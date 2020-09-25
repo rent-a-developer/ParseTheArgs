@@ -108,6 +108,7 @@ namespace ParseTheArgs
         /// <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
         /// <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -115,6 +116,7 @@ namespace ParseTheArgs
             Action<TCommand4Arguments> command4Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler });
         }
@@ -128,6 +130,7 @@ namespace ParseTheArgs
         /// <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
         /// <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -136,6 +139,7 @@ namespace ParseTheArgs
             Action<TCommand5Arguments> command5Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler });
         }
@@ -150,6 +154,7 @@ namespace ParseTheArgs
         /// <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
         /// <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -159,6 +164,7 @@ namespace ParseTheArgs
             Action<TCommand6Arguments> command6Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler });
         }
@@ -174,6 +180,8 @@ namespace ParseTheArgs
         /// <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
         /// <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -184,6 +192,8 @@ namespace ParseTheArgs
             Action<TCommand7Arguments> command7Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler });
         }
@@ -200,6 +210,8 @@ namespace ParseTheArgs
         /// <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
         /// <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -211,6 +223,8 @@ namespace ParseTheArgs
             Action<TCommand8Arguments> command8Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler });
         }
@@ -228,6 +242,8 @@ namespace ParseTheArgs
         /// <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
         /// <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments, TCommand9Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -240,6 +256,8 @@ namespace ParseTheArgs
             Action<TCommand9Arguments> command9Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler, command9Handler });
         }
@@ -258,6 +276,8 @@ namespace ParseTheArgs
         /// <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
         /// <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public void Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments, TCommand9Arguments, TCommand10Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
@@ -271,6 +291,8 @@ namespace ParseTheArgs
             Action<TCommand10Arguments> command10Handler,
             Action<ParseResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler, command9Handler, command10Handler });
         }
@@ -315,12 +337,14 @@ namespace ParseTheArgs
         /// <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
             Func<TCommand3Arguments, TResult> command3Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler });
         }
@@ -334,6 +358,7 @@ namespace ParseTheArgs
         /// <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -341,6 +366,7 @@ namespace ParseTheArgs
             Func<TCommand4Arguments, TResult> command4Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler });
         }
@@ -355,6 +381,7 @@ namespace ParseTheArgs
         /// <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -363,6 +390,7 @@ namespace ParseTheArgs
             Func<TCommand5Arguments, TResult> command5Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler });
         }
@@ -378,6 +406,7 @@ namespace ParseTheArgs
         /// <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -387,6 +416,7 @@ namespace ParseTheArgs
             Func<TCommand6Arguments, TResult> command6Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler });
         }
@@ -403,6 +433,8 @@ namespace ParseTheArgs
         /// <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -413,6 +445,8 @@ namespace ParseTheArgs
             Func<TCommand7Arguments, TResult> command7Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
+#pragma warning restore S107 // Methods should not have too many parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler });
         }
@@ -430,6 +464,8 @@ namespace ParseTheArgs
         /// <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -441,6 +477,8 @@ namespace ParseTheArgs
             Func<TCommand8Arguments, TResult> command8Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler });
         }
@@ -459,6 +497,8 @@ namespace ParseTheArgs
         /// <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments, TCommand9Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -471,6 +511,8 @@ namespace ParseTheArgs
             Func<TCommand9Arguments, TResult> command9Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler, command9Handler });
         }
@@ -490,6 +532,8 @@ namespace ParseTheArgs
         /// <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" /></param>
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
+#pragma warning disable S107 // Methods should not have too many parameters
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TCommand3Arguments, TCommand4Arguments, TCommand5Arguments, TCommand6Arguments, TCommand7Arguments, TCommand8Arguments, TCommand9Arguments, TCommand10Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
@@ -503,6 +547,8 @@ namespace ParseTheArgs
             Func<TCommand10Arguments, TResult> command10Handler,
             Func<ParseResult, TResult> errorHandler = null
         )
+#pragma warning restore S107 // Methods should not have too many parameters
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler, command9Handler, command10Handler });
         }

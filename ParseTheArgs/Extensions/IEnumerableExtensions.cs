@@ -17,7 +17,9 @@ namespace ParseTheArgs.Extensions
         /// <param name="other">The second instance to compare.</param>
         /// <returns>True if this instance has the same elements, in the same order, as the given other instance; otherwise, false.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="source" /> or <paramref name="other" /> is null.</exception>
+#pragma warning disable S3776 // Cognitive Complexity of methods should not be too high
         public static Boolean HasSameElementsThan<T>(this IEnumerable<T> source, IEnumerable<T> other)
+#pragma warning restore S3776 // Cognitive Complexity of methods should not be too high
         {
             if (source == null)
             {

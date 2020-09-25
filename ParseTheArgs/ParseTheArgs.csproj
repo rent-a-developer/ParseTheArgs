@@ -19,6 +19,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>1.0.2</Version>
     <PackageReleaseNotes>Fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1.</PackageReleaseNotes>
+    <CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
@@ -37,6 +38,10 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
 		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\.sonarlint\rent-a-developer_parsetheargs\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>

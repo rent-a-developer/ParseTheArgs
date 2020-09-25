@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Toolbox</AssemblyName>
+    <CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="..\.sonarlint\rent-a-developer_parsetheargs\CSharp\SonarLint.xml" Link="SonarLint.xml" />
     <Content Include="Cat.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

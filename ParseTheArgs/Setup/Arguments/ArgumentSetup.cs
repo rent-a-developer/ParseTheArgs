@@ -13,7 +13,9 @@ namespace ParseTheArgs.Setup.Arguments
     /// <typeparam name="TCommandArguments">The type in which the values of the arguments (of the command the argument belongs to) will be stored.</typeparam>
     /// <typeparam name="TArgumentParser">The type of parser for the argument.</typeparam>
     /// <typeparam name="TArgumentSetup">The type of setup for the argument.</typeparam>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
     public abstract class ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         where TArgumentParser : ArgumentParser<TCommandArguments>, new()
         where TArgumentSetup : ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
     {

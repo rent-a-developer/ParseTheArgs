@@ -11,7 +11,9 @@ namespace ParseTheArgs.Setup.Arguments
     /// <typeparam name="TArgumentParser">The type of parser for the argument.</typeparam>
     /// <typeparam name="TArgumentSetup">The type of setup for the argument.</typeparam>
     /// <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
+#pragma warning disable S2436 // Types and methods should not have too many generic parameters
     public abstract class SingleValueArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup, TArgumentValue> : ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
+#pragma warning restore S2436 // Types and methods should not have too many generic parameters
         where TArgumentParser : SingleValueArgumentParser<TCommandArguments, TArgumentValue>, new()
         where TArgumentSetup : SingleValueArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup, TArgumentValue>
     {

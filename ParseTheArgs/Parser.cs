@@ -175,7 +175,9 @@ namespace ParseTheArgs
         /// </summary>
         /// <param name="args">The command line arguments to parse.</param>
         /// <returns>The result of the parsing.</returns>
+#pragma warning disable S3776 // Cognitive Complexity of methods should not be too high
         public ParseResult Parse(String[] args)
+#pragma warning restore S3776 // Cognitive Complexity of methods should not be too high
         {
             if (args.Length == 0)
             {

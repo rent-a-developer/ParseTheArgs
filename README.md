@@ -356,4 +356,3 @@ See [Changelog](CHANGELOG.md).
 
 ## Main contributors
 - David Liebeherr (info@rent-a-developer.de)
-

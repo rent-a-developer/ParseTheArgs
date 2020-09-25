@@ -1,5 +1,11 @@
 [![NuGet Badge](https://buildstats.info/nuget/ParseTheArgs)](https://www.nuget.org/packages/ParseTheArgs/)
-[![.NET Core](https://github.com/rent-a-developer/ParseTheArgs/workflows/.NET%20Core/badge.svg)](https://github.com/rent-a-developer/ParseTheArgs)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=alert_status)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=bugs)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=code_smells)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=coverage)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=ncloc)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=security_rating)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 
 # Command Line Parser Library for .NET
 

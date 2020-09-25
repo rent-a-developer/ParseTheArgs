@@ -1,11 +1,11 @@
 [![NuGet Badge](https://buildstats.info/nuget/ParseTheArgs)](https://www.nuget.org/packages/ParseTheArgs/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=alert_status)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=security_rating)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=bugs)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=code_smells)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=coverage)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=ncloc)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=security_rating)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=rent-a-developer_ParseTheArgs&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=rent-a-developer_ParseTheArgs)
 
 # Command Line Parser Library for .NET
 
@@ -63,10 +63,12 @@ C:\> PrintFile --file C:\temp\test.txt
 This library is licensed under the [MIT license](LICENSE.md).
 
 # Installation
-First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). Then install the parser from the package manager console:
+First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget).
+
+Then install the parser [NuGet package](https://www.nuget.org/packages/ParseTheArgs/) from the package manager console:
 
 ```shell
-PM> Install-Package [ParseTheArgs](https://www.nuget.org/packages/ParseTheArgs/)
+PM> Install-Package ParseTheArgs
 ```
 
 # Documentation

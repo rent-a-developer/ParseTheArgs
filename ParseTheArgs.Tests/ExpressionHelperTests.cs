@@ -37,7 +37,8 @@ namespace ParseTheArgs.Tests
             )
             .Should()
             .Throw<ArgumentException>()
-            .WithMessage("The given property expression is invalid. It must be an expression that returns the value of a property and the property must have a public setter. (Parameter 'propertyExpression')");
+            .WithMessage(@"The given property expression is invalid. It must be an expression that returns the value of a property and the property must have a public setter.
+Parameter name: propertyExpression");
         }
 
         class Item

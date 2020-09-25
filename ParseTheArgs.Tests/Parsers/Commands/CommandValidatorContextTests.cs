@@ -47,10 +47,11 @@ namespace ParseTheArgs.Tests.Parsers.Commands
                 .Should()
                 .Throw<ArgumentNullException>();
 
-            context.Invoking(a => a.GetArgumentName(a => a.ArgumentB))
+            context.Invoking(a => a.GetArgumentName(b => b.ArgumentB))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The property ArgumentB of the type ParseTheArgs.Tests.TestData.Command1Arguments is not mapped to any argument. (Parameter 'argumentSelector')");
+                .WithMessage(@"The property ArgumentB of the type ParseTheArgs.Tests.TestData.Command1Arguments is not mapped to any argument.
+Parameter name: argumentSelector");
         }
     }
 }

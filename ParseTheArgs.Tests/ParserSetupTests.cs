@@ -23,7 +23,8 @@ namespace ParseTheArgs.Tests
                 .Invoking(a => a.Name("command1"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given command name 'command1' is already in use by another command. Please use a different name. (Parameter 'name')");
+                .WithMessage(@"The given command name 'command1' is already in use by another command. Please use a different name.
+Parameter name: name");
         }
 
         [Test]
@@ -43,7 +44,8 @@ namespace ParseTheArgs.Tests
                 .Invoking(a => a.Name("argumentA"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given argument name 'argumentA' is already in use by another argument. Please use a different name. (Parameter 'name')");
+                .WithMessage(@"The given argument name 'argumentA' is already in use by another argument. Please use a different name.
+Parameter name: name");
         }
 
         [Test]
@@ -63,7 +65,8 @@ namespace ParseTheArgs.Tests
                 .Invoking(a => a.ShortName('a'))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given argument short name 'a' is already in use by another argument. Please use a different short name. (Parameter 'shortName')");
+                .WithMessage(@"The given argument short name 'a' is already in use by another argument. Please use a different short name.
+Parameter name: shortName");
         }
     }
 }

@@ -24,6 +24,8 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <DocumentationFile>ParseTheArgs.xml</DocumentationFile>
+	  <DebugType>full</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">

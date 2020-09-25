@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+		<Authors>David Liebeherr</Authors>
+		<Company>rent-a-developer</Company>
+		<Copyright>Copyright © rent-a-developer / David Liebeherr</Copyright>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/rent-a-developer/ParseTheArgs</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/rent-a-developer/ParseTheArgs.git</RepositoryUrl>
+		<RepositoryType>GIT</RepositoryType>
+		<PackageTags>command line argument parse parser parameter commandline option parsing library syntax shell</PackageTags>
+		<Description>Simple, yet powerful, strongly typed command line arguments parser library for .NET.</Description>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1.</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <DocumentationFile>ParseTheArgs.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
+	  <DocumentationFile>ParseTheArgs.xml</DocumentationFile>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE.md">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	  <None Include="icon.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
+
+</Project>

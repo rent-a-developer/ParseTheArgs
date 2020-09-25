@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Toolbox</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Cat.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Cat.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ParseTheArgs\ParseTheArgs.csproj" />
+  </ItemGroup>
+
+</Project>

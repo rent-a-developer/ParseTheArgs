@@ -10,6 +10,7 @@ namespace ParseTheArgs.Parsers.Commands
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
     public class CommandValidatorContext<TCommandArguments>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -25,12 +26,12 @@ namespace ParseTheArgs.Parsers.Commands
         /// <summary>
         /// The instance in which the values of the arguments of the command are stored.
         /// </summary>
-        public TCommandArguments CommandArguments => (TCommandArguments) this.ParseResult.CommandArguments;
+        public TCommandArguments? CommandArguments => (TCommandArguments?) this.ParseResult.CommandArguments;
 
         /// <summary>
         /// The (preliminary) result of the command line arguments parsing.
         /// </summary>
-        public ParseResult ParseResult { get; set; }
+        public ParseResult ParseResult { get; }
 
         /// <summary>
         /// Adds an error to the parse result.

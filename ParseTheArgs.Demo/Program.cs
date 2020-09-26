@@ -20,6 +20,17 @@ namespace ParseTheArgs.Demo
             
             var parseResult = parser.Parse(args);
 
+            parseResult.Handle(
+                (ConvertGuidCommandArguments arguments) =>
+                {
+                    return "1";
+                },
+                (ParseResult result) =>
+                {
+                    return "1";
+                }
+            );
+
             return parseResult.Handle(
                 (ConvertGuidCommandArguments arguments) => ConvertGuidCommand.ConvertGuid(arguments),
                 (DateCommandArguments arguments) => DateCommand.GetDate(arguments),

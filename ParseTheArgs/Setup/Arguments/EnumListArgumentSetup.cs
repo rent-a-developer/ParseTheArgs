@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
     /// <typeparam name="TEnum">The type of the enum the argument accepts as argument values.</typeparam>
-    public class EnumListArgumentSetup<TCommandArguments, TEnum> : MultiValueArgumentSetup<TCommandArguments, EnumListArgumentParser<TCommandArguments, TEnum>, EnumListArgumentSetup<TCommandArguments, TEnum>, TEnum>
+    public class EnumListArgumentSetup<TCommandArguments, TEnum> : MultiValueArgumentSetup<TCommandArguments, EnumListArgumentParser<TEnum>, EnumListArgumentSetup<TCommandArguments, TEnum>, TEnum>
+        where TCommandArguments : class
         where TEnum : struct, Enum
     {
         /// <summary>

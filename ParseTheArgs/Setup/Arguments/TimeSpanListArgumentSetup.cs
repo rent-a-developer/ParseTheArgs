@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts one or more <see cref="TimeSpan" /> values.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class TimeSpanListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, TimeSpanListArgumentParser<TCommandArguments>, TimeSpanListArgumentSetup<TCommandArguments>, TimeSpan>
+    public class TimeSpanListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, TimeSpanListArgumentParser, TimeSpanListArgumentSetup<TCommandArguments>, TimeSpan>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

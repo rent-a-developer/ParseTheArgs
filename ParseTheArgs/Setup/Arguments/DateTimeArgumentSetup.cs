@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts a single <see cref="DateTime" /> value.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class DateTimeArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, DateTimeArgumentParser<TCommandArguments>, DateTimeArgumentSetup<TCommandArguments>, DateTime>
+    public class DateTimeArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, DateTimeArgumentParser, DateTimeArgumentSetup<TCommandArguments>, DateTime>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

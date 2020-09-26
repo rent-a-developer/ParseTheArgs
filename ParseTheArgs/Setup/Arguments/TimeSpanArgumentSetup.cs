@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts a single <see cref="TimeSpan" /> value.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class TimeSpanArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, TimeSpanArgumentParser<TCommandArguments>, TimeSpanArgumentSetup<TCommandArguments>, TimeSpan>
+    public class TimeSpanArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, TimeSpanArgumentParser, TimeSpanArgumentSetup<TCommandArguments>, TimeSpan>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

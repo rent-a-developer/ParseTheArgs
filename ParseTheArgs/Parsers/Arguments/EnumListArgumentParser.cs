@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ParseTheArgs.Errors;
 
@@ -9,15 +10,16 @@ namespace ParseTheArgs.Parsers.Arguments
     /// <summary>
     /// Parses a command line argument that accepts one or more enum members of the enum <typeparamref name="TEnum" />.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
     /// <typeparam name="TEnum">The type of the enum the parser accepts as argument values.</typeparam>
-    public class EnumListArgumentParser<TCommandArguments, TEnum> : MultiValueArgumentParser<TCommandArguments, TEnum>
+    public class EnumListArgumentParser<TEnum> : MultiValueArgumentParser<TEnum>
         where TEnum : struct, Enum
     {
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        public EnumListArgumentParser()
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        public EnumListArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
         {
             this.EnumValuesHelps = new Dictionary<TEnum, String>();
         }

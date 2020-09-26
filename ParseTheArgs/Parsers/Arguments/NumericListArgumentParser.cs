@@ -1,19 +1,21 @@
 using System;
 using System.Globalization;
+using System.Reflection;
 
 namespace ParseTheArgs.Parsers.Arguments
 {
     /// <summary>
     /// Parses a command line argument that accepts one or more numeric values of the type <typeparamref name="TValue" />.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
     /// <typeparam name="TValue">The specific numeric type the parser parses.</typeparam>
-    public abstract class NumericListArgumentParser<TCommandArguments, TValue> : MultiValueArgumentParser<TCommandArguments, TValue>
+    public abstract class NumericListArgumentParser<TValue> : MultiValueArgumentParser<TValue>
     {
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        protected NumericListArgumentParser()
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        protected NumericListArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
         {
             this.NumberStyles = NumberStyles.Any;
             this.FormatProvider = CultureInfo.CurrentCulture;

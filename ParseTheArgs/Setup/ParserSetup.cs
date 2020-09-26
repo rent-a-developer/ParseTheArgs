@@ -48,7 +48,7 @@ namespace ParseTheArgs.Setup
         /// </summary>
         /// <typeparam name="TCommandArguments">The type where the values of the arguments of the command will be stored in.</typeparam>
         /// <returns>An instance of <see cref="NamedCommandSetup{TCommandArguments}" /> that can be used to configure the command.</returns>
-        public NamedCommandSetup<TCommandArguments> Command<TCommandArguments>() where TCommandArguments : new()
+        public NamedCommandSetup<TCommandArguments> Command<TCommandArguments>() where TCommandArguments : class, new()
         {
             return new NamedCommandSetup<TCommandArguments>(this.parser);
         }
@@ -61,7 +61,7 @@ namespace ParseTheArgs.Setup
         /// </summary>
         /// <typeparam name="TCommandArguments">The type where the values of the arguments of the command will be stored in.</typeparam>
         /// <returns>An instance of <see cref="DefaultCommandSetup{TCommandArguments}" /> that can be used to configure the command.</returns>
-        public DefaultCommandSetup<TCommandArguments> DefaultCommand<TCommandArguments>() where TCommandArguments : new()
+        public DefaultCommandSetup<TCommandArguments> DefaultCommand<TCommandArguments>() where TCommandArguments : class, new()
         {
             return new DefaultCommandSetup<TCommandArguments>(this.parser);
         }

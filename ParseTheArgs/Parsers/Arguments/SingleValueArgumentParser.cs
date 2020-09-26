@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ParseTheArgs.Errors;
 using ParseTheArgs.Tokens;
 
@@ -9,10 +10,19 @@ namespace ParseTheArgs.Parsers.Arguments
     /// <summary>
     /// Parses a command line argument that accepts a single <typeparamref name="TArgumentValue" /> value.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
     /// <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
-    public abstract class SingleValueArgumentParser<TCommandArguments, TArgumentValue> : ArgumentParser<TCommandArguments>
+    public abstract class SingleValueArgumentParser<TArgumentValue> : ArgumentParser
     {
+        /// <summary>
+        /// Initializes a new instance of this class.
+        /// </summary>
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        protected SingleValueArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        {
+            this.argumentDefaultValue = default!;
+        }
+
         /// <summary>
         /// Defines the default value to use for the argument when the argument is not given.
         /// </summary>
@@ -22,7 +32,7 @@ namespace ParseTheArgs.Parsers.Arguments
             set
             {
                 this.argumentDefaultValue = value;
-                this.IsArgumentDefaultValueSet = true;
+                this.isArgumentDefaultValueSet = true;
             }
         }
 
@@ -30,11 +40,6 @@ namespace ParseTheArgs.Parsers.Arguments
         /// The type of the argument the parser parses.
         /// </summary>
         public override ArgumentType ArgumentType => ArgumentType.SingleValueArgument;
-
-        /// <summary>
-        /// Determines if the argument default value (<see cref="ArgumentDefaultValue" />) is set.
-        /// </summary>
-        public Boolean IsArgumentDefaultValueSet { get; set; }
 
         /// <summary>
         /// Parses the given tokens and puts the result of the parsing into the given parse result object.
@@ -69,7 +74,7 @@ namespace ParseTheArgs.Parsers.Arguments
             {
                 parseResult.AddError(new ArgumentMissingError(this.ArgumentName));
             }
-            else if (this.IsArgumentDefaultValueSet)
+            else if (this.isArgumentDefaultValueSet)
             {
                 this.TargetProperty.SetValue(parseResult.CommandArguments, this.ArgumentDefaultValue);
             }
@@ -84,6 +89,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// <returns>True if the given argument value could be parsed; otherwise false.</returns>
         protected abstract Boolean TryParseValue(String argumentValue, ParseResult parseResult, out TArgumentValue resultValue);
 
+        private Boolean isArgumentDefaultValueSet;
         private TArgumentValue argumentDefaultValue;
     }
 }

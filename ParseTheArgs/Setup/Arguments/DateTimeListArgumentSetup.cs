@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts one or more <see cref="DateTime" /> values.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class DateTimeListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, DateTimeListArgumentParser<TCommandArguments>, DateTimeListArgumentSetup<TCommandArguments>, DateTime>
+    public class DateTimeListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, DateTimeListArgumentParser, DateTimeListArgumentSetup<TCommandArguments>, DateTime>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

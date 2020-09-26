@@ -13,6 +13,7 @@ namespace ParseTheArgs.Parsers.Commands
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
     public class CommandParser<TCommandArguments> : ICommandParser
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -20,14 +21,17 @@ namespace ParseTheArgs.Parsers.Commands
         /// <param name="parser">The parser the command parser belongs to.</param>
         public CommandParser(Parser parser)
         {
-            this.ArgumentParsers = new List<IArgumentParser>();
             this.parser = parser;
+
+            this.ArgumentParsers = new List<ArgumentParser>();
+            this.CommandHelp = String.Empty;
+            this.CommandExampleUsage = String.Empty;
         }
 
         /// <summary>
         /// Defines the list of argument parsers for the command.
         /// </summary>
-        public List<IArgumentParser> ArgumentParsers { get; }
+        public List<ArgumentParser> ArgumentParsers { get; }
 
         /// <summary>
         /// Defines a text that describes an example usage of the command.
@@ -43,7 +47,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// Defines the name of the command.
         /// Will be null, if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
         /// </summary>
-        public String CommandName { get; set; }
+        public String? CommandName { get; set; }
 
         /// <summary>
         /// Determines if the command is the default (non-named) command.
@@ -54,7 +58,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// <summary>
         /// Defines the validator to use to validate the command and its arguments.
         /// </summary>
-        public Action<CommandValidatorContext<TCommandArguments>> Validator { get; set; }
+        public Action<CommandValidatorContext<TCommandArguments>>? Validator { get; set; }
 
         /// <summary>
         /// Gets the help text of the command.
@@ -156,7 +160,7 @@ namespace ParseTheArgs.Parsers.Commands
             }
         }
 
-        private static String GetArgumentLongHelpPart(IArgumentParser argumentParser)
+        private static String GetArgumentLongHelpPart(ArgumentParser argumentParser)
         {
             var result = "";
 
@@ -187,7 +191,7 @@ namespace ParseTheArgs.Parsers.Commands
             return result;
         }
 
-        private static String GetArgumentShortHelpPart(IArgumentParser argumentParser)
+        private static String GetArgumentShortHelpPart(ArgumentParser argumentParser)
         {
             var result = "[";
 

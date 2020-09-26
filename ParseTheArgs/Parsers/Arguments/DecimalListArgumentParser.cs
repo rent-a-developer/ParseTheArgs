@@ -1,14 +1,23 @@
 using System;
+using System.Reflection;
 using ParseTheArgs.Errors;
 
 namespace ParseTheArgs.Parsers.Arguments
 {
     /// <summary>
-    /// Parses a command line argument that accepts one or more <see cref="decimal" /> values.
+    /// Parses a command line argument that accepts one or more <see cref="Decimal" /> values.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
-    public class DecimalListArgumentParser<TCommandArguments> : NumericListArgumentParser<TCommandArguments, Decimal>
+    public class DecimalListArgumentParser : NumericListArgumentParser<Decimal>
     {
+        /// <summary>
+        /// Initializes a new instance of this class.
+        /// </summary>
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        public DecimalListArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        {
+        }
+
         /// <summary>
         /// Parses the given value to the desired argument value type of the argument parser.
         /// </summary>

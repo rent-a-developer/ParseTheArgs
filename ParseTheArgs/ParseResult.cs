@@ -23,12 +23,12 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines the Object that holds the arguments of the parsed command.
         /// </summary>
-        public Object CommandArguments { get; internal set; }
+        public Object? CommandArguments { get; internal set; }
 
         /// <summary>
         /// Defines the name of the command that was found in the parsed command line arguments.
         /// </summary>
-        public String CommandName { get; internal set; }
+        public String? CommandName { get; internal set; }
 
         /// <summary>
         /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or arguments where passed or the help command was specified).
@@ -62,7 +62,7 @@ namespace ParseTheArgs
         /// <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         public void Handle<TCommandArguments>(
             Action<TCommandArguments> commandHandler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
         {
             this.Handle(errorHandler, new Delegate[] { commandHandler });
@@ -77,7 +77,7 @@ namespace ParseTheArgs
         public void Handle<TCommand1Arguments, TCommand2Arguments>(
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler });
@@ -94,7 +94,7 @@ namespace ParseTheArgs
             Action<TCommand1Arguments> command1Handler,
             Action<TCommand2Arguments> command2Handler,
             Action<TCommand3Arguments> command3Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
         {
             this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler });
@@ -114,7 +114,7 @@ namespace ParseTheArgs
             Action<TCommand2Arguments> command2Handler,
             Action<TCommand3Arguments> command3Handler,
             Action<TCommand4Arguments> command4Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -137,7 +137,7 @@ namespace ParseTheArgs
             Action<TCommand3Arguments> command3Handler,
             Action<TCommand4Arguments> command4Handler,
             Action<TCommand5Arguments> command5Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -162,7 +162,7 @@ namespace ParseTheArgs
             Action<TCommand4Arguments> command4Handler,
             Action<TCommand5Arguments> command5Handler,
             Action<TCommand6Arguments> command6Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -190,7 +190,7 @@ namespace ParseTheArgs
             Action<TCommand5Arguments> command5Handler,
             Action<TCommand6Arguments> command6Handler,
             Action<TCommand7Arguments> command7Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -221,7 +221,7 @@ namespace ParseTheArgs
             Action<TCommand6Arguments> command6Handler,
             Action<TCommand7Arguments> command7Handler,
             Action<TCommand8Arguments> command8Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -254,7 +254,7 @@ namespace ParseTheArgs
             Action<TCommand7Arguments> command7Handler,
             Action<TCommand8Arguments> command8Handler,
             Action<TCommand9Arguments> command9Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -289,7 +289,7 @@ namespace ParseTheArgs
             Action<TCommand8Arguments> command8Handler,
             Action<TCommand9Arguments> command9Handler,
             Action<TCommand10Arguments> command10Handler,
-            Action<ParseResult> errorHandler = null
+            Action<ParseResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -307,7 +307,7 @@ namespace ParseTheArgs
         /// <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than <typeparamref name="TCommandArguments" /> and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         public TResult Handle<TCommandArguments, TResult>(
             Func<TCommandArguments, TResult> commandHandler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
         {
             return this.Handle(errorHandler, new Delegate[] { commandHandler });
@@ -323,7 +323,7 @@ namespace ParseTheArgs
         public TResult Handle<TCommand1Arguments, TCommand2Arguments, TResult>(
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
         {
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler });
@@ -342,7 +342,7 @@ namespace ParseTheArgs
             Func<TCommand1Arguments, TResult> command1Handler,
             Func<TCommand2Arguments, TResult> command2Handler,
             Func<TCommand3Arguments, TResult> command3Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -364,7 +364,7 @@ namespace ParseTheArgs
             Func<TCommand2Arguments, TResult> command2Handler,
             Func<TCommand3Arguments, TResult> command3Handler,
             Func<TCommand4Arguments, TResult> command4Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -388,7 +388,7 @@ namespace ParseTheArgs
             Func<TCommand3Arguments, TResult> command3Handler,
             Func<TCommand4Arguments, TResult> command4Handler,
             Func<TCommand5Arguments, TResult> command5Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -414,7 +414,7 @@ namespace ParseTheArgs
             Func<TCommand4Arguments, TResult> command4Handler,
             Func<TCommand5Arguments, TResult> command5Handler,
             Func<TCommand6Arguments, TResult> command6Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
         {
@@ -443,7 +443,7 @@ namespace ParseTheArgs
             Func<TCommand5Arguments, TResult> command5Handler,
             Func<TCommand6Arguments, TResult> command6Handler,
             Func<TCommand7Arguments, TResult> command7Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
 #pragma warning restore S107 // Methods should not have too many parameters
@@ -475,7 +475,7 @@ namespace ParseTheArgs
             Func<TCommand6Arguments, TResult> command6Handler,
             Func<TCommand7Arguments, TResult> command7Handler,
             Func<TCommand8Arguments, TResult> command8Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -509,7 +509,7 @@ namespace ParseTheArgs
             Func<TCommand7Arguments, TResult> command7Handler,
             Func<TCommand8Arguments, TResult> command8Handler,
             Func<TCommand9Arguments, TResult> command9Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -545,7 +545,7 @@ namespace ParseTheArgs
             Func<TCommand8Arguments, TResult> command8Handler,
             Func<TCommand9Arguments, TResult> command9Handler,
             Func<TCommand10Arguments, TResult> command10Handler,
-            Func<ParseResult, TResult> errorHandler = null
+            Func<ParseResult, TResult>? errorHandler = null
         )
 #pragma warning restore S107 // Methods should not have too many parameters
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
@@ -553,7 +553,7 @@ namespace ParseTheArgs
             return this.Handle(errorHandler, new Delegate[] { command1Handler, command2Handler, command3Handler, command4Handler, command5Handler, command6Handler, command7Handler, command8Handler, command9Handler, command10Handler });
         }
 
-        private TResult Handle<TResult>(Func<ParseResult, TResult> errorHandler, Delegate[] commandHandlers)
+        private TResult Handle<TResult>(Func<ParseResult, TResult>? errorHandler, Delegate[] commandHandlers)
         {
             if (this.HasErrors)
             {
@@ -562,7 +562,7 @@ namespace ParseTheArgs
                     return errorHandler(this);
                 }
 
-                return default(TResult);
+                return default(TResult)!;
             }
 
             if (this.CommandArguments != null)
@@ -587,10 +587,10 @@ namespace ParseTheArgs
                 }
             }
 
-            return default(TResult);
+            return default(TResult)!;
         }
 
-        private void Handle(Action<ParseResult> errorHandler, Delegate[] commandHandlers)
+        private void Handle(Action<ParseResult>? errorHandler, Delegate[] commandHandlers)
         {
             if (this.HasErrors)
             {

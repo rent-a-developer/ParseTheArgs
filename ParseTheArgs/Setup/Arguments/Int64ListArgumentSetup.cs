@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts one or more <see cref="long" /> values.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class Int64ListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, Int64ListArgumentParser<TCommandArguments>, Int64ListArgumentSetup<TCommandArguments>, Int64>
+    public class Int64ListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, Int64ListArgumentParser, Int64ListArgumentSetup<TCommandArguments>, Int64>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

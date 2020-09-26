@@ -12,6 +12,7 @@ namespace ParseTheArgs
         /// </summary>
         public ArgumentName()
         {
+            this.Name = String.Empty;
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace ParseTheArgs
         /// The short name of the argument.
         /// The value is null if the argument does not have a short name.
         /// </summary>
-        public Nullable<Char> ShortName { get; set; }
+        public Char? ShortName { get; set; }
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>
         /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>

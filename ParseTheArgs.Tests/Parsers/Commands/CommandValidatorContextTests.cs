@@ -17,9 +17,9 @@ namespace ParseTheArgs.Tests.Parsers.Commands
         {
             var commandParserMock = new Mock<ICommandParser>();
             var parseResultMock = new Mock<ParseResult>();
-            var argumentParserMock = new Mock<IArgumentParser>();
+            var argumentParserMock = new Mock<ArgumentParser>(null, null);
 
-            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<IArgumentParser> { argumentParserMock.Object });
+            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser> { argumentParserMock.Object });
 
             var context = new CommandValidatorContext<Command1Arguments>(commandParserMock.Object, parseResultMock.Object);
 
@@ -34,9 +34,9 @@ namespace ParseTheArgs.Tests.Parsers.Commands
         {
             var commandParserMock = new Mock<ICommandParser>();
             var parseResultMock = new Mock<ParseResult>();
-            var argumentParserMock = new Mock<IArgumentParser>();
+            var argumentParserMock = new Mock<ArgumentParser>(null, null);
 
-            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<IArgumentParser> { argumentParserMock.Object });
+            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser> { argumentParserMock.Object });
 
             var context = new CommandValidatorContext<Command1Arguments>(commandParserMock.Object, parseResultMock.Object);
 

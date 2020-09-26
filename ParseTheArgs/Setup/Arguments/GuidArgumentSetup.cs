@@ -9,7 +9,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts a single <see cref="Guid" /> value.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class GuidArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, GuidArgumentParser<TCommandArguments>, GuidArgumentSetup<TCommandArguments>, Guid>
+    public class GuidArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, GuidArgumentParser, GuidArgumentSetup<TCommandArguments>, Guid>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

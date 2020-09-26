@@ -9,7 +9,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts one or more <see cref="string" /> values.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class StringListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, StringListArgumentParser<TCommandArguments>, StringListArgumentSetup<TCommandArguments>, String>
+    public class StringListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, StringListArgumentParser, StringListArgumentSetup<TCommandArguments>, String>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

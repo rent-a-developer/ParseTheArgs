@@ -16,7 +16,8 @@ namespace ParseTheArgs.Setup.Arguments
 #pragma warning disable S2436 // Types and methods should not have too many generic parameters
     public abstract class ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
-        where TArgumentParser : ArgumentParser<TCommandArguments>, new()
+        where TCommandArguments : class
+        where TArgumentParser : ArgumentParser
         where TArgumentSetup : ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
     {
         /// <summary>
@@ -34,15 +35,7 @@ namespace ParseTheArgs.Setup.Arguments
 
             if (this.ArgumentParser == null)
             {
-                this.ArgumentParser = new TArgumentParser
-                {
-                    CommandParser = this.commandParser,
-                    TargetProperty = targetProperty,
-                    ArgumentName =
-                    {
-                        Name = targetProperty.Name.ToCamelCase()
-                    }
-                };
+                this.ArgumentParser = (TArgumentParser) Activator.CreateInstance(typeof(TArgumentParser), new Object[] { targetProperty, new ArgumentName(targetProperty.Name.ToCamelCase()) });
 
                 commandParser.ArgumentParsers.Add(this.ArgumentParser);
             }

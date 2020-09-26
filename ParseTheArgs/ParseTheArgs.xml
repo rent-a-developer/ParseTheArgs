@@ -726,61 +726,57 @@
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.ArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.ArgumentParser">
             <summary>
             Parses a command line argument.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.ArgumentHelp">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentHelp">
             <summary>
             Defines the help text of the argument.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.ArgumentName">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentName">
             <summary>
             The name of the argument the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.ArgumentType">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentType">
             <summary>
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.CommandParser">
-            <summary>
-            Defines the command parser of the command the argument this this parser parses belongs to.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.IsArgumentRequired">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.IsArgumentRequired">
             <summary>
             Determines if the argument is required.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.TargetProperty">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.TargetProperty">
             <summary>
-            Defines the property (of the <typeparamref name="TCommandArguments" /> type) where the value of the argument will be stored.
+            Defines the property where the value of the argument will be stored.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.GetHelpText">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.GetHelpText">
             <summary>
             Gets the help text of the argument.
             </summary>
             <returns>The help text of the argument.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser`1.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
             <summary>
             Validates the given tokens and puts the result of the validation into the given parse result object.
             </summary>
@@ -807,72 +803,68 @@
             An argument that accepts one or more values.
             </summary>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser">
             <summary>
             Parses a valueless (switch) command line argument.
             The target property will be set to true when the argument is present, otherwise the target property will be set to false.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.ArgumentDefaultValue">
+        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
-            Defines the default value for the argument.
-            The default value will be assigned to the target property when the argument is not given.
+            Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.ArgumentType">
+        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.ArgumentType">
             <summary>
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.IsArgumentDefaultValueSet">
-            <summary>
-            Determines if the argument default value (<see cref="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.ArgumentDefaultValue" />) is set.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.IsArgumentRequired">
+        <member name="P:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.IsArgumentRequired">
             <summary>
             Determines if the argument is required.
             Since this argument type does not have a value (it is a switch argument) it can never be required.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.DateTime" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1.DateTimeFormat">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.DateTimeFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.DateTime" />.
             For supported formats see the documentation of <see cref="M:System.DateTime.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1.DateTimeStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.DateTimeStyles">
             <summary>
             Defines the date time styles that are permitted when parsing the argument value to a <see cref="T:System.DateTime" />.
             The default is <see cref="F:System.Globalization.DateTimeStyles.None" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a <see cref="T:System.DateTime" />.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.DateTime@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.DateTime@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -881,36 +873,37 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.DateTime" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1.DateTimeFormat">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.DateTimeFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.DateTime" />.
             For supported formats see the documentation of <see cref="M:System.DateTime.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1.DateTimeStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.DateTimeStyles">
             <summary>
             Defines the date time styles that are permitted when parsing the argument value to a <see cref="T:System.DateTime" />.
             The default is <see cref="F:System.Globalization.DateTimeStyles.None" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a <see cref="T:System.DateTime" />.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.DateTime@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.DateTime@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -919,13 +912,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.Decimal" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -934,13 +933,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.Decimal" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -949,30 +954,31 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1">
             <summary>
             Parses a command line argument that accepts a single enum member of the enum <typeparamref name="TEnum" />.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TEnum">The type of the enum the parser accepts as argument value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`2.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`2.EnumValuesHelps">
+        <member name="P:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.EnumValuesHelps">
             <summary>
             Defines the help texts for individual enum member of the type <typeparamref name="TEnum" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`2.GetHelpText">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.GetHelpText">
             <summary>
             Gets the help text of the argument.
             </summary>
             <returns>The help text of the argument.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`2.TryParseValue(System.String,ParseTheArgs.ParseResult,`1@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -981,30 +987,31 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1">
             <summary>
             Parses a command line argument that accepts one or more enum members of the enum <typeparamref name="TEnum" />.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TEnum">The type of the enum the parser accepts as argument values.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`2.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`2.EnumValuesHelps">
+        <member name="P:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.EnumValuesHelps">
             <summary>
             Defines the help texts for individual enum member of the type <typeparamref name="TEnum" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`2.GetHelpText">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.GetHelpText">
             <summary>
             Gets the help text of the argument.
             </summary>
             <returns>The help text of the argument.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`2.TryParseValue(System.String,ParseTheArgs.ParseResult,`1@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1013,19 +1020,25 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.GuidArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.GuidArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.Guid" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.GuidArgumentParser`1.GuidFormat">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Arguments.GuidArgumentParser.GuidFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.Guid" />.
             For supported formats see the documentation of <see cref="M:System.Guid.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.GuidArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Guid@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Guid@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1034,19 +1047,25 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.Guid" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser`1.GuidFormat">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser.GuidFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.Guid" />.
             For supported formats see the documentation of <see cref="M:System.Guid.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Guid@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Guid@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1055,58 +1074,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.IArgumentParser">
-            <summary>
-            Represents a parser that parses a command line argument.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.IArgumentParser.ArgumentName">
-            <summary>
-            The name of the argument the parser parses.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.IArgumentParser.ArgumentType">
-            <summary>
-            The type of the argument the parser parses.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.IArgumentParser.IsArgumentRequired">
-            <summary>
-            Determines if the argument is required.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.IArgumentParser.TargetProperty">
-            <summary>
-            Defines the property where the value of the argument will be stored.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.IArgumentParser.GetHelpText">
-            <summary>
-            Gets the help text of the argument.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.IArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
-            <summary>
-            Parses the given tokens and puts the result of the parsing into the given parse result object.
-            </summary>
-            <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.IArgumentParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
-            <summary>
-            Validates the given tokens and puts the result of the validation into the given parse result object.
-            </summary>
-            <param name="tokens">The tokens to validate.</param>
-            <param name="parseResult">The parse result to put result of the validation into.</param>
-        </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.Int64" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1115,13 +1095,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.Int64" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1130,36 +1116,37 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1">
             <summary>
             Parses a command line argument that accepts one or more <typeparamref name="TArgumentValue" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.ArgumentDefaultValue">
+        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.ArgumentDefaultValue">
             <summary>
             Defines the default value to use for the argument when the argument is not given.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.ArgumentType">
+        <member name="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.ArgumentType">
             <summary>
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.IsArgumentDefaultValueSet">
-            <summary>
-            Determines if the argument default value (<see cref="P:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.ArgumentDefaultValue" />) is set.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`2.TryParseValue(System.String,ParseTheArgs.ParseResult,`1@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1168,84 +1155,87 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1">
             <summary>
             Parses a command line argument that accepts a single numeric value of the type <typeparamref name="TValue" />.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TValue">The specific numeric type the parser parses.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`2.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`2.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a numeric value.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`2.NumberStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1.NumberStyles">
             <summary>
             Defines the number styles that are permitted when parsing the argument value to a numeric value.
             The default is <see cref="F:System.Globalization.NumberStyles.Any" />.
             </summary>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1">
             <summary>
             Parses a command line argument that accepts one or more numeric values of the type <typeparamref name="TValue" />.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TValue">The specific numeric type the parser parses.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`2.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`2.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a numeric value.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`2.NumberStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1.NumberStyles">
             <summary>
             Defines the number styles that are permitted when parsing the argument value to a numeric value.
             The default is <see cref="F:System.Globalization.NumberStyles.Any" />.
             </summary>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2">
+        <member name="T:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1">
             <summary>
             Parses a command line argument that accepts a single <typeparamref name="TArgumentValue" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
             <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.ArgumentDefaultValue">
+        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.ArgumentDefaultValue">
             <summary>
             Defines the default value to use for the argument when the argument is not given.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.ArgumentType">
+        <member name="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.ArgumentType">
             <summary>
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.IsArgumentDefaultValueSet">
-            <summary>
-            Determines if the argument default value (<see cref="P:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.ArgumentDefaultValue" />) is set.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`2.TryParseValue(System.String,ParseTheArgs.ParseResult,`1@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1254,13 +1244,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.StringArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.StringArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.String" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.StringArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1269,13 +1265,19 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.StringListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.StringListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.String" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.StringListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1284,36 +1286,37 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser">
             <summary>
             Parses a command line argument that accepts a single <see cref="T:System.TimeSpan" /> value.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a <see cref="T:System.TimeSpan" />.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1.TimeSpanFormat">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.TimeSpanFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.TimeSpan" />.
             For supported formats see the documentation of <see cref="M:System.TimeSpan.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1.TimeSpanStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.TimeSpanStyles">
             <summary>
             Defines the date time styles that are permitted when parsing the argument value to a <see cref="T:System.TimeSpan" />.
             The default is <see cref="F:System.Globalization.TimeSpanStyles.None" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.TimeSpan@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.TimeSpan@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>
@@ -1322,36 +1325,37 @@
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given argument value could be parsed; otherwise false.</returns>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1">
+        <member name="T:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser">
             <summary>
             Parses a command line argument that accepts one or more <see cref="T:System.TimeSpan" /> values.
             </summary>
-            <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1.#ctor">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
             <summary>
             Initializes a new instance of this class.
             </summary>
+            <param name="targetProperty">The property where the value of the argument will be stored.</param>
+            <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1.FormatProvider">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.FormatProvider">
             <summary>
             Defines the format provider to use to parse the argument value to a <see cref="T:System.TimeSpan" />.
             The default is <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1.TimeSpanFormat">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.TimeSpanFormat">
             <summary>
             Defines the format to use when parsing the argument value to a <see cref="T:System.TimeSpan" />.
             For supported formats see the documentation of <see cref="M:System.TimeSpan.Parse(System.String)" />.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1.TimeSpanStyles">
+        <member name="P:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.TimeSpanStyles">
             <summary>
             Defines the date time styles that are permitted when parsing the argument value to a <see cref="T:System.TimeSpan" />.
             The default is <see cref="F:System.Globalization.TimeSpanStyles.None" />.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,System.TimeSpan@)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.TimeSpan@)">
             <summary>
             Parses the given value to the desired argument value type of the argument parser.
             </summary>

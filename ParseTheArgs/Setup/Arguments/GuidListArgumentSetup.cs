@@ -9,7 +9,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts one or more <see cref="Guid" /> values.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class GuidListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, GuidListArgumentParser<TCommandArguments>, GuidListArgumentSetup<TCommandArguments>, Guid>
+    public class GuidListArgumentSetup<TCommandArguments> : MultiValueArgumentSetup<TCommandArguments, GuidListArgumentParser, GuidListArgumentSetup<TCommandArguments>, Guid>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

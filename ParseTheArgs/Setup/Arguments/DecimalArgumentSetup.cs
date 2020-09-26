@@ -10,7 +10,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// Represents the configuration of an argument that accepts a single <see cref="decimal" /> value.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class DecimalArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, DecimalArgumentParser<TCommandArguments>, DecimalArgumentSetup<TCommandArguments>, Decimal>
+    public class DecimalArgumentSetup<TCommandArguments> : SingleValueArgumentSetup<TCommandArguments, DecimalArgumentParser, DecimalArgumentSetup<TCommandArguments>, Decimal>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

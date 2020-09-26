@@ -9,7 +9,7 @@ namespace ParseTheArgs
     {
         internal static PropertyInfo GetPropertyFromPropertyExpression(LambdaExpression propertyExpression)
         {
-            MemberExpression memberExpression = null;
+            MemberExpression? memberExpression = null;
 
             if (propertyExpression.Body is MemberExpression expressionBody)
             {
@@ -25,7 +25,7 @@ namespace ParseTheArgs
                 memberExpression = operand;
             }
 
-            PropertyInfo propertyInfo = null;
+            PropertyInfo? propertyInfo = null;
 
             if (memberExpression != null)
             {

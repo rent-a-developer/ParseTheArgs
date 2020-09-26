@@ -9,7 +9,8 @@ namespace ParseTheArgs.Setup.Arguments
     /// The target property will be set to true when the argument is present, otherwise the target property will be set to false.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type in which the arguments of the command the argument belongs to will be stored.</typeparam>
-    public class BooleanArgumentSetup<TCommandArguments> : ArgumentSetup<TCommandArguments, BooleanArgumentParser<TCommandArguments>, BooleanArgumentSetup<TCommandArguments>>
+    public class BooleanArgumentSetup<TCommandArguments> : ArgumentSetup<TCommandArguments, BooleanArgumentParser, BooleanArgumentSetup<TCommandArguments>>
+        where TCommandArguments : class
     {
         /// <summary>
         /// Initializes a new instance of this class.

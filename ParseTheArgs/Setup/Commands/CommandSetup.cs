@@ -10,7 +10,7 @@ namespace ParseTheArgs.Setup.Commands
     /// Represents the configuration of a command.
     /// </summary>
     /// <typeparam name="TCommandArguments">The type where the values of the arguments of the command will be stored in.</typeparam>
-    public abstract class CommandSetup<TCommandArguments> where TCommandArguments : new()
+    public abstract class CommandSetup<TCommandArguments> where TCommandArguments : class, new()
     {
         /// <summary>
         /// Initializes a new instance of this class.

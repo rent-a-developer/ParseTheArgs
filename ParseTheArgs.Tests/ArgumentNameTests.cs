@@ -11,7 +11,7 @@ namespace ParseTheArgs.Tests
         public void TestConstructors()
         {
             var name = new ArgumentName();
-            name.Name.Should().BeNull();
+            name.Name.Should().BeEmpty();
             name.ShortName.Should().BeNull();
 
             name = new ArgumentName("argumentA");

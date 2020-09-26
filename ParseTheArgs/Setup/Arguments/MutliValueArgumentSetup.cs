@@ -15,7 +15,8 @@ namespace ParseTheArgs.Setup.Arguments
 #pragma warning disable S2436 // Types and methods should not have too many generic parameters
     public abstract class MultiValueArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup, TArgumentValue> : ArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup>
 #pragma warning restore S2436 // Types and methods should not have too many generic parameters
-        where TArgumentParser : MultiValueArgumentParser<TCommandArguments, TArgumentValue>, new()
+        where TCommandArguments : class
+        where TArgumentParser : MultiValueArgumentParser<TArgumentValue>
         where TArgumentSetup : MultiValueArgumentSetup<TCommandArguments, TArgumentParser, TArgumentSetup, TArgumentValue>
     {
         /// <summary>

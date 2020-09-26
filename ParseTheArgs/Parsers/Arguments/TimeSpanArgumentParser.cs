@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Reflection;
 using ParseTheArgs.Errors;
 
 namespace ParseTheArgs.Parsers.Arguments
@@ -7,13 +8,14 @@ namespace ParseTheArgs.Parsers.Arguments
     /// <summary>
     /// Parses a command line argument that accepts a single <see cref="TimeSpan" /> value.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
-    public class TimeSpanArgumentParser<TCommandArguments> : SingleValueArgumentParser<TCommandArguments, TimeSpan>
+    public class TimeSpanArgumentParser : SingleValueArgumentParser<TimeSpan>
     {
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        public TimeSpanArgumentParser()
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        public TimeSpanArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
         {
             this.FormatProvider = CultureInfo.CurrentCulture;
             this.TimeSpanStyles = TimeSpanStyles.None;
@@ -29,7 +31,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// Defines the format to use when parsing the argument value to a <see cref="TimeSpan" />.
         /// For supported formats see the documentation of <see cref="TimeSpan.Parse(string)" />.
         /// </summary>
-        public String TimeSpanFormat { get; set; }
+        public String? TimeSpanFormat { get; set; }
 
         /// <summary>
         /// Defines the date time styles that are permitted when parsing the argument value to a <see cref="TimeSpan" />.

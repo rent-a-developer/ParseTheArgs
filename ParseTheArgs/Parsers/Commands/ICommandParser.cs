@@ -13,7 +13,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// <summary>
         /// Defines the list of argument parsers for the command.
         /// </summary>
-        List<IArgumentParser> ArgumentParsers { get; }
+        List<ArgumentParser> ArgumentParsers { get; }
 
         /// <summary>
         /// Defines the help text of the command.
@@ -24,7 +24,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// Defines the name of the command.
         /// Will be null, if the command is the default command (see <see cref="IsCommandDefault" />).
         /// </summary>
-        String CommandName { get; }
+        String? CommandName { get; }
 
         /// <summary>
         /// Determines if the command is the default (non-named) command.

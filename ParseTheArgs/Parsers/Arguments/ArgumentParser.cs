@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Tokens;
 
 namespace ParseTheArgs.Parsers.Arguments
@@ -9,15 +8,19 @@ namespace ParseTheArgs.Parsers.Arguments
     /// <summary>
     /// Parses a command line argument.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
-    public abstract class ArgumentParser<TCommandArguments> : IArgumentParser
+    public abstract class ArgumentParser
     {
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        protected ArgumentParser()
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        protected ArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName)
         {
-            this.ArgumentName = new ArgumentName();
+            this.TargetProperty = targetProperty;
+            this.ArgumentName = argumentName;
+
+            this.ArgumentHelp = String.Empty;
         }
 
         /// <summary>
@@ -28,7 +31,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// <summary>
         /// The name of the argument the parser parses.
         /// </summary>
-        public ArgumentName ArgumentName { get; }
+        public virtual ArgumentName ArgumentName { get; }
 
         /// <summary>
         /// The type of the argument the parser parses.
@@ -36,19 +39,14 @@ namespace ParseTheArgs.Parsers.Arguments
         public virtual ArgumentType ArgumentType => ArgumentType.ValuelessArgument;
 
         /// <summary>
-        /// Defines the command parser of the command the argument this this parser parses belongs to.
-        /// </summary>
-        public CommandParser<TCommandArguments> CommandParser { get; set; }
-
-        /// <summary>
         /// Determines if the argument is required.
         /// </summary>
         public virtual Boolean IsArgumentRequired { get; set; }
 
         /// <summary>
-        /// Defines the property (of the <typeparamref name="TCommandArguments" /> type) where the value of the argument will be stored.
+        /// Defines the property where the value of the argument will be stored.
         /// </summary>
-        public PropertyInfo TargetProperty { get; set; }
+        public virtual PropertyInfo TargetProperty { get; }
 
         /// <summary>
         /// Gets the help text of the argument.

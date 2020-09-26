@@ -23,6 +23,8 @@ namespace ParseTheArgs
         {
             this.CommandParsers = new List<ICommandParser>();
             this.Setup = new ParserSetup(this);
+
+            this.Banner = String.Empty;
             this.ProgramName = Process.GetCurrentProcess().ProcessName;
 
             if (ConsoleHelper.IsConsolePresent())
@@ -147,11 +149,11 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("Commands:");
 
-                var maxCommandNameLength = nonDefaultCommandParsers.Max(a => a.CommandName.Length);
+                var maxCommandNameLength = nonDefaultCommandParsers.Max(a => a.CommandName!.Length);
 
                 foreach (var commandParser in nonDefaultCommandParsers)
                 {
-                    stringBuilder.AppendLine($"{commandParser.CommandName.PadRight(maxCommandNameLength)}\t{commandParser.CommandHelp}");
+                    stringBuilder.AppendLine($"{commandParser.CommandName!.PadRight(maxCommandNameLength)}\t{commandParser.CommandHelp}");
                 }
 
                 stringBuilder.AppendLine("");
@@ -261,13 +263,13 @@ namespace ParseTheArgs
         /// Defines the text writer to write error messages to.
         /// </summary>
         /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
-        internal TextWriter ErrorTextWriter { get; set; }
+        internal TextWriter? ErrorTextWriter { get; set; }
 
         /// <summary>
         /// Defines the text writer to write help messages to.
         /// </summary>
         /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
-        internal TextWriter HelpTextWriter { get; set; }
+        internal TextWriter? HelpTextWriter { get; set; }
 
         /// <summary>
         /// Defines the maximum length a line of a help text can have.

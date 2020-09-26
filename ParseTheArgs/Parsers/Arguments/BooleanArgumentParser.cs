@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ParseTheArgs.Errors;
 using ParseTheArgs.Tokens;
 
@@ -10,32 +11,21 @@ namespace ParseTheArgs.Parsers.Arguments
     /// Parses a valueless (switch) command line argument.
     /// The target property will be set to true when the argument is present, otherwise the target property will be set to false.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the value of the argument (of the command the argument belongs to) will be stored.</typeparam>
-    public class BooleanArgumentParser<TCommandArguments> : ArgumentParser<TCommandArguments>
+    public class BooleanArgumentParser : ArgumentParser
     {
         /// <summary>
-        /// Defines the default value for the argument.
-        /// The default value will be assigned to the target property when the argument is not given.
+        /// Initializes a new instance of this class.
         /// </summary>
-        public Boolean ArgumentDefaultValue
+        /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
+        /// <param name="argumentName">The name of the argument the parser parses.</param>
+        public BooleanArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
         {
-            get => this.argumentDefaultValue;
-            set
-            {
-                this.argumentDefaultValue = value;
-                this.IsArgumentDefaultValueSet = true;
-            }
         }
 
         /// <summary>
         /// The type of the argument the parser parses.
         /// </summary>
         public override ArgumentType ArgumentType => ArgumentType.ValuelessArgument;
-
-        /// <summary>
-        /// Determines if the argument default value (<see cref="ArgumentDefaultValue" />) is set.
-        /// </summary>
-        public Boolean IsArgumentDefaultValueSet { get; set; }
 
         /// <summary>
         /// Determines if the argument is required.
@@ -65,12 +55,6 @@ namespace ParseTheArgs.Parsers.Arguments
                     parseResult.AddError(new InvalidArgumentError(this.ArgumentName, "This argument does not support any values."));
                 }
             }
-            else if (this.IsArgumentDefaultValueSet)
-            {
-                this.TargetProperty.SetValue(parseResult.CommandArguments, this.ArgumentDefaultValue);
-            }
         }
-
-        private Boolean argumentDefaultValue;
     }
 }

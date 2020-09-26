@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument whose value has an invalid format.</param>
-        /// <param name="invalidArgumentValue">The argument value that has an invalid format</param>
+        /// <param name="invalidArgumentValue">The argument value that has an invalid format.</param>
         /// <param name="expectedValueFormat">The format the value was expected to have.</param>
         public ArgumentValueFormatError(ArgumentName argumentName, String invalidArgumentValue, String expectedValueFormat) : base(argumentName)
         {

@@ -46,14 +46,6 @@ namespace ParseTheArgs
         /// </summary>
         public Char? ShortName { get; set; }
 
-        /// <summary>Determines whether the specified object is equal to the current object.</summary>
-        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-        /// <param name="obj">The object to compare with the current object. </param>
-        public override Boolean Equals(Object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is ArgumentName other && this.Equals(other);
-        }
-
         /// <summary>
         /// Determines if the given string is equal to the name or short name of this instance.
         /// </summary>
@@ -62,16 +54,6 @@ namespace ParseTheArgs
         public Boolean EqualsNameOrShortName(String nameOrShortName)
         {
             return this.Name == nameOrShortName || (this.ShortName != null && this.ShortName.Value.ToString() == nameOrShortName);
-        }
-
-        /// <summary>Serves as the default hash function. </summary>
-        /// <returns>A hash code for the current object.</returns>
-        public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return ((this.Name != null ? this.Name.GetHashCode() : 0) * 397) ^ this.ShortName.GetHashCode();
-            }
         }
 
         /// <summary>
@@ -89,11 +71,6 @@ namespace ParseTheArgs
             {
                 return $"--{this.Name}";
             }
-        }
-
-        private Boolean Equals(ArgumentName other)
-        {
-            return this.Name == other.Name && this.ShortName == other.ShortName;
         }
     }
 }

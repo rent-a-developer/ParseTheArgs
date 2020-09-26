@@ -24,9 +24,9 @@ namespace ParseTheArgs.Parsers.Arguments
         }
 
         /// <summary>
-        /// Defines the help text of the argument.
+        /// Defines the property where the value of the argument will be stored.
         /// </summary>
-        public String ArgumentHelp { get; set; }
+        public virtual PropertyInfo TargetProperty { get; }
 
         /// <summary>
         /// The name of the argument the parser parses.
@@ -44,9 +44,9 @@ namespace ParseTheArgs.Parsers.Arguments
         public virtual Boolean IsArgumentRequired { get; set; }
 
         /// <summary>
-        /// Defines the property where the value of the argument will be stored.
+        /// Defines the help text of the argument.
         /// </summary>
-        public virtual PropertyInfo TargetProperty { get; }
+        public String ArgumentHelp { get; set; }
 
         /// <summary>
         /// Gets the help text of the argument.
@@ -62,15 +62,6 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
-        public abstract void Parse(List<CommandLineArgumentsToken> tokens, ParseResult parseResult);
-
-        /// <summary>
-        /// Validates the given tokens and puts the result of the validation into the given parse result object.
-        /// </summary>
-        /// <param name="tokens">The tokens to validate.</param>
-        /// <param name="parseResult">The parse result to put result of the validation into.</param>
-        public virtual void Validate(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
-        {
-        }
+        public abstract void Parse(List<Token> tokens, ParseResult parseResult);
     }
 }

@@ -543,7 +543,7 @@ Prints this help screen.
             parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
 
             var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().Be(new ArgumentName("argumentB"));
+            error.ArgumentName.Should().BeEquivalentTo(new ArgumentName("argumentB"));
             error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
         }
 
@@ -577,7 +577,7 @@ Prints this help screen.
             parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
 
             var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().Be(new ArgumentName("argumentB"));
+            error.ArgumentName.Should().BeEquivalentTo(new ArgumentName("argumentB"));
             error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
         }
 

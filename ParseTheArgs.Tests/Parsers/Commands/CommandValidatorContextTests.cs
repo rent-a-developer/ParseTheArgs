@@ -26,7 +26,7 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             argumentParserMock.Setup(a => a.TargetProperty).Returns(typeof(Command1Arguments).GetProperty("ArgumentA"));
             argumentParserMock.Setup(a => a.ArgumentName).Returns(new ArgumentName("argumentA", 'a'));
 
-            context.GetArgumentName(a => a.ArgumentA).Should().Be(new ArgumentName("argumentA", 'a'));
+            context.GetArgumentName(a => a.ArgumentA).Should().BeEquivalentTo(new ArgumentName("argumentA", 'a'));
         }
 
         [Test]

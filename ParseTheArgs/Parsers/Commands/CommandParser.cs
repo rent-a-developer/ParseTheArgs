@@ -126,7 +126,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
-        public void Parse(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
+        public void Parse(List<Token> tokens, ParseResult parseResult)
         {
             var commandToken = tokens.OfType<CommandToken>().FirstOrDefault();
 
@@ -149,14 +149,13 @@ namespace ParseTheArgs.Parsers.Commands
         /// </summary>
         /// <param name="tokens">The tokens to validate.</param>
         /// <param name="parseResult">The parse result to put result of the validation into.</param>
-        public void Validate(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
+        public void Validate(List<Token> tokens, ParseResult parseResult)
         {
             var commandToken = tokens.OfType<CommandToken>().FirstOrDefault();
 
             if ((commandToken == null && this.IsCommandDefault) || (commandToken != null && commandToken.CommandName == this.CommandName))
             {
                 this.Validator?.Invoke(new CommandValidatorContext<TCommandArguments>(this, parseResult));
-                this.ArgumentParsers.ForEach(a => a.Validate(tokens, parseResult));
             }
         }
 

@@ -46,7 +46,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
-        public override void Parse(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
+        public override void Parse(List<Token> tokens, ParseResult parseResult)
         {
             var argumentToken = tokens.OfType<ArgumentToken>().FirstOrDefault(a => this.ArgumentName.EqualsNameOrShortName(a.ArgumentName));
 

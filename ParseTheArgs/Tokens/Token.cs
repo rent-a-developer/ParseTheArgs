@@ -3,9 +3,9 @@
 namespace ParseTheArgs.Tokens
 {
     /// <summary>
-    /// Represents a command line arguments token.
+    /// Represents a token of a command line.
     /// </summary>
-    public abstract class CommandLineArgumentsToken
+    public abstract class Token
     {
         /// <summary>
         /// Determines if the token has already been parsed.

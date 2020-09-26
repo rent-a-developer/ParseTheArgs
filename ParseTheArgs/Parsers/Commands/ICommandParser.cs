@@ -43,13 +43,13 @@ namespace ParseTheArgs.Parsers.Commands
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
-        void Parse(List<CommandLineArgumentsToken> tokens, ParseResult parseResult);
+        void Parse(List<Token> tokens, ParseResult parseResult);
 
         /// <summary>
         /// Validates the given tokens and puts the result of the validation into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to validate.</param>
         /// <param name="parseResult">The parse result to put result of the validation into.</param>
-        void Validate(List<CommandLineArgumentsToken> tokens, ParseResult parseResult);
+        void Validate(List<Token> tokens, ParseResult parseResult);
     }
 }

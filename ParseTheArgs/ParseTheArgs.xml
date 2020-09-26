@@ -38,21 +38,12 @@
             The value is null if the argument does not have a short name.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.ArgumentName.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-            <param name="obj">The object to compare with the current object. </param>
-        </member>
         <member name="M:ParseTheArgs.ArgumentName.EqualsNameOrShortName(System.String)">
             <summary>
             Determines if the given string is equal to the name or short name of this instance.
             </summary>
             <param name="nameOrShortName">A name or short name of an argument.</param>
             <returns>True if the given string is equal the name or short name of this instance; otherwise, false.</returns>
-        </member>
-        <member name="M:ParseTheArgs.ArgumentName.GetHashCode">
-            <summary>Serves as the default hash function. </summary>
-            <returns>A hash code for the current object.</returns>
         </member>
         <member name="M:ParseTheArgs.ArgumentName.ToString">
             <summary>
@@ -127,7 +118,7 @@
             Initializes a new instance of this class.
             </summary>
             <param name="argumentName">The name of the argument whose value has an invalid format.</param>
-            <param name="invalidArgumentValue">The argument value that has an invalid format</param>
+            <param name="invalidArgumentValue">The argument value that has an invalid format.</param>
             <param name="expectedValueFormat">The format the value was expected to have.</param>
         </member>
         <member name="P:ParseTheArgs.Errors.ArgumentValueFormatError.ExpectedValueFormat">
@@ -274,22 +265,6 @@
             Gets the error message that describes the error.
             </summary>
             <returns>The error message that describes the error.</returns>
-        </member>
-        <member name="T:ParseTheArgs.Extensions.IEnumerableExtensions">
-            <summary>
-            Provides extension methods for the <see cref="T:System.Collections.Generic.IEnumerable`1" /> type.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.Extensions.IEnumerableExtensions.HasSameElementsThan``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Determines if this instance has the same elements, in the same order, as the given other instance.
-            The equality of the elements is determined using the (overloaded) <see cref="M:System.Object.Equals(System.Object)" /> method of each element.
-            </summary>
-            <typeparam name="T">The type of elements this instance contains.</typeparam>
-            <param name="source">The first instance to compare.</param>
-            <param name="other">The second instance to compare.</param>
-            <returns>True if this instance has the same elements, in the same order, as the given other instance; otherwise, false.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="source" /> or <paramref name="other" /> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Extensions.PropertyInfoExtensions">
             <summary>
@@ -488,115 +463,115 @@
             Executes the given <paramref name="commandHandler" /> callback when the command line arguments where parsed to a command of the type <typeparamref name="TCommandArguments" /> or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
             <typeparam name="TCommandArguments">The type of command arguments the command line arguments must have been parsed to to execute the given <paramref name="commandHandler" /> callback.</typeparam>
-            <param name="commandHandler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommandArguments" /></param>
+            <param name="commandHandler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommandArguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``2(System.Action{``0},System.Action{``1},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``3(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``4(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``5(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``6(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{``5},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``7(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{``5},System.Action{``6},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``8(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{``5},System.Action{``6},System.Action{``7},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``9(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{``5},System.Action{``6},System.Action{``7},System.Action{``8},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
-            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
+            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``10(System.Action{``0},System.Action{``1},System.Action{``2},System.Action{``3},System.Action{``4},System.Action{``5},System.Action{``6},System.Action{``7},System.Action{``8},System.Action{``9},System.Action{ParseTheArgs.ParseResult})">
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
-            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
-            <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
+            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" />.</param>
+            <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle``2(System.Func{``0,``1},System.Func{ParseTheArgs.ParseResult,``1})">
@@ -605,7 +580,7 @@
             </summary>
             <typeparam name="TCommandArguments">The type of command arguments the command line arguments must have been parsed to to execute the given <paramref name="commandHandler" /> callback.</typeparam>
             <typeparam name="TResult">The type of the return value of the given callbacks.</typeparam>
-            <param name="commandHandler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommandArguments" /></param>
+            <param name="commandHandler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommandArguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than <typeparamref name="TCommandArguments" /> and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -613,8 +588,8 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -622,9 +597,9 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -632,10 +607,10 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -643,11 +618,11 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -655,12 +630,12 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -668,13 +643,13 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -682,14 +657,14 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -697,15 +672,15 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
-            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
+            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -713,16 +688,16 @@
             <summary>
             Executes one of the given command callbacks when the command line arguments where parsed to a command of a type of one of the given callbacks or executes the given <paramref name="errorHandler" /> callback when the parsing produced errors.
             </summary>
-            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" /></param>
-            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" /></param>
-            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" /></param>
-            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" /></param>
-            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" /></param>
-            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" /></param>
-            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" /></param>
-            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" /></param>
-            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" /></param>
-            <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" /></param>
+            <param name="command1Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand1Arguments" />.</param>
+            <param name="command2Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand2Arguments" />.</param>
+            <param name="command3Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand3Arguments" />.</param>
+            <param name="command4Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand4Arguments" />.</param>
+            <param name="command5Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand5Arguments" />.</param>
+            <param name="command6Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand6Arguments" />.</param>
+            <param name="command7Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand7Arguments" />.</param>
+            <param name="command8Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand8Arguments" />.</param>
+            <param name="command9Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand9Arguments" />.</param>
+            <param name="command10Handler">A callback that is executed when the command line arguments where parsed to a command of the type <typeparamref name="TCommand10Arguments" />.</param>
             <param name="errorHandler">A callback that is executed when the parsing produced errors.</param>
             <returns>The return value of the callback that was executed. If the command line arguments where parsed to a command of another type than one of the given callbacks and when the parsing produced no errors, the default value of <typeparamref name="TResult" /> is returned.</returns>
         </member>
@@ -738,9 +713,9 @@
             <param name="targetProperty">The property where the value of the argument will be stored.</param>
             <param name="argumentName">The name of the argument the parser parses.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentHelp">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.TargetProperty">
             <summary>
-            Defines the help text of the argument.
+            Defines the property where the value of the argument will be stored.
             </summary>
         </member>
         <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentName">
@@ -758,9 +733,9 @@
             Determines if the argument is required.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.TargetProperty">
+        <member name="P:ParseTheArgs.Parsers.Arguments.ArgumentParser.ArgumentHelp">
             <summary>
-            Defines the property where the value of the argument will be stored.
+            Defines the help text of the argument.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.GetHelpText">
@@ -769,19 +744,12 @@
             </summary>
             <returns>The help text of the argument.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
-            <summary>
-            Validates the given tokens and puts the result of the validation into the given parse result object.
-            </summary>
-            <param name="tokens">The tokens to validate.</param>
-            <param name="parseResult">The parse result to put result of the validation into.</param>
         </member>
         <member name="T:ParseTheArgs.Parsers.Arguments.ArgumentType">
             <summary>
@@ -827,7 +795,7 @@
             Since this argument type does not have a value (it is a switch argument) it can never be required.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
@@ -1139,7 +1107,7 @@
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
@@ -1228,7 +1196,7 @@
             The type of the argument the parser parses.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
@@ -1414,14 +1382,14 @@
             </summary>
             <returns>The help text of the command.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Validates the given tokens and puts the result of the validation into the given parse result object.
             </summary>
@@ -1524,14 +1492,14 @@
             </summary>
             <returns>The help text of the argument.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.ICommandParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Commands.ICommandParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
             <param name="parseResult">The parse result to put result of the parsing into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.ICommandParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.CommandLineArgumentsToken},ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Parsers.Commands.ICommandParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Validates the given tokens and puts the result of the validation into the given parse result object.
             </summary>
@@ -2372,7 +2340,7 @@
         </member>
         <member name="T:ParseTheArgs.Tokens.ArgumentToken">
             <summary>
-            Represents an argument token.
+            A token that represents a command line argument.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Tokens.ArgumentToken.#ctor(System.String)">
@@ -2398,25 +2366,6 @@
             The values of the argument.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Tokens.ArgumentToken.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-            <param name="obj">The object to compare with the current object. </param>
-        </member>
-        <member name="M:ParseTheArgs.Tokens.ArgumentToken.GetHashCode">
-            <summary>Serves as the default hash function. </summary>
-            <returns>A hash code for the current object.</returns>
-        </member>
-        <member name="T:ParseTheArgs.Tokens.CommandLineArgumentsToken">
-            <summary>
-            Represents a command line arguments token.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Tokens.CommandLineArgumentsToken.IsParsed">
-            <summary>
-            Determines if the token has already been parsed.
-            </summary>
-        </member>
         <member name="T:ParseTheArgs.Tokens.CommandLineArgumentsTokenizer">
             <summary>
             A tokenizer for command line arguments.
@@ -2432,7 +2381,7 @@
         </member>
         <member name="T:ParseTheArgs.Tokens.CommandToken">
             <summary>
-            Represents a command token.
+            A token that represents a command line command.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Tokens.CommandToken.#ctor(System.String)">
@@ -2446,14 +2395,15 @@
             The name of the command.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Tokens.CommandToken.Equals(System.Object)">
-            <summary>Determines whether the specified object is equal to the current object.</summary>
-            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-            <param name="obj">The object to compare with the current object. </param>
+        <member name="T:ParseTheArgs.Tokens.Token">
+            <summary>
+            Represents a token of a command line.
+            </summary>
         </member>
-        <member name="M:ParseTheArgs.Tokens.CommandToken.GetHashCode">
-            <summary>Serves as the default hash function. </summary>
-            <returns>A hash code for the current object.</returns>
+        <member name="P:ParseTheArgs.Tokens.Token.IsParsed">
+            <summary>
+            Determines if the token has already been parsed.
+            </summary>
         </member>
     </members>
 </doc>

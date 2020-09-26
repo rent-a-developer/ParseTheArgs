@@ -15,7 +15,7 @@ namespace ParseTheArgs.Tokens
         /// <param name="args">The command line arguments to tokenize.</param>
         /// <returns>The tokens that represent the given command line arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="args" /> is null.</exception>
-        public static IEnumerable<CommandLineArgumentsToken> Tokenize(String[] args)
+        public static IEnumerable<Token> Tokenize(String[] args)
         {
             if (args == null)
             {
@@ -25,7 +25,7 @@ namespace ParseTheArgs.Tokens
             return TokenizeIterator(args);
         }
 
-        private static IEnumerable<CommandLineArgumentsToken> TokenizeIterator(String[] args)
+        private static IEnumerable<Token> TokenizeIterator(String[] args)
         {
             var leftArgs = new List<String>(args);
 

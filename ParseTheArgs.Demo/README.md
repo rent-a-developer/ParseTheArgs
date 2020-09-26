@@ -30,7 +30,7 @@ This folder contains a .Net console application project that demonstrates the us
 ##### Display a specific date
 > Toolbox date --date "31.12.2020 23:59:59"
 
-##### Add on offset to a date
+##### Add an offset to a date
 > Toolbox date --date "01.01.2020 10:00:00" --offset 10:15:00
 
 ##### Calculate the difference between two dates

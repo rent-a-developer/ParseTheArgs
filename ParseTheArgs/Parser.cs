@@ -257,7 +257,7 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines a list of parsers for commands.
         /// </summary>
-        internal List<ICommandParser> CommandParsers { get; }
+        internal virtual List<ICommandParser> CommandParsers { get; }
 
         /// <summary>
         /// Defines the text writer to write error messages to.

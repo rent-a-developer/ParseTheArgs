@@ -31,7 +31,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// <summary>
         /// The name of the argument the parser parses.
         /// </summary>
-        public virtual ArgumentName ArgumentName { get; }
+        public virtual ArgumentName ArgumentName { get; set; }
 
         /// <summary>
         /// The type of the argument the parser parses.

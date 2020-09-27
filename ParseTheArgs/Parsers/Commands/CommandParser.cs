@@ -24,6 +24,7 @@ namespace ParseTheArgs.Parsers.Commands
             this.parser = parser;
 
             this.ArgumentParsers = new List<ArgumentParser>();
+            this.CommandName = String.Empty;
             this.CommandHelp = String.Empty;
             this.CommandExampleUsage = String.Empty;
         }
@@ -31,7 +32,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// <summary>
         /// Defines the list of argument parsers for the command.
         /// </summary>
-        public List<ArgumentParser> ArgumentParsers { get; }
+        public virtual List<ArgumentParser> ArgumentParsers { get; }
 
         /// <summary>
         /// Defines a text that describes an example usage of the command.
@@ -45,9 +46,9 @@ namespace ParseTheArgs.Parsers.Commands
 
         /// <summary>
         /// Defines the name of the command.
-        /// Will be null, if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
+        /// Will be <see cref="String.Empty"/> if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
         /// </summary>
-        public String? CommandName { get; set; }
+        public String CommandName { get; set; }
 
         /// <summary>
         /// Determines if the command is the default (non-named) command.

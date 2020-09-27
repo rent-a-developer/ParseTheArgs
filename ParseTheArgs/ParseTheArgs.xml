@@ -9,18 +9,13 @@
             Represents the name (the name and optionally the short name) of an argument.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.ArgumentName.#ctor">
-            <summary>
-            Initializes a new instance of this class.
-            </summary>
-        </member>
         <member name="M:ParseTheArgs.ArgumentName.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="name">The name of the argument.</param>
         </member>
-        <member name="M:ParseTheArgs.ArgumentName.#ctor(System.String,System.Char)">
+        <member name="M:ParseTheArgs.ArgumentName.#ctor(System.String,System.Nullable{System.Char})">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1150,7 +1145,7 @@
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.CommandName">
             <summary>
             Defines the name of the command.
-            Will be null, if the command is the default command (see <see cref="P:ParseTheArgs.Parsers.Commands.ICommandParser.IsCommandDefault" />).
+            Will be <see cref="F:System.String.Empty"/> if the command is the default command (see <see cref="P:ParseTheArgs.Parsers.Commands.ICommandParser.IsCommandDefault" />).
             </summary>
         </member>
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.IsCommandDefault">
@@ -1802,7 +1797,7 @@
             </summary>
             <typeparam name="TCommandArguments">The type where the values of the arguments of the command will be stored in.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.CommandSetup`1.#ctor(ParseTheArgs.Parser,System.Func{ParseTheArgs.Parser,ParseTheArgs.Parsers.Commands.CommandParser{`0}})">
+        <member name="M:ParseTheArgs.Setup.Commands.CommandSetup`1.#ctor(ParseTheArgs.Parser,System.Func{ParseTheArgs.Parsers.Commands.CommandParser{`0}})">
             <summary>
             Initializes a new instance of this class.
             </summary>

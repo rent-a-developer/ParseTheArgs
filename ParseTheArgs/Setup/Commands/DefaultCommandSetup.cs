@@ -14,7 +14,7 @@ namespace ParseTheArgs.Setup.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
-        internal DefaultCommandSetup(Parser parser) : base(parser, CreateCommandParser)
+        internal DefaultCommandSetup(Parser parser) : base(parser, () => CreateCommandParser(parser))
         {
         }
 
@@ -60,7 +60,6 @@ namespace ParseTheArgs.Setup.Commands
             {
                 commandParser = new CommandParser<TCommandArguments>(parser)
                 {
-                    CommandName = null,
                     IsCommandDefault = true
                 };
 

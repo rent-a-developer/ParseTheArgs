@@ -11,15 +11,15 @@ namespace ParseTheArgs.Tests
     public class ParseResultTests
     {
         [Test(Description = "CommandArguments should initially be null.")]
-        public void TestCommandArguments_InitiallyNull()
+        public void CommandArguments_Initially_ShouldBeNull()
         {
             var result = new ParseResult();
             
             result.CommandArguments.Should().BeNull();
         }
 
-        [Test(Description = "CommandArguments should return the value it was set to.")]
-        public void TestCommandArguments_ReturnSetValue()
+        [Test(Description = "CommandArguments should return the value that was assigned to it.")]
+        public void CommandArguments_Assigned_ShouldReturnAssignedValue()
         {
             var result = new ParseResult();
             var command1Arguments = new Command1Arguments();
@@ -28,16 +28,16 @@ namespace ParseTheArgs.Tests
             result.CommandArguments.Should().Be(command1Arguments);
         }
 
-        [Test(Description = "CommandName should initially be null.")]
-        public void TestCommandName_InitiallyNull()
+        [Test(Description = "CommandName should initially be an empty string.")]
+        public void CommandName_Initially_ShouldBeEmpty()
         {
             var result = new ParseResult();
             
-            result.CommandName.Should().BeNull();
+            result.CommandName.Should().BeEmpty();
         }
 
-        [Test(Description = "CommandName should return the value it was set to.")]
-        public void TestCommandName_ReturnSetValue()
+        [Test(Description = "CommandName should return the value that was assigned to it.")]
+        public void CommandName_Assigned_ShouldReturnAssignedValue()
         {
             var result = new ParseResult();
 
@@ -46,7 +46,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Errors should initially be empty.")]
-        public void TestErrors_InitiallyEmpty()
+        public void Errors_Initially_ShouldBeEmpty()
         {
             var result = new ParseResult();
 
@@ -54,7 +54,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "HasError should initially be false.")]
-        public void TestHasErrors_InitiallyFalse()
+        public void HasErrors_Initially_ShouldBeFalse()
         {
             var result = new ParseResult();
 
@@ -62,7 +62,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "HasErrors should return true when there are errors.")]
-        public void TestHasErrors_Errors()
+        public void HasErrors_ErrorsExist_ShouldBeTrue()
         {
             var result = new ParseResult();
 
@@ -73,7 +73,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Errors should return the errors that where added.")]
-        public void TestErrors_Errors()
+        public void Errors_ErrorsExist_ShouldReturnErrors()
         {
             var result = new ParseResult();
 
@@ -87,7 +87,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return 0 when there are no command arguments.")]
-        public void TestHandle_CommandArgumentsIsNull()
+        public void Handle_NoCommandArguments_ShouldReturn0()
         {
             var result = new ParseResult();
 
@@ -97,7 +97,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should not call any command handler or the error handler when there are no command arguments.")]
-        public void TestHandle_DontCallHandlersWhenCommandArgumentsIsNull()
+        public void Handle_NoCommandArguments_ShouldNotCallHandlers()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -114,7 +114,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return 0 when there are no command handlers.")]
-        public void TestHandle_NoCommandHandlers()
+        public void Handle_NoCommandHandlers_ShouldReturn0()
         {
             var result = new ParseResult();
             var command1Arguments = new Command1Arguments();
@@ -125,7 +125,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return 0 when there is no matching command handler.")]
-        public void TestHandle_NoMatchingCommandHandlers()
+        public void Handle_NoMatchingCommandHandler_ShouldReturn0()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -139,7 +139,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should not call non-matching command handlers.")]
-        public void TestHandle_DontCallNonMatchingCommandHandlers()
+        public void Handle_NoMatchingCommandHandler_ShouldNotCallNonMatchingCommandHandlers()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -157,7 +157,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return 0 when there is an error, but there is no error handler.")]
-        public void TestHandle_NoErrorHandler()
+        public void Handle_HasErrorsAndNoErrorHandler_ShouldReturn0()
         {
             var result = new ParseResult();
 
@@ -167,7 +167,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should not call any command handler when there is an error.")]
-        public void TestHandle_DontCallCommandHandlerInCaseOfError()
+        public void Handle_HasErrors_ShouldNotCallAnyCommandHandler()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -181,7 +181,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should call the error handler when there is an error.")]
-        public void TestHandle_CallErrorHandler()
+        public void Handle_HasErrors_ShouldCallCallErrorHandler()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -196,7 +196,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return the return value of the error handler when there is an error.")]
-        public void TestHandle_ReturnValueOfErrorHandler()
+        public void Handle_HasErrors_ShouldReturnValueOfErrorHandler()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -209,8 +209,8 @@ namespace ParseTheArgs.Tests
             result.Handle().Should().Be(1);
         }
 
-        [Test(Description = "Handle should call the matching command handler.")]
-        public void TestHandle_CallCommandHandler()
+        [Test(Description = "Handle should call the matching command handler when there is one.")]
+        public void Handle_MatchingCommandHandlerExists_ShouldCallMatchingCommandHandler()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -226,7 +226,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should return the return value of the matching command handler.")]
-        public void TestHandle_ReturnValueOfCommandHandler()
+        public void Handle_MatchingCommandHandlerExists_ShouldReturnValueOfCommandHandler()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -240,8 +240,8 @@ namespace ParseTheArgs.Tests
             result.Handle().Should().Be(1);
         }
 
-        [Test(Description = "Handle should forward any exception thrown by a command handler.")]
-        public void TestHandle_ForwardCommandHandlerException()
+        [Test(Description = "Handle should forward the exception thrown by a command handler.")]
+        public void Handle_CommandHandlerThrows_ShouldForwardCommandHandlerException()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
@@ -259,7 +259,7 @@ namespace ParseTheArgs.Tests
         }
 
         [Test(Description = "Handle should forward any exception thrown by the error handler.")]
-        public void TestHandle_ForwardErrorHandlerException()
+        public void Handle_ErrorHandlerThrows_ShouldForwardErrorHandlerException()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();

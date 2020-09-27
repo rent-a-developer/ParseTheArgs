@@ -17,6 +17,7 @@ namespace ParseTheArgs
         /// </summary>
         public ParseResult()
         {
+            this.CommandName = String.Empty;
             this.errors = new List<IParseError>();
             this.commandHandlers = new Dictionary<Type, Delegate>();
         }
@@ -29,7 +30,7 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines the name of the command that was found in the parsed command line arguments.
         /// </summary>
-        public String? CommandName { get; internal set; }
+        public String CommandName { get; internal set; }
 
         /// <summary>
         /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or arguments where passed or the help command was specified).

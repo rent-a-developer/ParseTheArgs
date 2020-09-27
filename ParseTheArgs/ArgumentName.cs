@@ -10,14 +10,6 @@ namespace ParseTheArgs
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        public ArgumentName()
-        {
-            this.Name = String.Empty;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of this class.
-        /// </summary>
         /// <param name="name">The name of the argument.</param>
         public ArgumentName(String name)
         {
@@ -29,7 +21,7 @@ namespace ParseTheArgs
         /// </summary>
         /// <param name="name">The name of the argument.</param>
         /// <param name="shortName">The short name of the argument.</param>
-        public ArgumentName(String name, Char shortName)
+        public ArgumentName(String name, Char? shortName)
         {
             this.Name = name;
             this.ShortName = shortName;
@@ -38,13 +30,13 @@ namespace ParseTheArgs
         /// <summary>
         /// The name of the argument.
         /// </summary>
-        public String Name { get; set; }
+        public String Name { get; }
 
         /// <summary>
         /// The short name of the argument.
         /// The value is null if the argument does not have a short name.
         /// </summary>
-        public Char? ShortName { get; set; }
+        public Char? ShortName { get; }
 
         /// <summary>
         /// Determines if the given string is equal to the name or short name of this instance.

@@ -66,7 +66,7 @@ namespace ParseTheArgs.Setup.Arguments
                 throw new ArgumentException($"The given argument name '{name}' is already in use by another argument. Please use a different name.", nameof(name));
             }
 
-            this.ArgumentParser.ArgumentName.Name = name;
+            this.ArgumentParser.ArgumentName = new ArgumentName(name, this.ArgumentParser.ArgumentName.ShortName);
             return (TArgumentSetup) this;
         }
 
@@ -84,7 +84,7 @@ namespace ParseTheArgs.Setup.Arguments
                 throw new ArgumentException($"The given argument short name '{shortName}' is already in use by another argument. Please use a different short name.", nameof(shortName));
             }
 
-            this.ArgumentParser.ArgumentName.ShortName = shortName;
+            this.ArgumentParser.ArgumentName = new ArgumentName(this.ArgumentParser.ArgumentName.Name, shortName);
             return (TArgumentSetup) this;
         }
 

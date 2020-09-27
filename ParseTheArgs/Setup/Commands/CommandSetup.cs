@@ -17,10 +17,10 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
         /// <param name="commandParserFactory">A function that instantiates the command parser for the command.</param>
-        protected CommandSetup(Parser parser, Func<Parser, CommandParser<TCommandArguments>> commandParserFactory)
+        protected CommandSetup(Parser parser, Func<CommandParser<TCommandArguments>> commandParserFactory)
         {
             this.Parser = parser;
-            this.CommandParser = commandParserFactory(parser);
+            this.CommandParser = commandParserFactory();
         }
 
         /// <summary>

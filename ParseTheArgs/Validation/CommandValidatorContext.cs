@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Linq.Expressions;
 using ParseTheArgs.Errors;
+using ParseTheArgs.Parsers.Commands;
 
-namespace ParseTheArgs.Parsers.Commands
+namespace ParseTheArgs.Validation
 {
     /// <summary>
     /// Represents the context for a validator for a command.

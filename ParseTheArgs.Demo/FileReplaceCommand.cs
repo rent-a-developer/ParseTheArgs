@@ -2,8 +2,8 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using ParseTheArgs.Errors;
-using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Setup;
+using ParseTheArgs.Validation;
 
 namespace ParseTheArgs.Demo
 {

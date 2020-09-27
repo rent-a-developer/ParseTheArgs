@@ -1,7 +1,7 @@
 ﻿using System;
 using ParseTheArgs.Errors;
-using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Setup;
+using ParseTheArgs.Validation;
 using Console = System.Console;
 
 namespace ParseTheArgs.Demo

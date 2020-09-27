@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ParseTheArgs.Parsers.Commands;
+using ParseTheArgs.Validation;
 
 namespace ParseTheArgs.Setup.Commands
 {

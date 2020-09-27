@@ -6,8 +6,9 @@ using NUnit.Framework;
 using ParseTheArgs.Parsers.Arguments;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Tests.TestData;
+using ParseTheArgs.Validation;
 
-namespace ParseTheArgs.Tests.Parsers.Commands
+namespace ParseTheArgs.Tests.Validation
 {
     [TestFixture]
     public class CommandValidatorContextTests

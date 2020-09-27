@@ -1179,69 +1179,6 @@
             <param name="tokens">The tokens to validate.</param>
             <param name="parseResult">The parse result to put result of the validation into.</param>
         </member>
-        <member name="T:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1">
-            <summary>
-            Represents the context for a validator for a command.
-            </summary>
-            <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1.#ctor(ParseTheArgs.Parsers.Commands.ICommandParser,ParseTheArgs.ParseResult)">
-            <summary>
-            Initializes a new instance of this class.
-            </summary>
-            <param name="commandParser">The parser of the command.</param>
-            <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1.CommandArguments">
-            <summary>
-            The instance in which the values of the arguments of the command are stored.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1.ParseResult">
-            <summary>
-            The (preliminary) result of the command line arguments parsing.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1.AddError(ParseTheArgs.Errors.IParseError)">
-            <summary>
-            Adds an error to the parse result.
-            </summary>
-            <param name="error">The error to add to the parse result.</param>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandValidatorContext`1.GetArgumentName(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
-             <summary>
-             Gets the name of the argument mapped to the specified property.
-             </summary>
-             <param name="argumentSelector">An expression to specify the property that is mapped to an argument.</param>
-             <returns>An instance of <see cref="T:ParseTheArgs.ArgumentName"/> representing the name of the argument.</returns>
-             <example>
-             <code>
-             public class PrintFileArguments
-             {
-                 public String File { get; set; }
-             }
-            
-             public class Program
-             {
-                 public static void Main(String[] args)
-                 {
-                     var parser = new Parser();
-                     var setup = parser.Setup;
-            
-                     var command = setup.DefaultCommand&lt;PrintFileArguments&gt;();
-                     command.Argument(a => a.File).Name("file").IsRequired();
-                     command.Validate(context =>
-                     {
-                         if (!File.Exists(context.CommandArguments.File))
-                         {
-                             context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.File), "The specified file does not exist."));
-                         }
-                     });
-                 }
-             }
-             </code>
-             </example>
-        </member>
         <member name="T:ParseTheArgs.Parsers.Commands.ICommandParser">
             <summary>
             Represents a parser that parses a command line command and its arguments.
@@ -1990,7 +1927,7 @@
             <param name="help">The help text for the command.</param>
             <returns>A reference to this instance for further configuration of the command.</returns>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.Validate(System.Action{ParseTheArgs.Parsers.Commands.CommandValidatorContext{`0}})">
+        <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.Validate(System.Action{ParseTheArgs.Validation.CommandValidatorContext{`0}})">
             <summary>
             Sets the validator for this command.
             The given action is executed after all arguments of the command have been parsed and their values have been stored in <see cref="P:ParseTheArgs.ParseResult.CommandArguments" />.
@@ -2033,7 +1970,7 @@
             <param name="help">The help text for the command.</param>
             <returns>A reference to this instance for further configuration of the command.</returns>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Validate(System.Action{ParseTheArgs.Parsers.Commands.CommandValidatorContext{`0}})">
+        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Validate(System.Action{ParseTheArgs.Validation.CommandValidatorContext{`0}})">
             <summary>
             Sets the validator for this command.
             The given action is executed after all arguments of the command have been parsed and their values have been stored in <see cref="P:ParseTheArgs.ParseResult.CommandArguments" />.
@@ -2187,6 +2124,69 @@
             <summary>
             Determines if the token has already been parsed.
             </summary>
+        </member>
+        <member name="T:ParseTheArgs.Validation.CommandValidatorContext`1">
+            <summary>
+            Represents the context for a validator for a command.
+            </summary>
+            <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
+        </member>
+        <member name="M:ParseTheArgs.Validation.CommandValidatorContext`1.#ctor(ParseTheArgs.Parsers.Commands.ICommandParser,ParseTheArgs.ParseResult)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="commandParser">The parser of the command.</param>
+            <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
+        </member>
+        <member name="P:ParseTheArgs.Validation.CommandValidatorContext`1.CommandArguments">
+            <summary>
+            The instance in which the values of the arguments of the command are stored.
+            </summary>
+        </member>
+        <member name="P:ParseTheArgs.Validation.CommandValidatorContext`1.ParseResult">
+            <summary>
+            The (preliminary) result of the command line arguments parsing.
+            </summary>
+        </member>
+        <member name="M:ParseTheArgs.Validation.CommandValidatorContext`1.AddError(ParseTheArgs.Errors.IParseError)">
+            <summary>
+            Adds an error to the parse result.
+            </summary>
+            <param name="error">The error to add to the parse result.</param>
+        </member>
+        <member name="M:ParseTheArgs.Validation.CommandValidatorContext`1.GetArgumentName(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+             <summary>
+             Gets the name of the argument mapped to the specified property.
+             </summary>
+             <param name="argumentSelector">An expression to specify the property that is mapped to an argument.</param>
+             <returns>An instance of <see cref="T:ParseTheArgs.ArgumentName"/> representing the name of the argument.</returns>
+             <example>
+             <code>
+             public class PrintFileArguments
+             {
+                 public String File { get; set; }
+             }
+            
+             public class Program
+             {
+                 public static void Main(String[] args)
+                 {
+                     var parser = new Parser();
+                     var setup = parser.Setup;
+            
+                     var command = setup.DefaultCommand&lt;PrintFileArguments&gt;();
+                     command.Argument(a => a.File).Name("file").IsRequired();
+                     command.Validate(context =>
+                     {
+                         if (!File.Exists(context.CommandArguments.File))
+                         {
+                             context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.File), "The specified file does not exist."));
+                         }
+                     });
+                 }
+             }
+             </code>
+             </example>
         </member>
     </members>
 </doc>

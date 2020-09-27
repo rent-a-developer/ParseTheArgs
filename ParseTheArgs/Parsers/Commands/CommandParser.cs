@@ -5,6 +5,7 @@ using System.Text;
 using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Arguments;
 using ParseTheArgs.Tokens;
+using ParseTheArgs.Validation;
 
 namespace ParseTheArgs.Parsers.Commands
 {

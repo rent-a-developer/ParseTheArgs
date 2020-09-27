@@ -9,18 +9,23 @@ namespace ParseTheArgs.Tests.Extensions
     [TestFixture]
     public class PropertyInfoExtensionsTests
     {
-        [Test]
-        public void TestHasPublicSetter()
+        [Test(Description = "HasPublicSetter should return true when a public setter is present.")]
+        public void HasPublicSetter_PublicSetterPresent_ShouldReturnTrue()
         {
             typeof(Item).GetProperty("PropertyWithPublicSetter").HasPublicSetter().Should().BeTrue();
+        }
+
+        [Test(Description = "HasPublicSetter should return false when a public setter is not present.")]
+        public void HasPublicSetter_PublicSetterAbsent_ShouldReturnFalse()
+        {
             typeof(Item).GetProperty("PropertyWithPrivateSetter").HasPublicSetter().Should().BeFalse();
             typeof(Item).GetProperty("PropertyWithInternalSetter").HasPublicSetter().Should().BeFalse();
             typeof(Item).GetProperty("PropertyWithProtectedSetter").HasPublicSetter().Should().BeFalse();
             typeof(Item).GetProperty("PropertyWithoutSetter").HasPublicSetter().Should().BeFalse();
         }
 
-        [Test]
-        public void TestHasPublicSetter_Exceptions()
+        [Test(Description = "HasPublicSetter should throw an exception when the given property info is null.")]
+        public void HasPublicSetter_PropertyInfoIsNull_ShouldThrowException()
         {
             ((PropertyInfo) null).Invoking(a => a.HasPublicSetter()).Should().Throw<ArgumentNullException>();
         }

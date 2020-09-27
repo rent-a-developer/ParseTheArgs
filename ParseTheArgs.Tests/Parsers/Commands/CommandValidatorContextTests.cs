@@ -12,8 +12,8 @@ namespace ParseTheArgs.Tests.Parsers.Commands
     [TestFixture]
     public class CommandValidatorContextTests
     {
-        [Test]
-        public void TestGetArgumentName()
+        [Test(Description = "GetArgumentName should return the name of the argument that is mapped to the property the given expression points to.")]
+        public void GetArgumentName_ValidExpression_ShouldReturnArgumentName()
         {
             var commandParserMock = new Mock<ICommandParser>();
             var parseResultMock = new Mock<ParseResult>();
@@ -29,23 +29,28 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             context.GetArgumentName(a => a.ArgumentA).Should().BeEquivalentTo(new ArgumentName("argumentA", 'a'));
         }
 
-        [Test]
-        public void TestGetArgumentName_Exceptions()
+        [Test(Description = "GetArgumentName should throw an exception when the given expression is null.")]
+        public void GetArgumentName_Null_ShouldThrowException()
         {
             var commandParserMock = new Mock<ICommandParser>();
             var parseResultMock = new Mock<ParseResult>();
-            var argumentParserMock = new Mock<ArgumentParser>(null, null);
-
-            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser> { argumentParserMock.Object });
 
             var context = new CommandValidatorContext<Command1Arguments>(commandParserMock.Object, parseResultMock.Object);
-
-            argumentParserMock.Setup(a => a.TargetProperty).Returns(typeof(Command1Arguments).GetProperty("ArgumentA"));
-            argumentParserMock.Setup(a => a.ArgumentName).Returns(new ArgumentName("argumentA", 'a'));
 
             context.Invoking(a => a.GetArgumentName(null))
                 .Should()
                 .Throw<ArgumentNullException>();
+        }
+
+        [Test(Description = "GetArgumentName should throw an exception when the given expression doe point to a property that is not mapped to an argument.")]
+        public void GetArgumentName_UnmappedArgument_ShouldThrowException()
+        {
+            var commandParserMock = new Mock<ICommandParser>();
+            var parseResultMock = new Mock<ParseResult>();
+
+            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser>());
+
+            var context = new CommandValidatorContext<Command1Arguments>(commandParserMock.Object, parseResultMock.Object);
 
             context.Invoking(a => a.GetArgumentName(b => b.ArgumentB))
                 .Should()

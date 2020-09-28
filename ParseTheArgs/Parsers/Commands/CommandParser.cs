@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ParseTheArgs.Extensions;
-using ParseTheArgs.Parsers.Arguments;
+using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tokens;
 using ParseTheArgs.Validation;
 
@@ -12,9 +12,9 @@ namespace ParseTheArgs.Parsers.Commands
     /// <summary>
     /// Parses a command line command.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
-    public class CommandParser<TCommandArguments> : ICommandParser
-        where TCommandArguments : class
+    /// <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
+    public class CommandParser<TCommandOptions> : ICommandParser
+        where TCommandOptions : class
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -24,16 +24,16 @@ namespace ParseTheArgs.Parsers.Commands
         {
             this.parser = parser;
 
-            this.ArgumentParsers = new List<ArgumentParser>();
+            this.OptionParsers = new List<OptionParser>();
             this.CommandName = String.Empty;
             this.CommandHelp = String.Empty;
             this.CommandExampleUsage = String.Empty;
         }
 
         /// <summary>
-        /// Defines the list of argument parsers for the command.
+        /// Defines the list of option parsers for the command.
         /// </summary>
-        public virtual List<ArgumentParser> ArgumentParsers { get; }
+        public virtual List<OptionParser> OptionParsers { get; }
 
         /// <summary>
         /// Defines a text that describes an example usage of the command.
@@ -58,9 +58,9 @@ namespace ParseTheArgs.Parsers.Commands
         public Boolean IsCommandDefault { get; set; }
 
         /// <summary>
-        /// Defines the validator to use to validate the command and its arguments.
+        /// Defines the validator to use to validate the command and its options.
         /// </summary>
-        public Action<CommandValidatorContext<TCommandArguments>>? Validator { get; set; }
+        public Action<CommandValidatorContext<TCommandOptions>>? Validator { get; set; }
 
         /// <summary>
         /// Gets the help text of the command.
@@ -77,7 +77,7 @@ namespace ParseTheArgs.Parsers.Commands
                 stringBuilder.Append($"{this.CommandName} ");
             }
 
-            stringBuilder.AppendLine(String.Join(" ", this.ArgumentParsers.Select(a => GetArgumentShortHelpPart(a))));
+            stringBuilder.AppendLine(String.Join(" ", this.OptionParsers.Select(a => GetOptionShortHelpPart(a))));
 
             stringBuilder.AppendLine();
 
@@ -87,29 +87,29 @@ namespace ParseTheArgs.Parsers.Commands
                 stringBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine("Arguments:");
+            stringBuilder.AppendLine("Options:");
 
-            var maxArgumentNameLength = this.ArgumentParsers.Count == 0 ? 0 : this.ArgumentParsers.Max(a => GetArgumentLongHelpPart(a).Length);
-            var argumentHelpRightPadding = maxArgumentNameLength + 1 + 11;
+            var maxOptionNameLength = this.OptionParsers.Count == 0 ? 0 : this.OptionParsers.Max(a => GetOptionLongHelpPart(a).Length);
+            var optionHelpRightPadding = maxOptionNameLength + 1 + 11;
 
-            foreach (var argumentParser in this.ArgumentParsers)
+            foreach (var optionParser in this.OptionParsers)
             {
-                var argumentHelpText = argumentParser.GetHelpText();
-                var argumentHelpTextWrappedLines = argumentHelpText.WordWrap(this.parser.HelpTextMaxLineLength - argumentHelpRightPadding);
+                var optionHelpText = optionParser.GetHelpText();
+                var optionHelpTextWrappedLines = optionHelpText.WordWrap(this.parser.HelpTextMaxLineLength - optionHelpRightPadding);
 
-                for (int i = 0; i < argumentHelpTextWrappedLines.Length; i++)
+                for (int i = 0; i < optionHelpTextWrappedLines.Length; i++)
                 {
                     if (i == 0)
                     {
-                        stringBuilder.Append($"{GetArgumentLongHelpPart(argumentParser).PadRight(maxArgumentNameLength)} ");
-                        stringBuilder.Append(argumentParser.IsArgumentRequired ? "(Required) " : "(Optional) ");
+                        stringBuilder.Append($"{GetOptionLongHelpPart(optionParser).PadRight(maxOptionNameLength)} ");
+                        stringBuilder.Append(optionParser.IsOptionRequired ? "(Required) " : "(Optional) ");
                     }
                     else
                     {
-                        stringBuilder.Append(new String(' ', argumentHelpRightPadding));
+                        stringBuilder.Append(new String(' ', optionHelpRightPadding));
                     }
 
-                    stringBuilder.AppendLine(argumentHelpTextWrappedLines[i]);
+                    stringBuilder.AppendLine(optionHelpTextWrappedLines[i]);
                 }
             }
 
@@ -139,10 +139,10 @@ namespace ParseTheArgs.Parsers.Commands
                     commandToken.IsParsed = true;
                 }
 
-                parseResult.CommandArguments = Activator.CreateInstance(typeof(TCommandArguments));
+                parseResult.CommandOptions = Activator.CreateInstance(typeof(TCommandOptions));
                 parseResult.CommandName = this.CommandName;
 
-                this.ArgumentParsers.ForEach(a => a.Parse(tokens, parseResult));
+                this.OptionParsers.ForEach(a => a.Parse(tokens, parseResult));
             }
         }
 
@@ -157,57 +157,57 @@ namespace ParseTheArgs.Parsers.Commands
 
             if ((commandToken == null && this.IsCommandDefault) || (commandToken != null && commandToken.CommandName == this.CommandName))
             {
-                this.Validator?.Invoke(new CommandValidatorContext<TCommandArguments>(this, parseResult));
+                this.Validator?.Invoke(new CommandValidatorContext<TCommandOptions>(this, parseResult));
             }
         }
 
-        private static String GetArgumentLongHelpPart(ArgumentParser argumentParser)
+        private static String GetOptionLongHelpPart(OptionParser optionParser)
         {
             var result = "";
 
-            result += $"--{argumentParser.ArgumentName}";
+            result += $"--{optionParser.OptionName}";
 
-            switch (argumentParser.ArgumentType)
+            switch (optionParser.OptionType)
             {
-                case ArgumentType.ValuelessArgument:
+                case OptionType.ValuelessOption:
                     break;
 
-                case ArgumentType.SingleValueArgument:
+                case OptionType.SingleValueOption:
                     result += " [value]";
                     break;
 
-                case ArgumentType.MultiValueArgument:
+                case OptionType.MultiValueOption:
                     result += " [value value ...]";
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The ArgumentType '{argumentParser.ArgumentType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supproted.");
             }
 
             return result;
         }
 
-        private static String GetArgumentShortHelpPart(ArgumentParser argumentParser)
+        private static String GetOptionShortHelpPart(OptionParser optionParser)
         {
             var result = "[";
 
-            result += $"--{argumentParser.ArgumentName}";
+            result += $"--{optionParser.OptionName}";
 
-            switch (argumentParser.ArgumentType)
+            switch (optionParser.OptionType)
             {
-                case ArgumentType.ValuelessArgument:
+                case OptionType.ValuelessOption:
                     break;
 
-                case ArgumentType.SingleValueArgument:
+                case OptionType.SingleValueOption:
                     result += " value";
                     break;
 
-                case ArgumentType.MultiValueArgument:
+                case OptionType.MultiValueOption:
                     result += " value value ...";
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The ArgumentType '{argumentParser.ArgumentType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supproted.");
             }
 
             result += "]";

@@ -10,19 +10,19 @@ namespace ParseTheArgs.Demo
 {
     public static class QueryWebCommand
     {
-        public static Int32 QueryWeb(QueryWebCommandArguments arguments)
+        public static Int32 QueryWeb(QueryWebCommandOptions options)
         {
             try
             {
                 String queryUrl = "";
 
-                if (!String.IsNullOrEmpty(arguments.WebsiteAddress))
+                if (!String.IsNullOrEmpty(options.WebsiteAddress))
                 {
-                    queryUrl = arguments.WebsiteAddress;
+                    queryUrl = options.WebsiteAddress;
                 }
-                else if (!String.IsNullOrEmpty(arguments.SearchEngineQuery))
+                else if (!String.IsNullOrEmpty(options.SearchEngineQuery))
                 {
-                    queryUrl = $"https://www.google.com/search?q={WebUtility.UrlEncode(arguments.SearchEngineQuery)}";
+                    queryUrl = $"https://www.google.com/search?q={WebUtility.UrlEncode(options.SearchEngineQuery)}";
                 }
 
                 String queryResult;
@@ -48,34 +48,34 @@ namespace ParseTheArgs.Demo
         public static void SetupCommand(ParserSetup parserSetup)
         {
             var defaultCommand = parserSetup
-                .DefaultCommand<QueryWebCommandArguments>()
+                .DefaultCommand<QueryWebCommandOptions>()
                 .Help("Downloads and shows a website on the console and performs a search engine search.")
                 .ExampleUsage("Toolbox --search What is life");
 
             defaultCommand
-                .Argument(a => a.WebsiteAddress)
+                .Option(a => a.WebsiteAddress)
                 .Name("website")
                 .Help("The HTTP address of a website to download an show.");
 
             defaultCommand
-                .Argument(a => a.SearchEngineQuery)
+                .Option(a => a.SearchEngineQuery)
                 .Name("search")
                 .Help("A search query to ask a search engine.");
 
-            defaultCommand.Validate(ValidateArguments);
+            defaultCommand.Validate(Validate);
         }
 
-        private static void ValidateArguments(CommandValidatorContext<QueryWebCommandArguments> context)
+        private static void Validate(CommandValidatorContext<QueryWebCommandOptions> context)
         {
-            if (String.IsNullOrEmpty(context.CommandArguments.SearchEngineQuery) && String.IsNullOrWhiteSpace(context.CommandArguments.WebsiteAddress))
+            if (String.IsNullOrEmpty(context.CommandOptions.SearchEngineQuery) && String.IsNullOrWhiteSpace(context.CommandOptions.WebsiteAddress))
             {
-                context.AddError(new ArgumentMissingError(context.GetArgumentName(a => a.WebsiteAddress)));
+                context.AddError(new OptionMissingError(context.GetOptionName(a => a.WebsiteAddress)));
             }
 
-            if (!String.IsNullOrWhiteSpace(context.CommandArguments.WebsiteAddress))
+            if (!String.IsNullOrWhiteSpace(context.CommandOptions.WebsiteAddress))
             {
                 if (
-                    !Uri.TryCreate(context.CommandArguments.WebsiteAddress, UriKind.Absolute, out var uri) ||
+                    !Uri.TryCreate(context.CommandOptions.WebsiteAddress, UriKind.Absolute, out var uri) ||
                     (
                         uri.Scheme != Uri.UriSchemeHttp &&
                         uri.Scheme != Uri.UriSchemeHttps
@@ -83,9 +83,9 @@ namespace ParseTheArgs.Demo
                 )
                 {
                     context.AddError(
-                        new InvalidArgumentError(
-                            context.GetArgumentName(a => a.WebsiteAddress),
-                            $"The website address '{context.CommandArguments.WebsiteAddress}' is not a valid web URL."
+                        new InvalidOptionError(
+                            context.GetOptionName(a => a.WebsiteAddress),
+                            $"The website address '{context.CommandOptions.WebsiteAddress}' is not a valid web URL."
                         )
                     );
                 }

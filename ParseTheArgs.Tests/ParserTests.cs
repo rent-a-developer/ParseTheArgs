@@ -34,7 +34,7 @@ namespace ParseTheArgs.Tests
                 .Banner("Banner Text");
 
             setup
-                .Command<Command1Arguments>()
+                .Command<Command1Options>()
                 .Name("command1");
 
             setup
@@ -48,7 +48,7 @@ namespace ParseTheArgs.Tests
 
             helpTextWriterMock.Verify(a => a.Write(@"Banner Text
 
-tool <command> [arguments]
+tool <command> [options]
 
 Commands:
 command1	
@@ -66,7 +66,7 @@ Prints the help screen for the specified command.
 
 tool command1 
 
-Arguments:
+Options:
 "), Times.Exactly(1));
         }
 
@@ -84,18 +84,18 @@ Arguments:
                 .Banner("Banner Text");
 
             setup
-                .Command<Command1Arguments>()
+                .Command<Command1Options>()
                 .Name("command1");
 
             setup
                 .ErrorTextWriter(mock.Object);
 
-            parser.Parse(new String[] {"command1", "--unknownArgument"});
+            parser.Parse(new String[] {"command1", "--unknownOption"});
 
             mock.Verify(a => a.Write(@"Banner Text
 
-Invalid or missing argument(s):
-- The argument --unknownArgument is unknown.
+Invalid or missing option(s):
+- The option --unknownOption is unknown.
 
 Try the following command to get help:
 tool help command1
@@ -112,27 +112,27 @@ tool help command1
                 .ProgramName("tool")
                 .Banner("Banner Text");
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
             command1.Help("Command1 help.");
             command1.ExampleUsage("Command1 Example Usage.");
-            command1.Argument(a => a.ArgumentA).Help("ArgumentA help.").IsRequired();
-            command1.Argument(a => a.ArgumentB).Help("ArgumentB help.");
-            command1.Argument(a => a.ArgumentC).Help("ArgumentC help.").IsRequired();
+            command1.Option(a => a.OptionA).Help("OptionA help.").IsRequired();
+            command1.Option(a => a.OptionB).Help("OptionB help.");
+            command1.Option(a => a.OptionC).Help("OptionC help.").IsRequired();
 
             parser
                 .GetCommandHelpText("command1")
                 .Should()
                 .Be(@"Banner Text
 
-tool command1 [--argumentA value] [--argumentB value] [--argumentC value value ...]
+tool command1 [--optionA value] [--optionB value] [--optionC value value ...]
 
 Command1 help.
 
-Arguments:
---argumentA [value]           (Required) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC [value value ...] (Required) ArgumentC help.
+Options:
+--optionA [value]           (Required) OptionA help.
+--optionB [value]           (Optional) OptionB help.
+--optionC [value value ...] (Required) OptionC help.
 
 Example usage:
 Command1 Example Usage.
@@ -141,14 +141,14 @@ Command1 Example Usage.
             parser
                 .GetCommandHelpText("command1", false)
                 .Should()
-                .Be(@"tool command1 [--argumentA value] [--argumentB value] [--argumentC value value ...]
+                .Be(@"tool command1 [--optionA value] [--optionB value] [--optionC value value ...]
 
 Command1 help.
 
-Arguments:
---argumentA [value]           (Required) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC [value value ...] (Required) ArgumentC help.
+Options:
+--optionA [value]           (Required) OptionA help.
+--optionB [value]           (Optional) OptionB help.
+--optionC [value value ...] (Required) OptionC help.
 
 Example usage:
 Command1 Example Usage.
@@ -179,17 +179,17 @@ tool help
                 .BeEmpty();
 
             var parseResult = new ParseResult();
-            parseResult.AddError(new ArgumentMissingError("argumentA"));
-            parseResult.AddError(new ArgumentMultipleValuesError("argumentA"));
+            parseResult.AddError(new OptionMissingError("optionA"));
+            parseResult.AddError(new OptionMultipleValuesError("optionA"));
 
             parser
                 .GetErrorsText(parseResult)
                 .Should()
                 .Be(@"Banner Text
 
-Invalid or missing argument(s):
-- The argument --argumentA is missing.
-- Multiple values are given for the argument --argumentA, but the argument does not support multiple values.
+Invalid or missing option(s):
+- The option --optionA is required.
+- Multiple values are given for the option --optionA, but the option expects a single value.
 
 Try the following command to get help:
 tool help
@@ -213,40 +213,40 @@ tool help
 Prints this help screen.
 ");
 
-            var defaultCommand = setup.DefaultCommand<DefaultArguments>();
+            var defaultCommand = setup.DefaultCommand<DefaultOptions>();
             defaultCommand.Help("DefaultCommand Help.");
             defaultCommand.ExampleUsage("DefaultCommand Example Usage");
-            defaultCommand.Argument(a => a.ArgumentA).Help("ArgumentA help.");
-            defaultCommand.Argument(a => a.ArgumentB).Help("ArgumentB help.");
-            defaultCommand.Argument(a => a.ArgumentC).Help("ArgumentC help.");
+            defaultCommand.Option(a => a.OptionA).Help("OptionA help.");
+            defaultCommand.Option(a => a.OptionB).Help("OptionB help.");
+            defaultCommand.Option(a => a.OptionC).Help("OptionC help.");
 
             defaultCommand
-                .Argument(a => a.ArgumentD)
-                .Help("ArgumentD help.");
+                .Option(a => a.OptionD)
+                .Help("OptionD help.");
 
             defaultCommand
-                .Argument(a => a.ArgumentE)
-                .Help("ArgumentE help.")
+                .Option(a => a.OptionE)
+                .Help("OptionE help.")
                 .OptionHelp(Encoding.ASCII, "ASCII help.")
                 .OptionHelp(Encoding.UTF8, "UTF8 help.")
                 .OptionHelp(Encoding.UTF16, "UTF16 help.");
 
             defaultCommand
-                .Argument(a => a.ArgumentF)
-                .Help("ArgumentF help.");
+                .Option(a => a.OptionF)
+                .Help("OptionF help.");
 
             defaultCommand
-                .Argument(a => a.ArgumentG)
-                .Help("ArgumentG help.")
+                .Option(a => a.OptionG)
+                .Help("OptionG help.")
                 .OptionHelp(Encoding.ASCII, "ASCII help.")
                 .OptionHelp(Encoding.UTF8, "UTF8 help.")
                 .OptionHelp(Encoding.UTF16, "UTF16 help.");
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
             command1.Help("Command1 help.");
 
-            var command2 = setup.Command<Command2Arguments>();
+            var command2 = setup.Command<Command2Options>();
             command2.Name("command2");
             command2.Help("Command2 help.");
 
@@ -255,29 +255,29 @@ Prints this help screen.
                 .Should()
                 .Be(@"Banner Text
 
-tool [--argumentA value] [--argumentB value] [--argumentC] [--argumentD value] [--argumentE value] [--argumentF value value ...] [--argumentG value value ...]
+tool [--optionA value] [--optionB value] [--optionC] [--optionD value] [--optionE value] [--optionF value value ...] [--optionG value value ...]
 
 DefaultCommand Help.
 
-Arguments:
---argumentA [value]           (Optional) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC                   (Optional) ArgumentC help.
---argumentD [value]           (Optional) ArgumentD help. Possible values: Trace, Info, Debug, Error.
---argumentE [value]           (Optional) ArgumentE help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
---argumentF [value value ...] (Optional) ArgumentF help. Possible values: Trace, Info, Debug, Error.
---argumentG [value value ...] (Optional) ArgumentG help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
+Options:
+--optionA [value]           (Optional) OptionA help.
+--optionB [value]           (Optional) OptionB help.
+--optionC                   (Optional) OptionC help.
+--optionD [value]           (Optional) OptionD help. Possible values: Trace, Info, Debug, Error.
+--optionE [value]           (Optional) OptionE help. Possible values: ASCII, UTF8, UTF16.
+                                       ASCII: ASCII help.
+                                       UTF8: UTF8 help.
+                                       UTF16: UTF16 help.
+--optionF [value value ...] (Optional) OptionF help. Possible values: Trace, Info, Debug, Error.
+--optionG [value value ...] (Optional) OptionG help. Possible values: ASCII, UTF8, UTF16.
+                                       ASCII: ASCII help.
+                                       UTF8: UTF8 help.
+                                       UTF16: UTF16 help.
 
 Example usage:
 DefaultCommand Example Usage
 
-tool <command> [arguments]
+tool <command> [options]
 
 Commands:
 command1	Command1 help.
@@ -293,29 +293,29 @@ Prints the help screen for the specified command.
             parser
                 .GetHelpText(false)
                 .Should()
-                .Be(@"tool [--argumentA value] [--argumentB value] [--argumentC] [--argumentD value] [--argumentE value] [--argumentF value value ...] [--argumentG value value ...]
+                .Be(@"tool [--optionA value] [--optionB value] [--optionC] [--optionD value] [--optionE value] [--optionF value value ...] [--optionG value value ...]
 
 DefaultCommand Help.
 
-Arguments:
---argumentA [value]           (Optional) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC                   (Optional) ArgumentC help.
---argumentD [value]           (Optional) ArgumentD help. Possible values: Trace, Info, Debug, Error.
---argumentE [value]           (Optional) ArgumentE help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
---argumentF [value value ...] (Optional) ArgumentF help. Possible values: Trace, Info, Debug, Error.
---argumentG [value value ...] (Optional) ArgumentG help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
+Options:
+--optionA [value]           (Optional) OptionA help.
+--optionB [value]           (Optional) OptionB help.
+--optionC                   (Optional) OptionC help.
+--optionD [value]           (Optional) OptionD help. Possible values: Trace, Info, Debug, Error.
+--optionE [value]           (Optional) OptionE help. Possible values: ASCII, UTF8, UTF16.
+                                       ASCII: ASCII help.
+                                       UTF8: UTF8 help.
+                                       UTF16: UTF16 help.
+--optionF [value value ...] (Optional) OptionF help. Possible values: Trace, Info, Debug, Error.
+--optionG [value value ...] (Optional) OptionG help. Possible values: ASCII, UTF8, UTF16.
+                                       ASCII: ASCII help.
+                                       UTF8: UTF8 help.
+                                       UTF16: UTF16 help.
 
 Example usage:
 DefaultCommand Example Usage
 
-tool <command> [arguments]
+tool <command> [options]
 
 Commands:
 command1	Command1 help.
@@ -339,19 +339,19 @@ Prints the help screen for the specified command.
 
             setup.HelpTextMaxLineLength(80);
 
-            var defaultCommand = setup.DefaultCommand<DefaultArguments>();
-            defaultCommand.Argument(a => a.ArgumentA).Help("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et");
+            var defaultCommand = setup.DefaultCommand<DefaultOptions>();
+            defaultCommand.Option(a => a.OptionA).Help("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et");
 
             parser
                 .GetHelpText()
                 .Should()
-                .Be(@"tool [--argumentA value]
+                .Be(@"tool [--optionA value]
 
-Arguments:
---argumentA [value] (Optional) Lorem ipsum dolor sit amet, consetetur sadipscing
-                               elitr, sed diam nonumy eirmod tempor invidunt ut
-                               labore et dolore magna aliquyam erat, sed diam
-                               voluptua. At vero eos et accusam et
+Options:
+--optionA [value] (Optional) Lorem ipsum dolor sit amet, consetetur sadipscing
+                             elitr, sed diam nonumy eirmod tempor invidunt ut
+                             labore et dolore magna aliquyam erat, sed diam
+                             voluptua. At vero eos et accusam et
 
 tool help
 Prints this help screen.
@@ -365,31 +365,31 @@ Prints this help screen.
 
             var setup = parser.Setup;
 
-            var command = setup.Command<DataTypesCommandArguments>().Name("dataTypes");
+            var command = setup.Command<DataTypesCommandOptions>().Name("dataTypes");
 
-            command.Argument(a => a.Boolean);
-            command.Argument(a => a.DateTime);
-            command.Argument(a => a.Decimal);
-            command.Argument(a => a.Enum);
-            command.Argument(a => a.Guid);
-            command.Argument(a => a.Int64);
-            command.Argument(a => a.String);
-            command.Argument(a => a.TimeSpan);
+            command.Option(a => a.Boolean);
+            command.Option(a => a.DateTime);
+            command.Option(a => a.Decimal);
+            command.Option(a => a.Enum);
+            command.Option(a => a.Guid);
+            command.Option(a => a.Int64);
+            command.Option(a => a.String);
+            command.Option(a => a.TimeSpan);
 
-            command.Argument(a => a.NullableDateTime);
-            command.Argument(a => a.NullableDecimal);
-            command.Argument(a => a.NullableEnum);
-            command.Argument(a => a.NullableGuid);
-            command.Argument(a => a.NullableInt64);
-            command.Argument(a => a.NullableTimeSpan);
+            command.Option(a => a.NullableDateTime);
+            command.Option(a => a.NullableDecimal);
+            command.Option(a => a.NullableEnum);
+            command.Option(a => a.NullableGuid);
+            command.Option(a => a.NullableInt64);
+            command.Option(a => a.NullableTimeSpan);
 
-            command.Argument(a => a.DateTimes);
-            command.Argument(a => a.Decimals);
-            command.Argument(a => a.Enums);
-            command.Argument(a => a.Guids);
-            command.Argument(a => a.Int64s);
-            command.Argument(a => a.Strings);
-            command.Argument(a => a.TimeSpans);
+            command.Option(a => a.DateTimes);
+            command.Option(a => a.Decimals);
+            command.Option(a => a.Enums);
+            command.Option(a => a.Guids);
+            command.Option(a => a.Int64s);
+            command.Option(a => a.Strings);
+            command.Option(a => a.TimeSpans);
 
             var result = parser.Parse(new String[]
             {
@@ -419,32 +419,32 @@ Prints this help screen.
                 "--timeSpans", "1.02:03:04.0050000", "2.02:03:04.0050000", "3.02:03:04.0050000"
             });
 
-            result.CommandArguments.Should().BeOfType<DataTypesCommandArguments>();
+            result.CommandOptions.Should().BeOfType<DataTypesCommandOptions>();
 
-            var commandArguments = (DataTypesCommandArguments) result.CommandArguments;
-            commandArguments.Boolean.Should().BeTrue();
-            commandArguments.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.Decimal.Should().Be(123.45M);
-            commandArguments.Enum.Should().Be(LogLevel.Info);
-            commandArguments.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.Int64.Should().Be(64);
-            commandArguments.String.Should().Be("string value");
-            commandArguments.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
+            var commandOptions = (DataTypesCommandOptions) result.CommandOptions;
+            commandOptions.Boolean.Should().BeTrue();
+            commandOptions.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
+            commandOptions.Decimal.Should().Be(123.45M);
+            commandOptions.Enum.Should().Be(LogLevel.Info);
+            commandOptions.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
+            commandOptions.Int64.Should().Be(64);
+            commandOptions.String.Should().Be("string value");
+            commandOptions.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
 
-            commandArguments.NullableDateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.NullableDecimal.Should().Be(123.45M);
-            commandArguments.NullableEnum.Should().Be(LogLevel.Info);
-            commandArguments.NullableGuid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.NullableInt64.Should().Be(64);
-            commandArguments.NullableTimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
+            commandOptions.NullableDateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
+            commandOptions.NullableDecimal.Should().Be(123.45M);
+            commandOptions.NullableEnum.Should().Be(LogLevel.Info);
+            commandOptions.NullableGuid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
+            commandOptions.NullableInt64.Should().Be(64);
+            commandOptions.NullableTimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
 
-            commandArguments.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            commandArguments.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            commandArguments.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            commandArguments.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            commandArguments.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
-            commandArguments.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
-            commandArguments.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
+            commandOptions.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
+            commandOptions.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
+            commandOptions.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
+            commandOptions.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
+            commandOptions.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
+            commandOptions.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
+            commandOptions.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
         }
 
         [Test]
@@ -454,45 +454,45 @@ Prints this help screen.
 
             var setup = parser.Setup;
 
-            var command = setup.Command<DataTypesCommandArguments>().Name("dataTypes");
+            var command = setup.Command<DataTypesCommandOptions>().Name("dataTypes");
 
-            command.Argument(a => a.DateTime).DefaultValue(new DateTime(2016, 12, 31, 23, 59, 59));
-            command.Argument(a => a.Decimal).DefaultValue(123.45M);
-            command.Argument(a => a.Enum).DefaultValue(LogLevel.Info);
-            command.Argument(a => a.Guid).DefaultValue(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            command.Argument(a => a.Int64).DefaultValue(64);
-            command.Argument(a => a.String).DefaultValue("string value");
-            command.Argument(a => a.TimeSpan).DefaultValue(new TimeSpan(1, 2, 3, 4, 5));
+            command.Option(a => a.DateTime).DefaultValue(new DateTime(2016, 12, 31, 23, 59, 59));
+            command.Option(a => a.Decimal).DefaultValue(123.45M);
+            command.Option(a => a.Enum).DefaultValue(LogLevel.Info);
+            command.Option(a => a.Guid).DefaultValue(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
+            command.Option(a => a.Int64).DefaultValue(64);
+            command.Option(a => a.String).DefaultValue("string value");
+            command.Option(a => a.TimeSpan).DefaultValue(new TimeSpan(1, 2, 3, 4, 5));
 
-            command.Argument(a => a.DateTimes).DefaultValue(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            command.Argument(a => a.Decimals).DefaultValue(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            command.Argument(a => a.Enums).DefaultValue(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            command.Argument(a => a.Guids).DefaultValue(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            command.Argument(a => a.Int64s).DefaultValue(new List<Int64>() {64, 65, 66});
-            command.Argument(a => a.Strings).DefaultValue(new List<String>() {"string1", "string2", "string3"});
-            command.Argument(a => a.TimeSpans).DefaultValue(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
+            command.Option(a => a.DateTimes).DefaultValue(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
+            command.Option(a => a.Decimals).DefaultValue(new List<Decimal>() {100.45M, 101.45M, 102.45M});
+            command.Option(a => a.Enums).DefaultValue(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
+            command.Option(a => a.Guids).DefaultValue(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
+            command.Option(a => a.Int64s).DefaultValue(new List<Int64>() {64, 65, 66});
+            command.Option(a => a.Strings).DefaultValue(new List<String>() {"string1", "string2", "string3"});
+            command.Option(a => a.TimeSpans).DefaultValue(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
 
             var parseResult = parser.Parse(new String[] {"dataTypes"});
 
-            parseResult.CommandArguments.Should().BeOfType<DataTypesCommandArguments>();
+            parseResult.CommandOptions.Should().BeOfType<DataTypesCommandOptions>();
 
-            var commandArguments = (DataTypesCommandArguments) parseResult.CommandArguments;
+            var commandOptions = (DataTypesCommandOptions) parseResult.CommandOptions;
 
-            commandArguments.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.Decimal.Should().Be(123.45M);
-            commandArguments.Enum.Should().Be(LogLevel.Info);
-            commandArguments.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.Int64.Should().Be(64);
-            commandArguments.String.Should().Be("string value");
-            commandArguments.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
+            commandOptions.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
+            commandOptions.Decimal.Should().Be(123.45M);
+            commandOptions.Enum.Should().Be(LogLevel.Info);
+            commandOptions.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
+            commandOptions.Int64.Should().Be(64);
+            commandOptions.String.Should().Be("string value");
+            commandOptions.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
 
-            commandArguments.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            commandArguments.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            commandArguments.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            commandArguments.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            commandArguments.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
-            commandArguments.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
-            commandArguments.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
+            commandOptions.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
+            commandOptions.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
+            commandOptions.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
+            commandOptions.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
+            commandOptions.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
+            commandOptions.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
+            commandOptions.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
         }
 
         [Test]
@@ -506,28 +506,28 @@ Prints this help screen.
 
             setup.ProgramName("fileTool");
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
+            command1.Option(a => a.OptionA);
+            command1.Option(a => a.OptionB);
 
             command1.Validate((context) =>
             {
-                if (!String.IsNullOrEmpty(context.CommandArguments.ArgumentA) && context.CommandArguments.ArgumentB == null)
+                if (!String.IsNullOrEmpty(context.CommandOptions.OptionA) && context.CommandOptions.OptionB == null)
                 {
-                    context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.ArgumentB), "The argument '--argumentB' must be specified when argument '--argumentA' is specified."));
+                    context.AddError(new InvalidOptionError(context.GetOptionName(a => a.OptionB), "The option '--optionB' must be specified when option '--optionA' is specified."));
                 }
             });
 
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue"});
+            var parseResult = parser.Parse(new String[] {"command1", "--optionA", "optionAValue"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
+            parseResult.Errors[0].Should().BeOfType<InvalidOptionError>();
 
-            var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().BeEquivalentTo("argumentB");
-            error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
+            var error = (InvalidOptionError) parseResult.Errors[0];
+            error.OptionName.Should().BeEquivalentTo("optionB");
+            error.GetErrorMessage().Should().Be("The option --optionB is invalid: The option '--optionB' must be specified when option '--optionA' is specified.");
         }
 
         [Test]
@@ -541,31 +541,31 @@ Prints this help screen.
 
             setup.ProgramName("fileTool");
 
-            var command1 = setup.DefaultCommand<Command1Arguments>();
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
+            var command1 = setup.DefaultCommand<Command1Options>();
+            command1.Option(a => a.OptionA);
+            command1.Option(a => a.OptionB);
 
             command1.Validate((context) =>
             {
-                if (!String.IsNullOrEmpty(context.CommandArguments.ArgumentA) && context.CommandArguments.ArgumentB == null)
+                if (!String.IsNullOrEmpty(context.CommandOptions.OptionA) && context.CommandOptions.OptionB == null)
                 {
-                    context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.ArgumentB), "The argument '--argumentB' must be specified when argument '--argumentA' is specified."));
+                    context.AddError(new InvalidOptionError(context.GetOptionName(a => a.OptionB), "The option '--optionB' must be specified when option '--optionA' is specified."));
                 }
             });
 
-            var parseResult = parser.Parse(new String[] {"--argumentA", "argumentAValue"});
+            var parseResult = parser.Parse(new String[] {"--optionA", "optionAValue"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
+            parseResult.Errors[0].Should().BeOfType<InvalidOptionError>();
 
-            var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().BeEquivalentTo("argumentB");
-            error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
+            var error = (InvalidOptionError) parseResult.Errors[0];
+            error.OptionName.Should().BeEquivalentTo("optionB");
+            error.GetErrorMessage().Should().Be("The option --optionB is invalid: The option '--optionB' must be specified when option '--optionA' is specified.");
         }
 
         [Test]
-        public void TestParse_IgnoreUnknownArguments()
+        public void TestParse_IgnoreUnknownOptions()
         {
             var parser = new Parser();
 
@@ -573,14 +573,14 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            setup.IgnoreUnknownArguments();
+            setup.IgnoreUnknownOptions();
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
+            command1.Option(a => a.OptionA);
+            command1.Option(a => a.OptionB);
 
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue", "--unknownArgument"});
+            var parseResult = parser.Parse(new String[] {"command1", "--optionA", "optionAValue", "--unknownOption"});
             parseResult.HasErrors.Should().BeFalse();
         }
 
@@ -593,9 +593,9 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
             var parseResult = parser.Parse(new String[] {"command1", "command2"});
 
@@ -614,11 +614,11 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
-            var parseResult = parser.Parse(new String[] {"--argumentA"});
+            var parseResult = parser.Parse(new String[] {"--optionA"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
@@ -627,7 +627,7 @@ Prints this help screen.
         }
 
         [Test]
-        public void TestParse_ArgumentValueMissingError()
+        public void TestParse_OptionValueMissingError()
         {
             var parser = new Parser();
 
@@ -635,20 +635,20 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA"});
+            var parseResult = parser.Parse(new String[] {"command1", "--optionA"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<ArgumentValueMissingError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The value for the argument --argumentA is missing.");
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The value for the option --optionA is missing.");
         }
 
         [Test]
-        public void TestParse_DuplicateArgumentError()
+        public void TestParse_DuplicateOptionError()
         {
             var parser = new Parser();
 
@@ -656,16 +656,16 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue", "--argumentA"});
+            var parseResult = parser.Parse(new String[] {"command1", "--optionA", "optionAValue", "--optionA"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<DuplicateArgumentError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The argument --argumentA is used more than once. Please only use each argument once.");
+            parseResult.Errors[0].Should().BeOfType<DuplicateOptionError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The option --optionA is used more than once. Please only use each option once.");
         }
 
         [Test]
@@ -677,9 +677,9 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
             var parseResult = parser.Parse(new String[] {"unknownCommand"});
 
@@ -690,7 +690,7 @@ Prints this help screen.
         }
 
         [Test]
-        public void TestParse_ArgumentValueFormatError()
+        public void TestParse_OptionValueFormatError()
         {
             var parser = new Parser();
 
@@ -698,20 +698,20 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<DataTypesCommandArguments>();
+            var command1 = setup.Command<DataTypesCommandOptions>();
             command1.Name("command1");
-            command1.Argument(a => a.Int64);
+            command1.Option(a => a.Int64);
 
             var parseResult = parser.Parse(new String[] {"command1", "--int64", "NotANumber"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<ArgumentValueFormatError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The value 'NotANumber' of the argument --int64 has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
+            parseResult.Errors[0].Should().BeOfType<OptionValueFormatError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The value 'NotANumber' of the option --int64 has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
         }
 
         [Test]
-        public void TestParse_UnknownArgumentError()
+        public void TestParse_UnknownOptionError()
         {
             var parser = new Parser();
 
@@ -719,16 +719,16 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            var command1 = setup.Command<Command1Arguments>();
+            var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            command1.Option(a => a.OptionA);
 
-            var parseResult = parser.Parse(new String[] {"command1", "--unknownArgument"});
+            var parseResult = parser.Parse(new String[] {"command1", "--unknownOption"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<UnknownArgumentError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The argument --unknownArgument is unknown.");
+            parseResult.Errors[0].Should().BeOfType<UnknownOptionError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The option --unknownOption is unknown.");
         }
     }
 }

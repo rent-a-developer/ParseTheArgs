@@ -35,20 +35,20 @@ namespace ParseTheArgs.Tokens
                 
                 if (argument.StartsWith("--") || argument.StartsWith("-"))
                 {
-                    var argumentName = argument.StartsWith("--") ? argument.Substring(2) : argument.Substring(1);
-                    var argumentValues = argumentsToTokenize.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
+                    var optionName = argument.StartsWith("--") ? argument.Substring(2) : argument.Substring(1);
+                    var optionValues = argumentsToTokenize.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
 
-                    if (argumentValues.Count == 0)
+                    if (optionValues.Count == 0)
                     {
-                        yield return new ArgumentToken(argumentName);
+                        yield return new OptionToken(optionName);
                     }
                     else
                     {
-                        yield return new ArgumentToken(argumentName, argumentValues);
+                        yield return new OptionToken(optionName, optionValues);
                     }
 
                     argumentsToTokenize.RemoveAt(0);
-                    argumentsToTokenize.RemoveRange(0, argumentValues.Count);
+                    argumentsToTokenize.RemoveRange(0, optionValues.Count);
                 }
                 else
                 {

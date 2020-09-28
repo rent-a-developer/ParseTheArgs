@@ -21,7 +21,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             parserMock.Setup(a => a.CommandParsers).Returns(new List<ICommandParser> {duplicateCommandParserMock.Object});
             duplicateCommandParserMock.Setup(a => a.CommandName).Returns("command1");
 
-            var setup = new NamedCommandSetup<Command1Arguments>(parserMock.Object);
+            var setup = new NamedCommandSetup<Command1Options>(parserMock.Object);
 
             setup.Invoking(a => a.Name("command1"))
                 .Should()

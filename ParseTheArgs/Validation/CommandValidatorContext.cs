@@ -9,9 +9,9 @@ namespace ParseTheArgs.Validation
     /// <summary>
     /// Represents the context for a validator for a command.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
-    public class CommandValidatorContext<TCommandArguments>
-        where TCommandArguments : class
+    /// <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
+    public class CommandValidatorContext<TCommandOptions>
+        where TCommandOptions : class
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -25,9 +25,9 @@ namespace ParseTheArgs.Validation
         }
 
         /// <summary>
-        /// The instance in which the values of the arguments of the command are stored.
+        /// The instance in which the values of the options of the command are stored.
         /// </summary>
-        public TCommandArguments? CommandArguments => (TCommandArguments?) this.ParseResult.CommandArguments;
+        public TCommandOptions? CommandOptions => (TCommandOptions?) this.ParseResult.CommandOptions;
 
         /// <summary>
         /// The (preliminary) result of the command line arguments parsing.
@@ -44,13 +44,13 @@ namespace ParseTheArgs.Validation
         }
 
         /// <summary>
-        /// Gets the name of the argument mapped to the specified property.
+        /// Gets the name of the option mapped to the specified property.
         /// </summary>
-        /// <param name="argumentSelector">An expression to specify the property that is mapped to an argument.</param>
-        /// <returns>The name of the argument that is mapped to the specified property.</returns>
+        /// <param name="optionSelector">An expression to specify the property that is mapped to an option.</param>
+        /// <returns>The name of the option that is mapped to the specified property.</returns>
         /// <example>
         /// <code>
-        /// public class PrintFileArguments
+        /// public class PrintFileOptions
         /// {
         ///     public String File { get; set; }
         /// }
@@ -62,35 +62,35 @@ namespace ParseTheArgs.Validation
         ///         var parser = new Parser();
         ///         var setup = parser.Setup;
         ///
-        ///         var command = setup.DefaultCommand&lt;PrintFileArguments&gt;();
-        ///         command.Argument(a => a.File).Name("file").IsRequired();
+        ///         var command = setup.DefaultCommand&lt;PrintFileOptions&gt;();
+        ///         command.Option(a => a.File).Name("file").IsRequired();
         ///         command.Validate(context =>
         ///         {
-        ///             if (!File.Exists(context.CommandArguments.File))
+        ///             if (!File.Exists(context.CommandOptions.File))
         ///             {
-        ///                 context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.File), "The specified file does not exist."));
+        ///                 context.AddError(new InvalidOptionError(context.GetOptionName(a => a.File), "The specified file does not exist."));
         ///             }
         ///         });
         ///     }
         /// }
         /// </code>
         /// </example>
-        public String GetArgumentName(Expression<Func<TCommandArguments, Object>> argumentSelector)
+        public String GetOptionName(Expression<Func<TCommandOptions, Object>> optionSelector)
         {
-            if (argumentSelector == null)
+            if (optionSelector == null)
             {
-                throw new ArgumentNullException(nameof(argumentSelector));
+                throw new ArgumentNullException(nameof(optionSelector));
             }
 
-            var propertyInfo = ExpressionHelper.GetPropertyFromPropertyExpression(argumentSelector);
-            var argumentParser = this.commandParser.ArgumentParsers.FirstOrDefault(a => a.TargetProperty == propertyInfo);
+            var propertyInfo = ExpressionHelper.GetPropertyFromPropertyExpression(optionSelector);
+            var optionParser = this.commandParser.OptionParsers.FirstOrDefault(a => a.TargetProperty == propertyInfo);
 
-            if (argumentParser == null)
+            if (optionParser == null)
             {
-                throw new ArgumentException($"The property {propertyInfo.Name} of the type {propertyInfo.DeclaringType.FullName} is not mapped to any argument.", nameof(argumentSelector));
+                throw new ArgumentException($"The property {propertyInfo.Name} of the type {propertyInfo.DeclaringType.FullName} is not mapped to any option.", nameof(optionSelector));
             }
 
-            return argumentParser.ArgumentName;
+            return optionParser.OptionName;
         }
 
         private readonly ICommandParser commandParser;

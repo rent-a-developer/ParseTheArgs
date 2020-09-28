@@ -23,18 +23,18 @@ namespace ParseTheArgs.Tests.Tokens
             CommandLineArgumentsTokenizer.Tokenize(new String[] {"command"}).Should().BeEquivalentTo(new CommandToken("command"));
             CommandLineArgumentsTokenizer.Tokenize(new String[] {"command1", "command2"}).Should().BeEquivalentTo(new CommandToken("command1"), new CommandToken("command2"));
 
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"-a"}).Should().BeEquivalentTo(new ArgumentToken("a"));
-            CommandLineArgumentsTokenizer.Tokenize(new String[] { "--argument" }).Should().BeEquivalentTo(new ArgumentToken("argument"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"-a"}).Should().BeEquivalentTo(new OptionToken("a"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] { "--option" }).Should().BeEquivalentTo(new OptionToken("option"));
 
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"-a", "-b"}).Should().BeEquivalentTo(new ArgumentToken("a"), new ArgumentToken("b"));
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--argumentA", "--argumentB"}).Should().BeEquivalentTo(new ArgumentToken("argumentA"), new ArgumentToken("argumentB"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"-a", "-b"}).Should().BeEquivalentTo(new OptionToken("a"), new OptionToken("b"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--optionA", "--optionB"}).Should().BeEquivalentTo(new OptionToken("optionA"), new OptionToken("optionB"));
 
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--argument", "value"}).Should().BeEquivalentTo(new ArgumentToken("argument") { ArgumentValues = { "value" } });
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--argument", "value1", "value2"}).Should().BeEquivalentTo(new ArgumentToken("argument") { ArgumentValues = { "value1", "value2" } });
-            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--argumentA", "valueA", "--argumentB", "valueB"}).Should().BeEquivalentTo(new ArgumentToken("argumentA") { ArgumentValues = { "valueA" } }, new ArgumentToken("argumentB") { ArgumentValues = { "valueB" } });
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--option", "value"}).Should().BeEquivalentTo(new OptionToken("option") { OptionValues = { "value" } });
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--option", "value1", "value2"}).Should().BeEquivalentTo(new OptionToken("option") { OptionValues = { "value1", "value2" } });
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {"--optionA", "valueA", "--optionB", "valueB"}).Should().BeEquivalentTo(new OptionToken("optionA") { OptionValues = { "valueA" } }, new OptionToken("optionB") { OptionValues = { "valueB" } });
 
-            CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "-a" }).Should().BeEquivalentTo(new CommandToken("command"), new ArgumentToken("a"));
-            CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "--argument" }).Should().BeEquivalentTo(new CommandToken("command"), new ArgumentToken("argument"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "-a" }).Should().BeEquivalentTo(new CommandToken("command"), new OptionToken("a"));
+            CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "--option" }).Should().BeEquivalentTo(new CommandToken("command"), new OptionToken("option"));
         }
 
         [Test(Description = "Tokenize should throw an exception when the given arguments is null.")]

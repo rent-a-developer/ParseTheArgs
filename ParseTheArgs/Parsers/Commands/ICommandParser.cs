@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using ParseTheArgs.Parsers.Arguments;
+using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tokens;
 
 namespace ParseTheArgs.Parsers.Commands
 {
     /// <summary>
-    /// Represents a parser that parses a command line command and its arguments.
+    /// Represents a parser that parses a command line command and its options.
     /// </summary>
     public interface ICommandParser
     {
         /// <summary>
-        /// Defines the list of argument parsers for the command.
+        /// Defines the list of option parsers for the command.
         /// </summary>
-        List<ArgumentParser> ArgumentParsers { get; }
+        List<OptionParser> OptionParsers { get; }
 
         /// <summary>
         /// Defines the help text of the command.
@@ -33,9 +33,9 @@ namespace ParseTheArgs.Parsers.Commands
         Boolean IsCommandDefault { get; }
 
         /// <summary>
-        /// Gets the help text of the argument.
+        /// Gets the help text of the option.
         /// </summary>
-        /// <returns>The help text of the argument.</returns>
+        /// <returns>The help text of the option.</returns>
         String GetHelpText();
 
         /// <summary>

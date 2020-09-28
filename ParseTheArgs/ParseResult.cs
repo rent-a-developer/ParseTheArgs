@@ -18,14 +18,14 @@ namespace ParseTheArgs
         public ParseResult()
         {
             this.CommandName = String.Empty;
-            this.errors = new List<IParseError>();
             this.commandHandlers = new Dictionary<Type, Delegate>();
+            this.errors = new List<IParseError>();
         }
 
         /// <summary>
-        /// Defines the Object that holds the arguments of the parsed command.
+        /// Defines the Object that holds the options of the parsed command.
         /// </summary>
-        public Object? CommandArguments { get; internal set; }
+        public Object? CommandOptions { get; internal set; }
 
         /// <summary>
         /// Defines the name of the command that was found in the parsed command line arguments.
@@ -33,7 +33,7 @@ namespace ParseTheArgs
         public String CommandName { get; internal set; }
 
         /// <summary>
-        /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or arguments where passed or the help command was specified).
+        /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
         /// </summary>
         public Boolean IsHelpCalled { get; internal set; }
 
@@ -58,14 +58,14 @@ namespace ParseTheArgs
 
         /// <summary>
         /// Sets up a command handler for a specific command.
-        /// The handler will be invoked when the <see cref="Handle"/> method is called and <see cref="CommandArguments"/> is of type <typeparamref name="TCommandArguments"/>.
+        /// The handler will be invoked when the <see cref="Handle"/> method is called and <see cref="CommandOptions"/> is of type <typeparamref name="TCommandOptions"/>.
         /// The return value of the specified handler is returned by the <see cref="Handle"/> method when the handler is invoked.
         /// </summary>
-        /// <typeparam name="TCommandArguments">The type of the command arguments the handler handles.</typeparam>
-        /// <param name="commandHandler">The handler that handles the command arguments of type <typeparamref name="TCommandArguments"/>.</param>
-        public void CommandHandler<TCommandArguments>(Func<TCommandArguments, Int32> commandHandler)
+        /// <typeparam name="TCommandOptions">The type of the command options the handler handles.</typeparam>
+        /// <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions"/>.</param>
+        public void CommandHandler<TCommandOptions>(Func<TCommandOptions, Int32> commandHandler)
         {
-            this.commandHandlers[typeof(TCommandArguments)] = commandHandler;
+            this.commandHandlers[typeof(TCommandOptions)] = commandHandler;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ParseTheArgs
 
         /// <summary>
         /// Handles the result of the command line parsing.
-        /// The command handler that was set up (via the <see cref="CommandHandler{TCommandArguments}"/> method) for the current command will be invoked.
+        /// The command handler that was set up (via the <see cref="CommandHandler{TCommandOptions}"/> method) for the current command will be invoked.
         /// In case <see cref="HasErrors"/> is true, the error handler that was set up (via the <see cref="ErrorHandler"/> method) will be invoked.
         /// </summary>
         /// <returns>
@@ -111,11 +111,11 @@ namespace ParseTheArgs
                     }
                 }
             }
-            else if (this.CommandArguments != null && this.commandHandlers.TryGetValue(this.CommandArguments.GetType(), out Delegate commandHandler))
+            else if (this.CommandOptions != null && this.commandHandlers.TryGetValue(this.CommandOptions.GetType(), out Delegate commandHandler))
             {
                 try
                 {
-                    var commandHandlerReturnValue = commandHandler.DynamicInvoke(this.CommandArguments);
+                    var commandHandlerReturnValue = commandHandler.DynamicInvoke(this.CommandOptions);
                     if (commandHandlerReturnValue is Int32 commandHandlerInt32ReturnValue)
                     {
                         return commandHandlerInt32ReturnValue;

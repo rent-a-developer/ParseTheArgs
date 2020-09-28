@@ -9,8 +9,8 @@ namespace ParseTheArgs.Setup.Commands
     /// <summary>
     /// Represents the configuration of a named (non-default) command.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type where the values of the arguments of the command will be stored in.</typeparam>
-    public class NamedCommandSetup<TCommandArguments> : CommandSetup<TCommandArguments> where TCommandArguments : class, new()
+    /// <typeparam name="TCommandOptions">The type where the values of the options of the command will be stored in.</typeparam>
+    public class NamedCommandSetup<TCommandOptions> : CommandSetup<TCommandOptions> where TCommandOptions : class, new()
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -22,12 +22,12 @@ namespace ParseTheArgs.Setup.Commands
 
         /// <summary>
         /// Sets the name of the command.
-        /// Initially (until this method is called) the name of the given <typeparamref name="TCommandArguments" /> type (converted to lower camel case, see <see cref="StringExtensions.ToCamelCase" />) will be used as name for the command.
+        /// Initially (until this method is called) the name of the given <typeparamref name="TCommandOptions" /> type (converted to lower camel case, see <see cref="StringExtensions.ToCamelCase" />) will be used as name for the command.
         /// </summary>
         /// <param name="name">The name of the command.</param>
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
-        public NamedCommandSetup<TCommandArguments> Name(String name)
+        public NamedCommandSetup<TCommandOptions> Name(String name)
         {
             if (this.Parser.CommandParsers.Any(a => a != this.CommandParser && a.CommandName == name))
             {
@@ -43,7 +43,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="exampleUsageText">The text that describes an example usage of the command.</param>
         /// <returns>A reference to this instance for further configuration of the command.</returns>
-        public NamedCommandSetup<TCommandArguments> ExampleUsage(String exampleUsageText)
+        public NamedCommandSetup<TCommandOptions> ExampleUsage(String exampleUsageText)
         {
             this.CommandParser.CommandExampleUsage = exampleUsageText;
             return this;
@@ -54,7 +54,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="help">The help text for the command.</param>
         /// <returns>A reference to this instance for further configuration of the command.</returns>
-        public NamedCommandSetup<TCommandArguments> Help(String help)
+        public NamedCommandSetup<TCommandOptions> Help(String help)
         {
             this.CommandParser.CommandHelp = help;
             return this;
@@ -62,29 +62,28 @@ namespace ParseTheArgs.Setup.Commands
 
         /// <summary>
         /// Sets the validator for this command.
-        /// The given action is executed after all arguments of the command have been parsed and their values have been stored in <see cref="ParseResult.CommandArguments" />.
+        /// The given action is executed after all options of the command have been parsed and their values have been stored in <see cref="ParseResult.CommandOptions" />.
         /// </summary>
-        /// <param name="validator">An action that validates the command arguments.</param>
+        /// <param name="validator">An action that validates the command options.</param>
         /// <returns>A reference to this instance for further configuration of the command.</returns>
-        public NamedCommandSetup<TCommandArguments> Validate(Action<CommandValidatorContext<TCommandArguments>> validator)
+        public NamedCommandSetup<TCommandOptions> Validate(Action<CommandValidatorContext<TCommandOptions>> validator)
         {
             this.CommandParser.Validator = validator;
             return this;
         }
 
-        private static CommandParser<TCommandArguments> CreateCommandParser(Parser parser)
+        private static CommandParser<TCommandOptions> CreateCommandParser(Parser parser)
         {
-            var commandParser = parser.CommandParsers.OfType<CommandParser<TCommandArguments>>().FirstOrDefault();
+            var commandParser = parser.CommandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault();
 
             if (commandParser == null)
             {
-                commandParser = new CommandParser<TCommandArguments>(parser)
+                commandParser = new CommandParser<TCommandOptions>(parser)
                 {
-                    CommandName = typeof(TCommandArguments)
+                    CommandName = typeof(TCommandOptions)
                         .Name
                         .ToCamelCase()
-                        .Replace("Arguments", "")
-                        .Replace("Args", "")
+                        .Replace("Options", "")
                 };
 
                 parser.CommandParsers.Add(commandParser);

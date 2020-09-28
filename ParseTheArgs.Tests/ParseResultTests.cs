@@ -10,22 +10,22 @@ namespace ParseTheArgs.Tests
     [TestFixture]
     public class ParseResultTests
     {
-        [Test(Description = "CommandArguments should initially be null.")]
-        public void CommandArguments_Initially_ShouldBeNull()
+        [Test(Description = "CommandOptions should initially be null.")]
+        public void CommandOptions_Initially_ShouldBeNull()
         {
             var result = new ParseResult();
             
-            result.CommandArguments.Should().BeNull();
+            result.CommandOptions.Should().BeNull();
         }
 
-        [Test(Description = "CommandArguments should return the value that was assigned to it.")]
-        public void CommandArguments_Assigned_ShouldReturnAssignedValue()
+        [Test(Description = "CommandOptions should return the value that was assigned to it.")]
+        public void CommandOptions_Assigned_ShouldReturnAssignedValue()
         {
             var result = new ParseResult();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            result.CommandArguments = command1Arguments;
-            result.CommandArguments.Should().Be(command1Arguments);
+            result.CommandOptions = command1Options;
+            result.CommandOptions.Should().Be(command1Options);
         }
 
         [Test(Description = "CommandName should initially be an empty string.")]
@@ -66,8 +66,8 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            var argumentMissingError = new ArgumentMissingError("argumentA");
-            result.AddError(argumentMissingError);
+            var optionMissingError = new OptionMissingError("optionA");
+            result.AddError(optionMissingError);
             
             result.HasErrors.Should().BeTrue();
         }
@@ -77,39 +77,39 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            var argumentMissingError = new ArgumentMissingError("argumentA");
-            result.AddError(argumentMissingError);
+            var optionMissingError = new OptionMissingError("optionA");
+            result.AddError(optionMissingError);
 
-            var unknownArgumentError = new UnknownArgumentError("argumentB");
-            result.AddError(unknownArgumentError);
+            var unknownOptionError = new UnknownOptionError("optionB");
+            result.AddError(unknownOptionError);
             
-            result.Errors.Should().BeEquivalentTo(argumentMissingError, unknownArgumentError);
+            result.Errors.Should().BeEquivalentTo(optionMissingError, unknownOptionError);
         }
 
-        [Test(Description = "Handle should return 0 when there are no command arguments.")]
-        public void Handle_NoCommandArguments_ShouldReturn0()
+        [Test(Description = "Handle should return 0 when there are no command options.")]
+        public void Handle_NoCommandOptions_ShouldReturn0()
         {
             var result = new ParseResult();
 
-            result.CommandArguments = null;
+            result.CommandOptions = null;
 
             result.Handle().Should().Be(0);
         }
 
-        [Test(Description = "Handle should not call any command handler or the error handler when there are no command arguments.")]
-        public void Handle_NoCommandArguments_ShouldNotCallHandlers()
+        [Test(Description = "Handle should not call any command handler or the error handler when there are no command options.")]
+        public void Handle_NoCommandOptions_ShouldNotCallHandlers()
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
 
-            result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
+            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
             result.ErrorHandler(handlersMock.Object.HandleError);
             
-            result.CommandArguments = null;
+            result.CommandOptions = null;
 
             result.Handle();
 
-            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Arguments>()), Times.Never);
+            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Options>()), Times.Never);
             handlersMock.Verify(a => a.HandleError(It.IsAny<ParseResult>()), Times.Never);
         }
 
@@ -117,9 +117,9 @@ namespace ParseTheArgs.Tests
         public void Handle_NoCommandHandlers_ShouldReturn0()
         {
             var result = new ParseResult();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Handle().Should().Be(0);
         }
@@ -129,11 +129,11 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            result.CommandHandler<Command2Arguments>(handlersMock.Object.HandleCommand2);
+            result.CommandHandler<Command2Options>(handlersMock.Object.HandleCommand2);
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Handle().Should().Be(0);
         }
@@ -143,17 +143,17 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            result.CommandHandler<Command2Arguments>(handlersMock.Object.HandleCommand2);
-            result.CommandHandler<Command3Arguments>(handlersMock.Object.HandleCommand3);
+            result.CommandHandler<Command2Options>(handlersMock.Object.HandleCommand2);
+            result.CommandHandler<Command3Options>(handlersMock.Object.HandleCommand3);
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Handle();
             
-            handlersMock.Verify(a => a.HandleCommand2(It.IsAny<Command2Arguments>()), Times.Never);
-            handlersMock.Verify(a => a.HandleCommand3(It.IsAny<Command3Arguments>()), Times.Never);
+            handlersMock.Verify(a => a.HandleCommand2(It.IsAny<Command2Options>()), Times.Never);
+            handlersMock.Verify(a => a.HandleCommand3(It.IsAny<Command3Options>()), Times.Never);
         }
 
         [Test(Description = "Handle should return 0 when there is an error, but there is no error handler.")]
@@ -161,7 +161,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            result.AddError(new ArgumentMissingError("argumentA"));
+            result.AddError(new OptionMissingError("optionA"));
 
             result.Handle().Should().Be(0);
         }
@@ -172,12 +172,12 @@ namespace ParseTheArgs.Tests
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
 
-            result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
+            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
             
-            result.AddError(new ArgumentMissingError("argumentA"));
+            result.AddError(new OptionMissingError("optionA"));
 
             result.Handle();
-            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Arguments>()), Times.Never);
+            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Options>()), Times.Never);
         }
 
         [Test(Description = "Handle should call the error handler when there is an error.")]
@@ -188,7 +188,7 @@ namespace ParseTheArgs.Tests
 
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError("argumentA"));
+            result.AddError(new OptionMissingError("optionA"));
 
             result.Handle();
 
@@ -204,7 +204,7 @@ namespace ParseTheArgs.Tests
             handlersMock.Setup(a => a.HandleError(It.Is<ParseResult>(parseResult => parseResult == result))).Returns(1);
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError("argumentA"));
+            result.AddError(new OptionMissingError("optionA"));
 
             result.Handle().Should().Be(1);
         }
@@ -214,15 +214,15 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
+            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Handle();
 
-            handlersMock.Verify(a => a.HandleCommand1(command1Arguments), Times.Once);
+            handlersMock.Verify(a => a.HandleCommand1(command1Options), Times.Once);
         }
 
         [Test(Description = "Handle should return the return value of the matching command handler.")]
@@ -230,12 +230,12 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            handlersMock.Setup(a => a.HandleCommand1(It.Is<Command1Arguments>(arguments => arguments == command1Arguments))).Returns(1);
-            result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
+            handlersMock.Setup(a => a.HandleCommand1(It.Is<Command1Options>(options => options == command1Options))).Returns(1);
+            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Handle().Should().Be(1);
         }
@@ -245,12 +245,12 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
             var handlersMock = new Mock<ICommandHandlers>();
-            var command1Arguments = new Command1Arguments();
+            var command1Options = new Command1Options();
 
-            handlersMock.Setup(a => a.HandleCommand1(It.IsAny<Command1Arguments>())).Throws(new Exception("Command Handler Exception"));
-            result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
+            handlersMock.Setup(a => a.HandleCommand1(It.IsAny<Command1Options>())).Throws(new Exception("Command Handler Exception"));
+            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
 
-            result.CommandArguments = command1Arguments;
+            result.CommandOptions = command1Options;
 
             result.Invoking(a => a.Handle())
                 .Should()
@@ -267,7 +267,7 @@ namespace ParseTheArgs.Tests
             handlersMock.Setup(a => a.HandleError(It.IsAny<ParseResult>())).Throws(new Exception("Error Handler Exception"));
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError("argumentA"));
+            result.AddError(new OptionMissingError("optionA"));
 
             result.Invoking(a => a.Handle())
                 .Should()
@@ -278,9 +278,9 @@ namespace ParseTheArgs.Tests
 
     public interface ICommandHandlers
     {
-        Int32 HandleCommand1(Command1Arguments arguments);
-        Int32 HandleCommand2(Command2Arguments arguments);
-        Int32 HandleCommand3(Command3Arguments arguments);
+        Int32 HandleCommand1(Command1Options options);
+        Int32 HandleCommand2(Command2Options options);
+        Int32 HandleCommand3(Command3Options options);
         Int32 HandleError(ParseResult result);
     }
 }

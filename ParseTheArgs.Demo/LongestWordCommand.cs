@@ -6,11 +6,11 @@ namespace ParseTheArgs.Demo
 {
     public static class LongestWordCommand
     {
-        public static Int32 LongestWord(LongestWordCommandArguments arguments)
+        public static Int32 LongestWord(LongestWordCommandOptions options)
         {
             try
             {
-                var longestWord = arguments.Words.OrderBy(a => a.Length).Last();
+                var longestWord = options.Words.OrderBy(a => a.Length).Last();
                 Console.WriteLine($"The longest word is: {longestWord}");
 
                 return 0;
@@ -26,13 +26,13 @@ namespace ParseTheArgs.Demo
         public static void SetupCommand(ParserSetup parserSetup)
         {
             var command = parserSetup
-                .Command<LongestWordCommandArguments>()
+                .Command<LongestWordCommandOptions>()
                 .Name("longestWord")
                 .Help("Gets the longest word of a list of words.")
                 .ExampleUsage("Tool longestWord --words cat dog fish crocodile");
 
             command
-                .Argument(a => a.Words)
+                .Option(a => a.Words)
                 .Name("words")
                 .Help("The list of words.")
                 .IsRequired();

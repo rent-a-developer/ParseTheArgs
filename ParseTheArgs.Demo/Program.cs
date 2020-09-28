@@ -20,11 +20,11 @@ namespace ParseTheArgs.Demo
             
             var parseResult = parser.Parse(args);
 
-            parseResult.CommandHandler((ConvertGuidCommandArguments arguments) => ConvertGuidCommand.ConvertGuid(arguments));
-            parseResult.CommandHandler((DateCommandArguments arguments) => DateCommand.GetDate(arguments));
-            parseResult.CommandHandler((FileReplaceCommandArguments arguments) => FileReplaceCommand.ReplaceFile(arguments));
-            parseResult.CommandHandler((LongestWordCommandArguments arguments) => LongestWordCommand.LongestWord(arguments));
-            parseResult.CommandHandler((QueryWebCommandArguments arguments) => QueryWebCommand.QueryWeb(arguments));
+            parseResult.CommandHandler((ConvertGuidCommandOptions options) => ConvertGuidCommand.ConvertGuid(options));
+            parseResult.CommandHandler((DateCommandOptions options) => DateCommand.GetDate(options));
+            parseResult.CommandHandler((FileReplaceCommandOptions options) => FileReplaceCommand.ReplaceFile(options));
+            parseResult.CommandHandler((LongestWordCommandOptions options) => LongestWordCommand.LongestWord(options));
+            parseResult.CommandHandler((QueryWebCommandOptions options) => QueryWebCommand.QueryWeb(options));
             parseResult.ErrorHandler((ParseResult result) => 1);
 
             return parseResult.Handle();

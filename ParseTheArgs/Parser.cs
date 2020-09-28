@@ -98,7 +98,7 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine("Invalid or missing argument(s):");
+            stringBuilder.AppendLine("Invalid or missing option(s):");
 
             foreach (var error in parseResult.Errors)
             {
@@ -120,10 +120,10 @@ namespace ParseTheArgs
         }
 
         /// <summary>
-        /// Gets the general help text for commands and arguments.
+        /// Gets the general help text for commands and options.
         /// </summary>
         /// <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="ParserSetup.Banner" />) at the beginning.</param>
-        /// <returns>The general help text for commands and arguments.</returns>
+        /// <returns>The general help text for commands and options.</returns>
         public String GetHelpText(Boolean includeBanner = true)
         {
             var stringBuilder = new StringBuilder();
@@ -145,7 +145,7 @@ namespace ParseTheArgs
 
             if (nonDefaultCommandParsers.Any())
             {
-                stringBuilder.AppendLine($"{this.ProgramName} <command> [arguments]");
+                stringBuilder.AppendLine($"{this.ProgramName} <command> [options]");
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("Commands:");
 
@@ -220,11 +220,11 @@ namespace ParseTheArgs
             }
             else
             {
-                var duplicateArguments = tokens.OfType<ArgumentToken>().GroupBy(a => a.ArgumentName).Where(a => a.Count() > 1).ToList();
+                var duplicateOptions = tokens.OfType<OptionToken>().GroupBy(a => a.OptionName).Where(a => a.Count() > 1).ToList();
 
-                if (duplicateArguments.Any())
+                if (duplicateOptions.Any())
                 {
-                    duplicateArguments.ForEach(a => result.AddError(new DuplicateArgumentError(a.Key)));
+                    duplicateOptions.ForEach(a => result.AddError(new DuplicateOptionError(a.Key)));
                     this.PrintErrors(result);
                 }
                 else
@@ -234,9 +234,9 @@ namespace ParseTheArgs
 
                     tokens.OfType<CommandToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownCommandError(a.CommandName)));
 
-                    if (!this.IgnoreUnknownArguments)
+                    if (!this.IgnoreUnknownOptions)
                     {
-                        tokens.OfType<ArgumentToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownArgumentError(a.ArgumentName)));
+                        tokens.OfType<OptionToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownOptionError(a.OptionName)));
                     }
 
                     if (result.HasErrors)
@@ -278,9 +278,9 @@ namespace ParseTheArgs
         internal Int32 HelpTextMaxLineLength { get; set; }
 
         /// <summary>
-        /// Determines whether to ignore arguments that are unknown when arguments are parsed.
+        /// Determines whether to ignore options that are unknown when options are parsed.
         /// </summary>
-        internal Boolean IgnoreUnknownArguments { get; set; }
+        internal Boolean IgnoreUnknownOptions { get; set; }
 
         /// <summary>
         /// Defines the name of the program to display in help texts.

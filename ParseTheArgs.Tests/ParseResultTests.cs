@@ -66,7 +66,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            var argumentMissingError = new ArgumentMissingError(new ArgumentName("argumentA"));
+            var argumentMissingError = new ArgumentMissingError("argumentA");
             result.AddError(argumentMissingError);
             
             result.HasErrors.Should().BeTrue();
@@ -77,10 +77,10 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            var argumentMissingError = new ArgumentMissingError(new ArgumentName("argumentA"));
+            var argumentMissingError = new ArgumentMissingError("argumentA");
             result.AddError(argumentMissingError);
 
-            var unknownArgumentError = new UnknownArgumentError(new ArgumentName("argumentB"));
+            var unknownArgumentError = new UnknownArgumentError("argumentB");
             result.AddError(unknownArgumentError);
             
             result.Errors.Should().BeEquivalentTo(argumentMissingError, unknownArgumentError);
@@ -161,7 +161,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            result.AddError(new ArgumentMissingError(new ArgumentName("argumentA")));
+            result.AddError(new ArgumentMissingError("argumentA"));
 
             result.Handle().Should().Be(0);
         }
@@ -174,7 +174,7 @@ namespace ParseTheArgs.Tests
 
             result.CommandHandler<Command1Arguments>(handlersMock.Object.HandleCommand1);
             
-            result.AddError(new ArgumentMissingError(new ArgumentName("argumentA")));
+            result.AddError(new ArgumentMissingError("argumentA"));
 
             result.Handle();
             handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Arguments>()), Times.Never);
@@ -188,7 +188,7 @@ namespace ParseTheArgs.Tests
 
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError(new ArgumentName("argumentA")));
+            result.AddError(new ArgumentMissingError("argumentA"));
 
             result.Handle();
 
@@ -204,7 +204,7 @@ namespace ParseTheArgs.Tests
             handlersMock.Setup(a => a.HandleError(It.Is<ParseResult>(parseResult => parseResult == result))).Returns(1);
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError(new ArgumentName("argumentA")));
+            result.AddError(new ArgumentMissingError("argumentA"));
 
             result.Handle().Should().Be(1);
         }
@@ -267,7 +267,7 @@ namespace ParseTheArgs.Tests
             handlersMock.Setup(a => a.HandleError(It.IsAny<ParseResult>())).Throws(new Exception("Error Handler Exception"));
             result.ErrorHandler(handlersMock.Object.HandleError);
 
-            result.AddError(new ArgumentMissingError(new ArgumentName("argumentA")));
+            result.AddError(new ArgumentMissingError("argumentA"));
 
             result.Invoking(a => a.Handle())
                 .Should()

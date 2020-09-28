@@ -4,7 +4,7 @@ using System.Reflection;
 namespace ParseTheArgs.Parsers.Arguments
 {
     /// <summary>
-    /// Parses a command line argument that accepts one or more <see cref="string" /> values.
+    /// Parses a command line argument that accepts one or more <see cref="String" /> values.
     /// </summary>
     public class StringListArgumentParser : MultiValueArgumentParser<String>
     {
@@ -13,7 +13,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        public StringListArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        public StringListArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
         }
 

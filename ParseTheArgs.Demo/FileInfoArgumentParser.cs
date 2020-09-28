@@ -7,7 +7,7 @@ namespace ParseTheArgs.Demo
 {
     public class FileInfoArgumentParser : SingleValueArgumentParser<FileInfo>
     {
-        public FileInfoArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        public FileInfoArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
         }
 

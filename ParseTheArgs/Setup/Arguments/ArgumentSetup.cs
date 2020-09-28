@@ -35,7 +35,7 @@ namespace ParseTheArgs.Setup.Arguments
 
             if (this.ArgumentParser == null)
             {
-                this.ArgumentParser = (TArgumentParser) Activator.CreateInstance(typeof(TArgumentParser), new Object[] { targetProperty, new ArgumentName(targetProperty.Name.ToCamelCase()) });
+                this.ArgumentParser = (TArgumentParser) Activator.CreateInstance(typeof(TArgumentParser), new Object[] { targetProperty, targetProperty.Name.ToCamelCase() });
 
                 commandParser.ArgumentParsers.Add(this.ArgumentParser);
             }
@@ -61,30 +61,12 @@ namespace ParseTheArgs.Setup.Arguments
         /// <exception cref="ArgumentException">Throw if another argument with the same name as the given one already exists for the command the argument belongs to.</exception>
         public TArgumentSetup Name(String name)
         {
-            if (this.commandParser.ArgumentParsers.Any(a => a != this.ArgumentParser && a.ArgumentName.Name == name))
+            if (this.commandParser.ArgumentParsers.Any(a => a != this.ArgumentParser && a.ArgumentName == name))
             {
                 throw new ArgumentException($"The given argument name '{name}' is already in use by another argument. Please use a different name.", nameof(name));
             }
 
-            this.ArgumentParser.ArgumentName = new ArgumentName(name, this.ArgumentParser.ArgumentName.ShortName);
-            return (TArgumentSetup) this;
-        }
-
-        /// <summary>
-        /// Sets the short name for the argument.
-        /// On the command line the argument can be passed by writing one dash followed by the given (single character) name (e.g. -a).
-        /// </summary>
-        /// <param name="shortName">The short name (a single character) for the argument.</param>
-        /// <returns>A reference to this instance for further configuration.</returns>
-        /// <exception cref="ArgumentException">Throw if another argument with the same short name as the given one already exists for the command the argument belongs to.</exception>
-        public TArgumentSetup ShortName(Char shortName)
-        {
-            if (this.commandParser.ArgumentParsers.Any(a => a != this.ArgumentParser && a.ArgumentName.ShortName != null && a.ArgumentName.ShortName.Value == shortName))
-            {
-                throw new ArgumentException($"The given argument short name '{shortName}' is already in use by another argument. Please use a different short name.", nameof(shortName));
-            }
-
-            this.ArgumentParser.ArgumentName = new ArgumentName(this.ArgumentParser.ArgumentName.Name, shortName);
+            this.ArgumentParser.ArgumentName = name;
             return (TArgumentSetup) this;
         }
 

@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument that is given multiple times.</param>
-        public DuplicateArgumentError(ArgumentName argumentName) : base(argumentName)
+        public DuplicateArgumentError(String argumentName) : base(argumentName)
         {
         }
 
@@ -21,7 +21,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The argument {this.ArgumentName} is used more than once. Please only use each argument once.";
+            return $"The argument --{this.ArgumentName} is used more than once. Please only use each argument once.";
         }
     }
 }

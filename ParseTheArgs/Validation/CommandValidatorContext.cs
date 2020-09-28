@@ -47,7 +47,7 @@ namespace ParseTheArgs.Validation
         /// Gets the name of the argument mapped to the specified property.
         /// </summary>
         /// <param name="argumentSelector">An expression to specify the property that is mapped to an argument.</param>
-        /// <returns>An instance of <see cref="ArgumentName"/> representing the name of the argument.</returns>
+        /// <returns>The name of the argument that is mapped to the specified property.</returns>
         /// <example>
         /// <code>
         /// public class PrintFileArguments
@@ -75,7 +75,7 @@ namespace ParseTheArgs.Validation
         /// }
         /// </code>
         /// </example>
-        public ArgumentName GetArgumentName(Expression<Func<TCommandArguments, Object>> argumentSelector)
+        public String GetArgumentName(Expression<Func<TCommandArguments, Object>> argumentSelector)
         {
             if (argumentSelector == null)
             {

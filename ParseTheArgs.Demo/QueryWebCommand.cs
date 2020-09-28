@@ -55,13 +55,11 @@ namespace ParseTheArgs.Demo
             defaultCommand
                 .Argument(a => a.WebsiteAddress)
                 .Name("website")
-                .ShortName('w')
                 .Help("The HTTP address of a website to download an show.");
 
             defaultCommand
                 .Argument(a => a.SearchEngineQuery)
                 .Name("search")
-                .ShortName('s')
                 .Help("A search query to ask a search engine.");
 
             defaultCommand.Validate(ValidateArguments);

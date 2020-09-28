@@ -9,7 +9,7 @@ namespace ParseTheArgs.Tests.CustomArgument
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
-        public CustomValueArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        public CustomValueArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
         }
 

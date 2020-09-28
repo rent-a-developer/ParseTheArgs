@@ -25,9 +25,9 @@ namespace ParseTheArgs.Tests.Validation
             var context = new CommandValidatorContext<Command1Arguments>(commandParserMock.Object, parseResultMock.Object);
 
             argumentParserMock.Setup(a => a.TargetProperty).Returns(typeof(Command1Arguments).GetProperty("ArgumentA"));
-            argumentParserMock.Setup(a => a.ArgumentName).Returns(new ArgumentName("argumentA", 'a'));
+            argumentParserMock.Setup(a => a.ArgumentName).Returns("argumentA");
 
-            context.GetArgumentName(a => a.ArgumentA).Should().BeEquivalentTo(new ArgumentName("argumentA", 'a'));
+            context.GetArgumentName(a => a.ArgumentA).Should().BeEquivalentTo("argumentA");
         }
 
         [Test(Description = "GetArgumentName should throw an exception when the given expression is null.")]

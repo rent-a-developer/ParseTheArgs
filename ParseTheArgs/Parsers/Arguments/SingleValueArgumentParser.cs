@@ -18,7 +18,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        protected SingleValueArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        protected SingleValueArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
             this.argumentDefaultValue = default!;
         }
@@ -48,7 +48,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
         public override void Parse(List<Token> tokens, ParseResult parseResult)
         {
-            var argumentToken = tokens.OfType<ArgumentToken>().FirstOrDefault(a => this.ArgumentName.EqualsNameOrShortName(a.ArgumentName));
+            var argumentToken = tokens.OfType<ArgumentToken>().FirstOrDefault(a => this.ArgumentName == a.ArgumentName);
 
             if (argumentToken != null)
             {

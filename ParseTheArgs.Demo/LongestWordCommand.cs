@@ -34,7 +34,6 @@ namespace ParseTheArgs.Demo
             command
                 .Argument(a => a.Words)
                 .Name("words")
-                .ShortName('w')
                 .Help("The list of words.")
                 .IsRequired();
         }

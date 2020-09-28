@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument that is unknown.</param>
-        public UnknownArgumentError(ArgumentName argumentName) : base(argumentName)
+        public UnknownArgumentError(String argumentName) : base(argumentName)
         {
         }
 
@@ -21,7 +21,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The argument {this.ArgumentName} is unknown.";
+            return $"The argument --{this.ArgumentName} is unknown.";
         }
     }
 }

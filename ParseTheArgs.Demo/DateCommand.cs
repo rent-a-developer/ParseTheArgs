@@ -53,27 +53,23 @@ namespace ParseTheArgs.Demo
             command
                 .Argument(a => a.Date)
                 .Name("date")
-                .ShortName('d')
                 .DefaultValue(DateTime.Now)
                 .Help("The date and time to display. If not specified the current system date and time are used.");
 
             command
                 .Argument(a => a.Offset)
                 .Name("offset")
-                .ShortName('o')
                 .DefaultValue(TimeSpan.Zero)
                 .Help("Offsets the date and time by the specified duration before displaying it. Format is HH:MM:SS.");
 
             command
                 .Argument(a => a.DisplayInUtc)
                 .Name("utc")
-                .ShortName('u')
                 .Help("Converts the date and time to UTC before displaying it.");
 
             command
                 .Argument(a => a.DifferenceToDate)
                 .Name("differenceTo")
-                .ShortName('t')
                 .Help("If specified the difference between the first date (argument --date) and this date is displayed.");
 
             command.Validate(ValidateArguments);

@@ -15,7 +15,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        protected NumericListArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        protected NumericListArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
             this.NumberStyles = NumberStyles.Any;
             this.FormatProvider = CultureInfo.CurrentCulture;

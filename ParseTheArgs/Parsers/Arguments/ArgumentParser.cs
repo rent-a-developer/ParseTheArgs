@@ -15,7 +15,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        protected ArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName)
+        protected ArgumentParser(PropertyInfo targetProperty, String argumentName)
         {
             this.TargetProperty = targetProperty;
             this.ArgumentName = argumentName;
@@ -31,7 +31,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// <summary>
         /// The name of the argument the parser parses.
         /// </summary>
-        public virtual ArgumentName ArgumentName { get; set; }
+        public virtual String ArgumentName { get; set; }
 
         /// <summary>
         /// The type of the argument the parser parses.

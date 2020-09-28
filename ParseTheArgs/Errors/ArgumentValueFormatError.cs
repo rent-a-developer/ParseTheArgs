@@ -13,7 +13,7 @@ namespace ParseTheArgs.Errors
         /// <param name="argumentName">The name of the argument whose value has an invalid format.</param>
         /// <param name="invalidArgumentValue">The argument value that has an invalid format.</param>
         /// <param name="expectedValueFormat">The format the value was expected to have.</param>
-        public ArgumentValueFormatError(ArgumentName argumentName, String invalidArgumentValue, String expectedValueFormat) : base(argumentName)
+        public ArgumentValueFormatError(String argumentName, String invalidArgumentValue, String expectedValueFormat) : base(argumentName)
         {
             this.InvalidArgumentValue = invalidArgumentValue;
             this.ExpectedValueFormat = expectedValueFormat;
@@ -35,7 +35,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The value '{this.InvalidArgumentValue}' of the argument {this.ArgumentName} has an invalid format. The expected format is: {this.ExpectedValueFormat}.";
+            return $"The value '{this.InvalidArgumentValue}' of the argument --{this.ArgumentName} has an invalid format. The expected format is: {this.ExpectedValueFormat}.";
         }
     }
 }

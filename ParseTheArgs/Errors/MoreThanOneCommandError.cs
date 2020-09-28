@@ -13,7 +13,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public String GetErrorMessage()
         {
-            return "More than one command specified. Please only specify one command.";
+            return "More than one command was specified. Please only specify one command.";
         }
     }
 }

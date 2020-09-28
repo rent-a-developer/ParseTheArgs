@@ -4,7 +4,7 @@ using System.Reflection;
 namespace ParseTheArgs.Parsers.Arguments
 {
     /// <summary>
-    /// Parses a command line argument that accepts a single <see cref="string" /> value.
+    /// Parses a command line argument that accepts a single <see cref="String" /> value.
     /// </summary>
     public class StringArgumentParser : SingleValueArgumentParser<String>
     {
@@ -13,7 +13,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        public StringArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        public StringArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
         }
 

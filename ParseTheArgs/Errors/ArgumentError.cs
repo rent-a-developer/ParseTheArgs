@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument which caused the error.</param>
-        protected ArgumentError(ArgumentName argumentName)
+        protected ArgumentError(String argumentName)
         {
             this.ArgumentName = argumentName;
         }
@@ -19,7 +19,7 @@ namespace ParseTheArgs.Errors
         /// <summary>
         /// The name of the argument which caused the error.
         /// </summary>
-        public ArgumentName ArgumentName { get; }
+        public String ArgumentName { get; }
 
         /// <summary>
         /// Gets the error message that describes the error.

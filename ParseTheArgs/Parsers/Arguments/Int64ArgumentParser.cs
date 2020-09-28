@@ -5,7 +5,7 @@ using ParseTheArgs.Errors;
 namespace ParseTheArgs.Parsers.Arguments
 {
     /// <summary>
-    /// Parses a command line argument that accepts a single <see cref="long" /> value.
+    /// Parses a command line argument that accepts a single <see cref="Int64" /> value.
     /// </summary>
     public class Int64ArgumentParser : NumericArgumentParser<Int64>
     {
@@ -14,7 +14,7 @@ namespace ParseTheArgs.Parsers.Arguments
         /// </summary>
         /// <param name="targetProperty">The property where the value of the argument will be stored.</param>
         /// <param name="argumentName">The name of the argument the parser parses.</param>
-        public Int64ArgumentParser(PropertyInfo targetProperty, ArgumentName argumentName) : base(targetProperty, argumentName)
+        public Int64ArgumentParser(PropertyInfo targetProperty, String argumentName) : base(targetProperty, argumentName)
         {
         }
 

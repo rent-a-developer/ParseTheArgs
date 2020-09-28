@@ -12,7 +12,7 @@ namespace ParseTheArgs.Errors
         /// </summary>
         /// <param name="argumentName">The name of the argument which is invalid.</param>
         /// <param name="message">The message that describes why the argument is invalid.</param>
-        public InvalidArgumentError(ArgumentName argumentName, String message) : base(argumentName)
+        public InvalidArgumentError(String argumentName, String message) : base(argumentName)
         {
             this.Message = message;
         }
@@ -28,7 +28,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The argument {this.ArgumentName} is invalid: {this.Message}";
+            return $"The argument --{this.ArgumentName} is invalid: {this.Message}";
         }
     }
 }

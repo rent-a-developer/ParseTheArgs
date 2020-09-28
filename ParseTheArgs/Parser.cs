@@ -224,7 +224,7 @@ namespace ParseTheArgs
 
                 if (duplicateArguments.Any())
                 {
-                    duplicateArguments.ForEach(a => result.AddError(new DuplicateArgumentError(new ArgumentName(a.Key))));
+                    duplicateArguments.ForEach(a => result.AddError(new DuplicateArgumentError(a.Key)));
                     this.PrintErrors(result);
                 }
                 else
@@ -236,7 +236,7 @@ namespace ParseTheArgs
 
                     if (!this.IgnoreUnknownArguments)
                     {
-                        tokens.OfType<ArgumentToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownArgumentError(new ArgumentName(a.ArgumentName))));
+                        tokens.OfType<ArgumentToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownArgumentError(a.ArgumentName)));
                     }
 
                     if (result.HasErrors)

@@ -116,8 +116,8 @@ tool help command1
             command1.Name("command1");
             command1.Help("Command1 help.");
             command1.ExampleUsage("Command1 Example Usage.");
-            command1.Argument(a => a.ArgumentA).Help("ArgumentA help.").ShortName('a').IsRequired();
-            command1.Argument(a => a.ArgumentB).Help("ArgumentB help.").ShortName('b');
+            command1.Argument(a => a.ArgumentA).Help("ArgumentA help.").IsRequired();
+            command1.Argument(a => a.ArgumentB).Help("ArgumentB help.");
             command1.Argument(a => a.ArgumentC).Help("ArgumentC help.").IsRequired();
 
             parser
@@ -125,13 +125,13 @@ tool help command1
                 .Should()
                 .Be(@"Banner Text
 
-tool command1 [-a|--argumentA value] [-b|--argumentB value] [--argumentC value value ...]
+tool command1 [--argumentA value] [--argumentB value] [--argumentC value value ...]
 
 Command1 help.
 
 Arguments:
--a|--argumentA [value]        (Required) ArgumentA help.
--b|--argumentB [value]        (Optional) ArgumentB help.
+--argumentA [value]           (Required) ArgumentA help.
+--argumentB [value]           (Optional) ArgumentB help.
 --argumentC [value value ...] (Required) ArgumentC help.
 
 Example usage:
@@ -141,13 +141,13 @@ Command1 Example Usage.
             parser
                 .GetCommandHelpText("command1", false)
                 .Should()
-                .Be(@"tool command1 [-a|--argumentA value] [-b|--argumentB value] [--argumentC value value ...]
+                .Be(@"tool command1 [--argumentA value] [--argumentB value] [--argumentC value value ...]
 
 Command1 help.
 
 Arguments:
--a|--argumentA [value]        (Required) ArgumentA help.
--b|--argumentB [value]        (Optional) ArgumentB help.
+--argumentA [value]           (Required) ArgumentA help.
+--argumentB [value]           (Optional) ArgumentB help.
 --argumentC [value value ...] (Required) ArgumentC help.
 
 Example usage:
@@ -179,8 +179,8 @@ tool help
                 .BeEmpty();
 
             var parseResult = new ParseResult();
-            parseResult.AddError(new ArgumentMissingError(new ArgumentName("argumentA", 'a')));
-            parseResult.AddError(new ArgumentMultipleValuesError(new ArgumentName("argumentA", 'a')));
+            parseResult.AddError(new ArgumentMissingError("argumentA"));
+            parseResult.AddError(new ArgumentMultipleValuesError("argumentA"));
 
             parser
                 .GetErrorsText(parseResult)
@@ -188,8 +188,8 @@ tool help
                 .Be(@"Banner Text
 
 Invalid or missing argument(s):
-- The argument -a (--argumentA) is missing.
-- Multiple values are given for the argument -a (--argumentA), but the argument does not support multiple values.
+- The argument --argumentA is missing.
+- Multiple values are given for the argument --argumentA, but the argument does not support multiple values.
 
 Try the following command to get help:
 tool help
@@ -526,7 +526,7 @@ Prints this help screen.
             parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
 
             var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().BeEquivalentTo(new ArgumentName("argumentB"));
+            error.ArgumentName.Should().BeEquivalentTo("argumentB");
             error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
         }
 
@@ -560,7 +560,7 @@ Prints this help screen.
             parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
 
             var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().BeEquivalentTo(new ArgumentName("argumentB"));
+            error.ArgumentName.Should().BeEquivalentTo("argumentB");
             error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
         }
 
@@ -602,7 +602,7 @@ Prints this help screen.
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
             parseResult.Errors[0].Should().BeOfType<MoreThanOneCommandError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("More than one command specified. Please only specify one command.");
+            parseResult.Errors[0].GetErrorMessage().Should().Be("More than one command was specified. Please only specify one command.");
         }
 
         [Test]

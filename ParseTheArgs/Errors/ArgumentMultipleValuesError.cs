@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument for which multiple values are given.</param>
-        public ArgumentMultipleValuesError(ArgumentName argumentName) : base(argumentName)
+        public ArgumentMultipleValuesError(String argumentName) : base(argumentName)
         {
         }
 
@@ -21,7 +21,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"Multiple values are given for the argument {this.ArgumentName}, but the argument does not support multiple values.";
+            return $"Multiple values are given for the argument --{this.ArgumentName}, but the argument does not support multiple values.";
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ParseTheArgs.Tests.Setup.Arguments
         {
             var parserMock = new Mock<Parser>();
             var commandParserMock = new Mock<CommandParser<Command1Arguments>>(parserMock.Object);
-            var duplicateArgumentParser = new StringArgumentParser(typeof(Command1Arguments).GetProperty("ArgumentA"), new ArgumentName("argumentA"));
+            var duplicateArgumentParser = new StringArgumentParser(typeof(Command1Arguments).GetProperty("ArgumentA"), "argumentA");
             
             commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser> {duplicateArgumentParser});
             var setup = new StringArgumentSetup<Command1Arguments>(commandParserMock.Object, (Expression<Func<Command1Arguments, Object>>)(a => a.ArgumentB));
@@ -29,23 +29,6 @@ namespace ParseTheArgs.Tests.Setup.Arguments
                 .Throw<ArgumentException>()
                 .WithMessage(@"The given argument name 'argumentA' is already in use by another argument. Please use a different name.
 Parameter name: name");
-        }
-
-        [Test(Description = "ShortName should throw an exception when another argument already has the same name.")]
-        public void ShortName_DuplicateShortName_ShouldThrowException()
-        {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<Command1Arguments>>(parserMock.Object);
-            var duplicateArgumentParser = new StringArgumentParser(typeof(Command1Arguments).GetProperty("ArgumentA"), new ArgumentName("argumentA", 'a'));
-            
-            commandParserMock.Setup(a => a.ArgumentParsers).Returns(new List<ArgumentParser> {duplicateArgumentParser});
-            var setup = new StringArgumentSetup<Command1Arguments>(commandParserMock.Object, (Expression<Func<Command1Arguments, Object>>)(a => a.ArgumentB));
-
-            setup.Invoking(a => a.ShortName('a'))
-                .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given argument short name 'a' is already in use by another argument. Please use a different short name.
-Parameter name: shortName");
         }
     }
 }

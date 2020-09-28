@@ -56,14 +56,12 @@ namespace ParseTheArgs.Demo
             command
                 .Argument(a => a.Guid)
                 .Name("guid")
-                .ShortName('g')
                 .Help("The Guid to be converted.")
                 .IsRequired();
 
             command
                 .Argument(a => a.Mode)
                 .Name("to")
-                .ShortName('t')
                 .Help("Defines to which the Guid should converted.")
                 .OptionHelp(ConvertGuidMode.Bytes, "Converts the Guid to a sequence of bytes.")
                 .OptionHelp(ConvertGuidMode.BigInteger, "Converts the Guid to a big integer.");

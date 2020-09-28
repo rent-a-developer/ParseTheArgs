@@ -16,7 +16,7 @@ This folder contains a .Net console application project that demonstrates the us
 > Toolbox help date
 
 ##### Download and print out the content of a website
-> Toolbox -w http://www.microsoft.com
+> Toolbox -website http://www.microsoft.com
 
 ##### Query a search engine and print out the result
 > Toolbox --search "What is life"

@@ -165,12 +165,7 @@ namespace ParseTheArgs.Parsers.Commands
         {
             var result = "";
 
-            if (argumentParser.ArgumentName.ShortName != null)
-            {
-                result += $"-{argumentParser.ArgumentName.ShortName}|";
-            }
-
-            result += $"--{argumentParser.ArgumentName.Name}";
+            result += $"--{argumentParser.ArgumentName}";
 
             switch (argumentParser.ArgumentType)
             {
@@ -196,12 +191,7 @@ namespace ParseTheArgs.Parsers.Commands
         {
             var result = "[";
 
-            if (argumentParser.ArgumentName.ShortName != null)
-            {
-                result += $"-{argumentParser.ArgumentName.ShortName}|";
-            }
-
-            result += $"--{argumentParser.ArgumentName.Name}";
+            result += $"--{argumentParser.ArgumentName}";
 
             switch (argumentParser.ArgumentType)
             {

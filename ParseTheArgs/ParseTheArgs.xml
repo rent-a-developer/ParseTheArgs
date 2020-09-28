@@ -4,55 +4,12 @@
         <name>ParseTheArgs</name>
     </assembly>
     <members>
-        <member name="T:ParseTheArgs.ArgumentName">
-            <summary>
-            Represents the name (the name and optionally the short name) of an argument.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.ArgumentName.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of this class.
-            </summary>
-            <param name="name">The name of the argument.</param>
-        </member>
-        <member name="M:ParseTheArgs.ArgumentName.#ctor(System.String,System.Nullable{System.Char})">
-            <summary>
-            Initializes a new instance of this class.
-            </summary>
-            <param name="name">The name of the argument.</param>
-            <param name="shortName">The short name of the argument.</param>
-        </member>
-        <member name="P:ParseTheArgs.ArgumentName.Name">
-            <summary>
-            The name of the argument.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.ArgumentName.ShortName">
-            <summary>
-            The short name of the argument.
-            The value is null if the argument does not have a short name.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.ArgumentName.EqualsNameOrShortName(System.String)">
-            <summary>
-            Determines if the given string is equal to the name or short name of this instance.
-            </summary>
-            <param name="nameOrShortName">A name or short name of an argument.</param>
-            <returns>True if the given string is equal the name or short name of this instance; otherwise, false.</returns>
-        </member>
-        <member name="M:ParseTheArgs.ArgumentName.ToString">
-            <summary>
-            Returns a textual representation of this instance.
-            If this instance has a short name "-shortName (--name)" is returned, otherwise "--name" is returned.
-            </summary>
-            <returns>A textual representation of this instance.</returns>
-        </member>
         <member name="T:ParseTheArgs.Errors.ArgumentError">
             <summary>
             Represents an error that indicates an issue with an argument.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.ArgumentError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.ArgumentError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -74,7 +31,7 @@
             Represents an error that indicates that a required argument is missing.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.ArgumentMissingError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.ArgumentMissingError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -91,7 +48,7 @@
             Represents an error that indicates that multiple values are given for an argument that only supports a single value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.ArgumentMultipleValuesError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.ArgumentMultipleValuesError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -108,7 +65,7 @@
             Represents an error that indicates that the value of an argument has an invalid format.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.ArgumentValueFormatError.#ctor(ParseTheArgs.ArgumentName,System.String,System.String)">
+        <member name="M:ParseTheArgs.Errors.ArgumentValueFormatError.#ctor(System.String,System.String,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -137,7 +94,7 @@
             Represents an error that indicates that no value is given for an argument that requires a value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.ArgumentValueMissingError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.ArgumentValueMissingError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -154,7 +111,7 @@
             Represents an error that indicates that an argument is given multiple times.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.DuplicateArgumentError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.DuplicateArgumentError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -171,7 +128,7 @@
             Represents an error that indicates that an argument is invalid.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.InvalidArgumentError.#ctor(ParseTheArgs.ArgumentName,System.String)">
+        <member name="M:ParseTheArgs.Errors.InvalidArgumentError.#ctor(System.String,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -227,7 +184,7 @@
             Represents an error that indicates that an unknown argument is given.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.UnknownArgumentError.#ctor(ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Errors.UnknownArgumentError.#ctor(System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -489,7 +446,7 @@
             Parses a command line argument.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.ArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -560,7 +517,7 @@
             The target property will be set to true when the argument is present, otherwise the target property will be set to false.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.BooleanArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -590,7 +547,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.DateTime" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -629,7 +586,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.DateTime" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DateTimeListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -668,7 +625,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.Decimal" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -689,7 +646,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.Decimal" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.DecimalListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -711,7 +668,7 @@
             </summary>
             <typeparam name="TEnum">The type of the enum the parser accepts as argument value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -744,7 +701,7 @@
             </summary>
             <typeparam name="TEnum">The type of the enum the parser accepts as argument values.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.EnumListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -776,7 +733,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.Guid" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.GuidArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -803,7 +760,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.Guid" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.GuidListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -830,7 +787,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.Int64" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -851,7 +808,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.Int64" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.Int64ListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -873,7 +830,7 @@
             </summary>
             <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.MultiValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -912,7 +869,7 @@
             </summary>
             <typeparam name="TValue">The specific numeric type the parser parses.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.NumericArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -937,7 +894,7 @@
             </summary>
             <typeparam name="TValue">The specific numeric type the parser parses.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.NumericListArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -962,7 +919,7 @@
             </summary>
             <typeparam name="TArgumentValue">The type of the argument value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.SingleValueArgumentParser`1.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1000,7 +957,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.String" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.StringArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1021,7 +978,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.String" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.StringListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.StringListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1042,7 +999,7 @@
             Parses a command line argument that accepts a single <see cref="T:System.TimeSpan" /> value.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1081,7 +1038,7 @@
             Parses a command line argument that accepts one or more <see cref="T:System.TimeSpan" /> values.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.#ctor(System.Reflection.PropertyInfo,ParseTheArgs.ArgumentName)">
+        <member name="M:ParseTheArgs.Parsers.Arguments.TimeSpanListArgumentParser.#ctor(System.Reflection.PropertyInfo,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -1256,15 +1213,6 @@
             <param name="name">The name for the argument.</param>
             <returns>A reference to this instance for further configuration.</returns>
             <exception cref="T:System.ArgumentException">Throw if another argument with the same name as the given one already exists for the command the argument belongs to.</exception>
-        </member>
-        <member name="M:ParseTheArgs.Setup.Arguments.ArgumentSetup`3.ShortName(System.Char)">
-            <summary>
-            Sets the short name for the argument.
-            On the command line the argument can be passed by writing one dash followed by the given (single character) name (e.g. -a).
-            </summary>
-            <param name="shortName">The short name (a single character) for the argument.</param>
-            <returns>A reference to this instance for further configuration.</returns>
-            <exception cref="T:System.ArgumentException">Throw if another argument with the same short name as the given one already exists for the command the argument belongs to.</exception>
         </member>
         <member name="F:ParseTheArgs.Setup.Arguments.ArgumentSetup`3.ArgumentParser">
             <summary>
@@ -2159,7 +2107,7 @@
              Gets the name of the argument mapped to the specified property.
              </summary>
              <param name="argumentSelector">An expression to specify the property that is mapped to an argument.</param>
-             <returns>An instance of <see cref="T:ParseTheArgs.ArgumentName"/> representing the name of the argument.</returns>
+             <returns>The name of the argument that is mapped to the specified property.</returns>
              <example>
              <code>
              public class PrintFileArguments

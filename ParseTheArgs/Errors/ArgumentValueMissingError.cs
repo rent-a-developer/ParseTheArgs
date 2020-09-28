@@ -11,7 +11,7 @@ namespace ParseTheArgs.Errors
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="argumentName">The name of the argument for which the value is missing.</param>
-        public ArgumentValueMissingError(ArgumentName argumentName) : base(argumentName)
+        public ArgumentValueMissingError(String argumentName) : base(argumentName)
         {
         }
 
@@ -21,7 +21,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The value for the argument {this.ArgumentName} is missing.";
+            return $"The value for the argument --{this.ArgumentName} is missing.";
         }
     }
 }

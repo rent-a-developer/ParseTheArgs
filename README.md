@@ -13,7 +13,7 @@ You have a console application and you need to parse the arguments for it?
 **You've come to the right place!**
 
 This library is easy to use, yet powerful enough for most scenarios and most important: **it can save you a lot of work**.
-Simply define your arguments (and optionally commands (verbs)) and you're good to go.
+Simply define your options (and optionally commands (verbs)) and you're good to go.
 
 It's as simple as that:
 ```csharp
@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using ParseTheArgs;
 
-public class PrintFileArguments
+public class PrintFileOptions
 {
     public String File { get; set; }
 }
@@ -33,11 +33,11 @@ public class Program
         var parser = new Parser();
 
         var defaultCommand = parser.Setup
-            .DefaultCommand<PrintFileArguments>()
+            .DefaultCommand<PrintFileOptions>()
             .ExampleUsage(@"PrintFile --file C:\temp\test.txt");
 
         defaultCommand
-            .Argument(a => a.File)
+            .Option(a => a.File)
             .Name("file")
             .Help("The file to read and print to the console.")
             .IsRequired();
@@ -45,9 +45,9 @@ public class Program
         var parseResult = parser.Parse(args);
 
         parseResult.Handle(
-            (PrintFileArguments arguments) =>
+            (PrintFileOptions options) =>
             {
-                Console.WriteLine(File.ReadAllText(arguments.File));
+                Console.WriteLine(File.ReadAllText(options.File));
             }
         );
     }
@@ -82,20 +82,20 @@ A detailed documentation and a getting started guide can be found in the [wiki](
 - Automatic [help screens](https://github.com/rent-a-developer/ParseTheArgs/wiki/Help-screens) and error messages.
 - Supports [commands](https://github.com/rent-a-developer/ParseTheArgs/wiki/Commands) (verbs).
 - Supports custom [validators](https://github.com/rent-a-developer/ParseTheArgs/wiki/Validation).
-- Supports [all important .NET primitives](https://github.com/rent-a-developer/ParseTheArgs/wiki/Arguments) for argument values: Boolean (switch), DateTime, Decimal, Enums, Guid, Int64, String, TimeSpan.
-- Supports [enums](https://github.com/rent-a-developer/ParseTheArgs/wiki/Enum-arguments) for arguments.
-- Supports [multi value arguments](https://github.com/rent-a-developer/ParseTheArgs/wiki/Multi-value-arguments).
+- Supports [all important .NET primitives](https://github.com/rent-a-developer/ParseTheArgs/wiki/Arguments) for option values: Boolean (switch), DateTime, Decimal, Enums, Guid, Int64, String, TimeSpan.
+- Supports [enums](https://github.com/rent-a-developer/ParseTheArgs/wiki/Enum-arguments) for options.
+- Supports [multi value options](https://github.com/rent-a-developer/ParseTheArgs/wiki/Multi-value-arguments).
 - Supports .NET Framework 4.5+, .NET Standard and .NET Core.
 - No dependencies (beyond standard .NET base libraries).
 
 # Help Screens
-Setup your arguments and you get help screens and error messages for free.
+Setup your options and you get help screens and error messages for free.
 
 ```csharp
 using System;
 using ParseTheArgs;
 
-public class PingArguments
+public class PingOptions
 {
     public String Host { get; set; }
     public Boolean ResolveAddressToHost { get; set; }
@@ -115,39 +115,39 @@ public class Program
         setup.Banner("Ping tool. Lets you check if a host is alive.");
 
         var defaultCommand = setup
-            .DefaultCommand<PingArguments>()
+            .DefaultCommand<PingOptions>()
             .ExampleUsage(@"Ping --host www.google.de --noend --forceV6");
     
         defaultCommand
-            .Argument(a => a.Host)
+            .Option(a => a.Host)
             .Name("host")
             .Help("The hostname or IP address of the host to ping.")
             .IsRequired();
 
         defaultCommand
-            .Argument(a => a.ResolveAddressToHost)
+            .Option(a => a.ResolveAddressToHost)
             .Name("resolve")
             .Help("Resolve IP addresses to host names.");
 
         defaultCommand
-            .Argument(a => a.PingEndless)
+            .Option(a => a.PingEndless)
             .Name("noend")
             .Help("Ping the specified host until stopped.");
 
         defaultCommand
-            .Argument(a => a.ForceIPV4)
+            .Option(a => a.ForceIPV4)
             .Name("forceV4")
             .Help("Force using IPv4");
 
         defaultCommand
-            .Argument(a => a.ForceIPV6)
+            .Option(a => a.ForceIPV6)
             .Name("forceV6")
             .Help("Force using IPv6");
 
         var parseResult = parser.Parse(args);
 
         parseResult.Handle(
-            (PingArguments arguments) =>
+            (PingOptions options) =>
             {
                 // Your code
             }
@@ -163,7 +163,7 @@ Ping tool. Lets you check if a host is alive.
 
 Ping [--host value] [--resolve] [--noend] [--forceV4] [--forceV6]
 
-Arguments:
+Options:
 --host [value] (Required) The hostname or IP address of the host to ping.
 --resolve      (Optional) Resolve IP addresses to host names.
 --noend        (Optional) Ping the specified host until stopped.
@@ -177,12 +177,12 @@ Ping help
 Prints this help screen.
 ```
 
-And in case something is wrong with the arguments (e.g. a required argument is missing) you get a nice error screen too:
+And in case something is wrong with the arguments (e.g. a required option is missing) you get a nice error screen too:
 ```
 Ping tool. Lets you check if a host is alive.
 
-Invalid or missing argument(s):
-- The argument --host is missing.
+Invalid or missing option(s):
+- The option --host is missing.
 
 Try the following command to get help:
 Ping help
@@ -204,7 +204,7 @@ C:\> Calculator --num1 10 --num2 5 --op Divide
 using System;
 using ParseTheArgs;
 
-public class CalculatorArguments
+public class CalculatorOptions
 {
     public Decimal Number1 { get; set; }
     public Decimal Number2 { get; set; }
@@ -227,23 +227,23 @@ public class Program
         var setup = parser.Setup;
 
         var defaultCommand = setup
-            .DefaultCommand<CalculatorArguments>()
+            .DefaultCommand<CalculatorOptions>()
             .ExampleUsage("Calculator --num1 5 --num2 10 --op add");
         
         defaultCommand
-            .Argument(a => a.Number1)
+            .Option(a => a.Number1)
             .Name("num1")
             .Help("The first number.")
             .IsRequired();
 
         defaultCommand
-            .Argument(a => a.Number2)
+            .Option(a => a.Number2)
             .Name("num2")
             .Help("The second number.")
             .IsRequired();
 
         defaultCommand
-            .Argument(a => a.Operation)
+            .Option(a => a.Operation)
             .Name("op")
             .Help("The operation to perform on the two numbers")
             .IsRequired();
@@ -251,22 +251,22 @@ public class Program
         var parseResult = parser.Parse(args);
 
         parseResult.Handle(
-            (CalculatorArguments arguments) =>
+            (CalculatorOptions options) =>
             {
                 var result = 0M;
-                switch (arguments.Operation)
+                switch (options.Operation)
                 {
                     case Operation.Add:
-                        result = arguments.Number1 + arguments.Number2;
+                        result = options.Number1 + options.Number2;
                         break;
                     case Operation.Subtract:
-                        result = arguments.Number1 - arguments.Number2;
+                        result = options.Number1 - options.Number2;
                         break;
                     case Operation.Multiply:
-                        result = arguments.Number1 * arguments.Number2;
+                        result = options.Number1 * options.Number2;
                         break;
                     case Operation.Divide:
-                        result = arguments.Number1 / arguments.Number2;
+                        result = options.Number1 / options.Number2;
                         break;
                 }
 
@@ -288,14 +288,14 @@ using System;
 using System.IO;
 using ParseTheArgs;
 
-public class CopyFileArguments
+public class CopyFileOptions
 {
     public String SourceFileName { get; set; }
     public String TargetFileName { get; set; }
     public Boolean Override { get; set; }
 }
 
-public class DeleteFileArguments
+public class DeleteFileOptions
 {
     public String File { get; set; }
 }
@@ -308,45 +308,45 @@ public class Program
         var setup = parser.Setup;
 
         var copyFileCommand = setup
-            .DefaultCommand<CopyFileArguments>()
+            .DefaultCommand<CopyFileOptions>()
             .ExampleUsage(@"FileHelper copy --from C:\temp\test.txt --to C:\temp\test2.txt");
         
         copyFileCommand
-            .Argument(a => a.SourceFileName)
+            .Option(a => a.SourceFileName)
             .Name("from")
             .Help("The source file to copy.")
             .IsRequired();
         
         copyFileCommand
-            .Argument(a => a.TargetFileName)
+            .Option(a => a.TargetFileName)
             .Name("to")
             .Help("The target file to copy the source file to.")
             .IsRequired();
         
         copyFileCommand
-            .Argument(a => a.Override)
+            .Option(a => a.Override)
             .Name("override")
             .Help("Override the target file if it already exists.");
 
         var deleteFileCommand = setup
-            .Command<DeleteFileArguments>()
+            .Command<DeleteFileOptions>()
             .ExampleUsage(@"FileHelper delete --file C:\temp\test.txt");
 
         deleteFileCommand
-            .Argument(a => a.File)
+            .Option(a => a.File)
             .Help("The file to delete.")
             .IsRequired();
 
         var parseResult = parser.Parse(args);
 
         parseResult.Handle(
-            (CopyFileArguments arguments) =>
+            (CopyFileOptions options) =>
             {
-                File.Copy(arguments.SourceFileName, arguments.TargetFileName, arguments.Override);
+                File.Copy(options.SourceFileName, options.TargetFileName, options.Override);
             },
-            (DeleteFileArguments arguments) =>
+            (DeleteFileOptions options) =>
             {
-                File.Delete(arguments.File);
+                File.Delete(options.File);
             }
         );
     }

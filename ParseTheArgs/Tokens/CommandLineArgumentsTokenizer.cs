@@ -27,15 +27,16 @@ namespace ParseTheArgs.Tokens
 
         private static IEnumerable<Token> TokenizeIterator(String[] args)
         {
-            var leftArgs = new List<String>(args);
+            var argumentsToTokenize = new List<String>(args);
 
-            while (leftArgs.Any())
+            while (argumentsToTokenize.Any())
             {
-                var arg = leftArgs[0];
-                if (arg.StartsWith("--") || arg.StartsWith("-"))
+                var argument = argumentsToTokenize[0];
+                
+                if (argument.StartsWith("--") || argument.StartsWith("-"))
                 {
-                    var argumentName = arg.StartsWith("--") ? arg.Substring(2) : arg.Substring(1);
-                    var argumentValues = leftArgs.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
+                    var argumentName = argument.StartsWith("--") ? argument.Substring(2) : argument.Substring(1);
+                    var argumentValues = argumentsToTokenize.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
 
                     if (argumentValues.Count == 0)
                     {
@@ -46,15 +47,15 @@ namespace ParseTheArgs.Tokens
                         yield return new ArgumentToken(argumentName, argumentValues);
                     }
 
-                    leftArgs.RemoveAt(0);
-                    leftArgs.RemoveRange(0, argumentValues.Count);
+                    argumentsToTokenize.RemoveAt(0);
+                    argumentsToTokenize.RemoveRange(0, argumentValues.Count);
                 }
                 else
                 {
-                    var commandName = arg;
+                    var commandName = argument;
                     yield return new CommandToken(commandName);
 
-                    leftArgs.RemoveAt(0);
+                    argumentsToTokenize.RemoveAt(0);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -10,8 +11,14 @@ namespace ParseTheArgs.Tests.Tokens
     [TestFixture]
     public class CommandLineArgumentsTokenizerTests
     {
-        [Test]
-        public void TestTokenize()
+        [Test(Description = "Tokenize should return no tokens when there are no arguments.")]
+        public void Tokenize_NoArguments_ShouldReturnNoTokens()
+        {
+            CommandLineArgumentsTokenizer.Tokenize(new String[] {}).Should().BeEquivalentTo(new List<Token>());
+        }
+
+        [Test(Description = "Tokenize should return tokens that represent each present argument.")]
+        public void Tokenize_Arguments_ShouldReturnTokensRepresentingTheGivenArguments()
         {
             CommandLineArgumentsTokenizer.Tokenize(new String[] {"command"}).Should().BeEquivalentTo(new CommandToken("command"));
             CommandLineArgumentsTokenizer.Tokenize(new String[] {"command1", "command2"}).Should().BeEquivalentTo(new CommandToken("command1"), new CommandToken("command2"));
@@ -30,8 +37,8 @@ namespace ParseTheArgs.Tests.Tokens
             CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "--argument" }).Should().BeEquivalentTo(new CommandToken("command"), new ArgumentToken("argument"));
         }
 
-        [Test]
-        public void TestTokenize_Exceptions()
+        [Test(Description = "Tokenize should throw an exception when the given arguments is null.")]
+        public void Tokenize_Null_ShouldThrowException()
         {
             Invoking(() => CommandLineArgumentsTokenizer.Tokenize(null).ToList()).Should().Throw<ArgumentNullException>();
         }

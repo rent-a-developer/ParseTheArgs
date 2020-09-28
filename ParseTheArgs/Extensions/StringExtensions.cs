@@ -134,9 +134,14 @@ namespace ParseTheArgs.Extensions
         /// <returns>The wrapped lines of the given text.</returns>
         public static String[] WordWrap(this String text, Int32 lineLength)
         {
-            if (String.IsNullOrEmpty(text))
+            if (text == null)
             {
-                return new String[] {text};
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text == String.Empty)
+            {
+                return new String[] { String.Empty };
             }
 
             var pattern = @"(?<line>.{1," + lineLength + @"})(?<!\s)(\s+|$)|(?<line>.+?)(\s+|$)";

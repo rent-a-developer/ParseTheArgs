@@ -72,12 +72,6 @@ namespace ParseTheArgs.Tests.Extensions
             "aB".ToFirstLetterUpperCase().Should().Be("AB");
         }
 
-        [Test(Description = "WordWrap should return a sequence with a single null value when null is given.")]
-        public void WordWrap_Null_ShouldReturnNull()
-        {
-            ((String) null).WordWrap(20).Should().BeEquivalentTo(new String[] { null });
-        }
-
         [Test(Description = "WordWrap should return a sequence with a single empty string value when an empty string is given.")]
         public void WordWrap_EmptyString_ShouldReturnEmptyString()
         {
@@ -88,6 +82,14 @@ namespace ParseTheArgs.Tests.Extensions
         public void WordWrap_Text_ShouldWordWrapAndReturnLines()
         {
             "Lorem ipsum dolor sit amet, consetetur. sadipscing elitr, sed diam.".WordWrap(20).Should().BeEquivalentTo(new String[] { "Lorem ipsum dolor", "sit amet,", "consetetur.", "sadipscing elitr,", "sed diam." });
+        }
+
+        [Test(Description = "WordWrap should throw an exception when null is given.")]
+        public void WordWrap_Null_ShouldThrowException()
+        {
+            ((String) null).Invoking(a => a.WordWrap(20))
+                .Should()
+                .Throw<ArgumentNullException>();
         }
     }
 }

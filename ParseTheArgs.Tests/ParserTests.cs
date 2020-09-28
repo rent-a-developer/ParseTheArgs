@@ -70,23 +70,6 @@ Arguments:
 "), Times.Exactly(1));
         }
 
-        [Test(Description = "Tests fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1")]
-        public void TestParse_Help_ArgumentWithoutHelp()
-        {
-            var parser = new Parser();
-
-            parser.Setup.HelpTextWriter(new StringWriter());
-
-            var defaultCommand = parser.Setup
-                .DefaultCommand<Command1Arguments>();
-
-            defaultCommand
-                .Argument(a => a.ArgumentA)
-                .Name("argumentA");
-
-            parser.Invoking(a => a.Parse(new String[] { })).Should().NotThrow();
-        }
-
         [Test]
         public void TestParse_Error()
         {

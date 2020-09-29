@@ -17,11 +17,27 @@ namespace ParseTheArgs.Tests
         [SetUp]
         public void SetUp()
         {
+            // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
-        [Test]
-        public void TestParse_Help()
+        [Test(Description = "Parse should set ParseResult.IsHelpCalled to true when the help was called.")]
+        public void Parse_HelpCalled_ShouldSetIsHelpCalledToTrue()
+        {
+            var parser = new Parser();
+
+            var parseResult1 = parser.Parse(new String[] {});
+            parseResult1.IsHelpCalled.Should().BeTrue();
+
+            var parseResult2 = parser.Parse(new String[] {"help"});
+            parseResult2.IsHelpCalled.Should().BeTrue();
+
+            var parseResult3 = parser.Parse(new String[] { "help", "command1" });
+            parseResult3.IsHelpCalled.Should().BeTrue();
+        }
+
+        [Test(Description = "Parse should write the help screen to the help text writer when help was called.")]
+        public void Parse_HelpCalled_ShouldWriteHelpScreenToHelpTextWriter()
         {
             var parser = new Parser();
 
@@ -40,11 +56,7 @@ namespace ParseTheArgs.Tests
             setup
                 .HelpTextWriter(helpTextWriterMock.Object);
 
-            var parseResult1 = parser.Parse(new String[] {});
-            parseResult1.IsHelpCalled.Should().BeTrue();
-
-            var parseResult2 = parser.Parse(new String[] {"help"});
-            parseResult2.IsHelpCalled.Should().BeTrue();
+            parser.Parse(new String[] {});
 
             helpTextWriterMock.Verify(a => a.Write(@"Banner Text
 
@@ -58,24 +70,15 @@ Prints this help screen.
 
 tool help <command>
 Prints the help screen for the specified command.
-"), Times.Exactly(2));
-
-            parser.Parse(new String[] { "help", "command1" });
-
-            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
-
-tool command1 
-
-Options:
-"), Times.Exactly(1));
+"), Times.Once);
         }
 
-        [Test]
-        public void TestParse_Error()
+        [Test(Description = "Parse should write the command help screen to the help text writer when command help was called.")]
+        public void Parse_CommandHelpCalled_ShouldWriteCommandHelpScreenToHelpTextWriter()
         {
             var parser = new Parser();
 
-            var mock = new Mock<TextWriter>();
+            var helpTextWriterMock = new Mock<TextWriter>();
 
             var setup = parser.Setup;
 
@@ -88,22 +91,52 @@ Options:
                 .Name("command1");
 
             setup
-                .ErrorTextWriter(mock.Object);
+                .HelpTextWriter(helpTextWriterMock.Object);
+
+            parser.Parse(new String[] { "help", "command1" });
+
+            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
+
+tool command1 
+
+Options:
+"), Times.Once);
+        }
+
+        [Test(Description = "Parse should write the error screen to the error writer when there is an issue with an argument.")]
+        public void Parse_ArgumentError_ShouldPrintErrorsToErrorWriter()
+        {
+            var parser = new Parser();
+
+            var errorTextWriterMock = new Mock<TextWriter>();
+
+            var setup = parser.Setup;
+
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
+
+            setup
+                .Command<Command1Options>()
+                .Name("command1");
+
+            setup
+                .ErrorTextWriter(errorTextWriterMock.Object);
 
             parser.Parse(new String[] {"command1", "--unknownOption"});
 
-            mock.Verify(a => a.Write(@"Banner Text
+            errorTextWriterMock.Verify(a => a.Write(@"Banner Text
 
 Invalid or missing option(s):
 - The option --unknownOption is unknown.
 
 Try the following command to get help:
 tool help command1
-"));
+"), Times.Once);
         }
 
-        [Test]
-        public void TestGetCommandHelpText()
+        [Test(Description = "GetCommandHelpText should return the help of the specified command.")]
+        public void GetCommandHelpText_Called_ShouldReturnTheCorrectCommandHelp()
         {
             var parser = new Parser();
 
@@ -137,6 +170,25 @@ Options:
 Example usage:
 Command1 Example Usage.
 ");
+        }
+
+        [Test(Description = "GetCommandHelpText should not include the banner if specified.")]
+        public void GetCommandHelpText_NoBanner_ShouldReturnCommandHelpWithoutBanner()
+        {
+            var parser = new Parser();
+
+            var setup = parser.Setup;
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
+
+            var command1 = setup.Command<Command1Options>();
+            command1.Name("command1");
+            command1.Help("Command1 help.");
+            command1.ExampleUsage("Command1 Example Usage.");
+            command1.Option(a => a.OptionA).Help("OptionA help.").IsRequired();
+            command1.Option(a => a.OptionB).Help("OptionB help.");
+            command1.Option(a => a.OptionC).Help("OptionC help.").IsRequired();
 
             parser
                 .GetCommandHelpText("command1", false)
@@ -153,9 +205,19 @@ Options:
 Example usage:
 Command1 Example Usage.
 ");
+        }
+
+        [Test(Description = "GetCommandHelpText should return an error message when the specified command is unknown.")]
+        public void GetCommandHelpText_UnknownCommand_ShouldReturnErrorMessage()
+        {
+            var parser = new Parser();
+
+            var setup = parser.Setup;
+            setup
+                .ProgramName("tool");
 
             parser
-                .GetCommandHelpText("unknownCommand", false)
+                .GetCommandHelpText("unknownCommand")
                 .Should()
                 .Be(@"The command 'unknownCommand' is unknown.
 Try the following command to get a list of valid commands:
@@ -163,8 +225,19 @@ tool help
 ");
         }
 
-        [Test]
-        public void TestGetErrorsText()
+        [Test(Description = "GetErrorsText should return an empty string when there are no errors.")]
+        public void GetErrorsText_NoErrorsPresent_ShouldReturnEmptyString()
+        {
+            var parser = new Parser();
+
+            parser
+                .GetErrorsText(new ParseResult())
+                .Should()
+                .BeEmpty();
+        }
+
+        [Test(Description = "GetErrorsText should return the error messages of the errors when there are errors.")]
+        public void GetErrorsText_ErrorsPresent_ShouldReturnErrorMessages()
         {
             var parser = new Parser();
 
@@ -172,11 +245,6 @@ tool help
             setup
                 .ProgramName("tool")
                 .Banner("Banner Text");
-
-            parser
-                .GetErrorsText(new ParseResult())
-                .Should()
-                .BeEmpty();
 
             var parseResult = new ParseResult();
             parseResult.AddError(new OptionMissingError("optionA"));
@@ -196,13 +264,15 @@ tool help
 ");
         }
 
-        [Test]
-        public void TestGetHelpText()
+        [Test(Description = "GetHelpText should return the help screen.")]
+        public void GetHelpText_Called_ShouldReturnHelpScreen()
         {
             var parser = new Parser();
 
             var setup = parser.Setup;
-            setup.ProgramName("tool").Banner("Banner Text");
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
 
             parser
                 .GetHelpText()
@@ -212,6 +282,35 @@ tool help
 tool help
 Prints this help screen.
 ");
+        }
+
+        [Test(Description = "GetHelpText should not include the banner if specified.")]
+        public void GetHelpText_NoBanner_ShouldReturnHelpScreen()
+        {
+            var parser = new Parser();
+
+            var setup = parser.Setup;
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
+
+            parser
+                .GetHelpText(false)
+                .Should()
+                .Be(@"tool help
+Prints this help screen.
+");
+        }
+
+        [Test(Description = "GetHelpText should return the help text of the default.")]
+        public void GetHelpText_Commands_ShouldReturnHelpOfDefaultCommand()
+        {
+            var parser = new Parser();
+
+            var setup = parser.Setup;
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
 
             var defaultCommand = setup.DefaultCommand<DefaultOptions>();
             defaultCommand.Help("DefaultCommand Help.");
@@ -242,14 +341,6 @@ Prints this help screen.
                 .OptionHelp(Encoding.UTF8, "UTF8 help.")
                 .OptionHelp(Encoding.UTF16, "UTF16 help.");
 
-            var command1 = setup.Command<Command1Options>();
-            command1.Name("command1");
-            command1.Help("Command1 help.");
-
-            var command2 = setup.Command<Command2Options>();
-            command2.Name("command2");
-            command2.Help("Command2 help.");
-
             parser
                 .GetHelpText()
                 .Should()
@@ -277,43 +368,33 @@ Options:
 Example usage:
 DefaultCommand Example Usage
 
-tool <command> [options]
-
-Commands:
-command1	Command1 help.
-command2	Command2 help.
-
 tool help
 Prints this help screen.
-
-tool help <command>
-Prints the help screen for the specified command.
 ");
+        }
+
+        [Test(Description = "GetHelpText should list all available commands.")]
+        public void GetHelpText_Commands_ShouldReturnHelpOfCommands()
+        {
+            var parser = new Parser();
+
+            var setup = parser.Setup;
+            setup
+                .ProgramName("tool")
+                .Banner("Banner Text");
+
+            var command1 = setup.Command<Command1Options>();
+            command1.Name("command1");
+            command1.Help("Command1 help.");
+
+            var command2 = setup.Command<Command2Options>();
+            command2.Name("command2");
+            command2.Help("Command2 help.");
 
             parser
-                .GetHelpText(false)
+                .GetHelpText()
                 .Should()
-                .Be(@"tool [--optionA value] [--optionB value] [--optionC] [--optionD value] [--optionE value] [--optionF value value ...] [--optionG value value ...]
-
-DefaultCommand Help.
-
-Options:
---optionA [value]           (Optional) OptionA help.
---optionB [value]           (Optional) OptionB help.
---optionC                   (Optional) OptionC help.
---optionD [value]           (Optional) OptionD help. Possible values: Trace, Info, Debug, Error.
---optionE [value]           (Optional) OptionE help. Possible values: ASCII, UTF8, UTF16.
-                                       ASCII: ASCII help.
-                                       UTF8: UTF8 help.
-                                       UTF16: UTF16 help.
---optionF [value value ...] (Optional) OptionF help. Possible values: Trace, Info, Debug, Error.
---optionG [value value ...] (Optional) OptionG help. Possible values: ASCII, UTF8, UTF16.
-                                       ASCII: ASCII help.
-                                       UTF8: UTF8 help.
-                                       UTF16: UTF16 help.
-
-Example usage:
-DefaultCommand Example Usage
+                .Be(@"Banner Text
 
 tool <command> [options]
 
@@ -329,8 +410,8 @@ Prints the help screen for the specified command.
 ");
         }
 
-        [Test]
-        public void TestGetHelpText_MaxLineLength()
+        [Test(Description = "GetHelpText should wrap lines longer than the specified maximum.")]
+        public void GetHelpText_MaxLineLength_ShouldWrapLongLines()
         {
             var parser = new Parser();
 
@@ -339,8 +420,12 @@ Prints the help screen for the specified command.
 
             setup.HelpTextMaxLineLength(80);
 
-            var defaultCommand = setup.DefaultCommand<DefaultOptions>();
-            defaultCommand.Option(a => a.OptionA).Help("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et");
+            var defaultCommand = setup
+                .DefaultCommand<DefaultOptions>();
+            
+            defaultCommand
+                .Option(a => a.OptionA)
+                .Help("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et");
 
             parser
                 .GetHelpText()
@@ -358,8 +443,8 @@ Prints this help screen.
 ");
         }
 
-        [Test]
-        public void TestParse_DataTypes()
+        [Test(Description = "Parse should parse all supported data types for option values correctly.")]
+        public void Parse_DataTypes_ShouldParseAllSupportedDataTypes()
         {
             var parser = new Parser();
 
@@ -447,8 +532,8 @@ Prints this help screen.
             commandOptions.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
         }
 
-        [Test]
-        public void TestParse_Defaults()
+        [Test(Description = "Parse should use the specified default value for each option if the option is not specified in the command line arguments.")]
+        public void Parse_Defaults_ShouldUseDefaultValues()
         {
             var parser = new Parser();
 
@@ -495,16 +580,14 @@ Prints this help screen.
             commandOptions.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
         }
 
-        [Test]
-        public void TestParse_ValidateCommand()
+        [Test(Description = "Parse should call the validator of the specified command.")]
+        public void Parse_CommandValidator_ShouldCallValidator()
         {
             var parser = new Parser();
 
             var setup = parser.Setup;
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
-
-            setup.ProgramName("fileTool");
 
             var command1 = setup.Command<Command1Options>();
             command1.Name("command1");
@@ -530,8 +613,8 @@ Prints this help screen.
             error.GetErrorMessage().Should().Be("The option --optionB is invalid: The option '--optionB' must be specified when option '--optionA' is specified.");
         }
 
-        [Test]
-        public void TestParse_ValidateDefaultCommand()
+        [Test(Description = "Parse should call the validator of the default command.")]
+        public void Parse_DefaultCommandValidator_ShouldCallValidator()
         {
             var parser = new Parser();
 
@@ -539,13 +622,11 @@ Prints this help screen.
             setup.HelpTextWriter(null);
             setup.ErrorTextWriter(null);
 
-            setup.ProgramName("fileTool");
+            var defaultCommand = setup.DefaultCommand<Command1Options>();
+            defaultCommand.Option(a => a.OptionA);
+            defaultCommand.Option(a => a.OptionB);
 
-            var command1 = setup.DefaultCommand<Command1Options>();
-            command1.Option(a => a.OptionA);
-            command1.Option(a => a.OptionB);
-
-            command1.Validate((context) =>
+            defaultCommand.Validate((context) =>
             {
                 if (!String.IsNullOrEmpty(context.CommandOptions.OptionA) && context.CommandOptions.OptionB == null)
                 {
@@ -564,8 +645,8 @@ Prints this help screen.
             error.GetErrorMessage().Should().Be("The option --optionB is invalid: The option '--optionB' must be specified when option '--optionA' is specified.");
         }
 
-        [Test]
-        public void TestParse_IgnoreUnknownOptions()
+        [Test(Description = "Parse should ignore unknown options when the IgnoreUnknownOptions is enabled.")]
+        public void Parse_IgnoreUnknownOptionsEnabled_ShouldIgnoreUnknownOptions()
         {
             var parser = new Parser();
 
@@ -584,8 +665,8 @@ Prints this help screen.
             parseResult.HasErrors.Should().BeFalse();
         }
 
-        [Test]
-        public void TestParse_MoreThanOneCommandError()
+        [Test(Description = "Parse should return a MoreThanOneCommandError when there is more than once command specified.")]
+        public void Parse_MoreThanOneCommand_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -605,8 +686,8 @@ Prints this help screen.
             parseResult.Errors[0].GetErrorMessage().Should().Be("More than one command was specified. Please only specify one command.");
         }
 
-        [Test]
-        public void TestParse_MissingCommandError()
+        [Test(Description = "Parse should return a MissingCommandError when there is no command specified and the default command has not set up.")]
+        public void Parse_MissingCommand_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -626,8 +707,8 @@ Prints this help screen.
             parseResult.Errors[0].GetErrorMessage().Should().Be("No command was specified.");
         }
 
-        [Test]
-        public void TestParse_OptionValueMissingError()
+        [Test(Description = "Parse should return a OptionValueMissingError when the value of an option is missing.")]
+        public void Parse_OptionValueMissing_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -644,11 +725,11 @@ Prints this help screen.
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
             parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The value for the option --optionA is missing.");
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The option --optionA requires a value, but no value was specified.");
         }
 
-        [Test]
-        public void TestParse_DuplicateOptionError()
+        [Test(Description = "Parse should return a DuplicateOptionError when an option was specified more than once.")]
+        public void Parse_DuplicateOption_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -668,8 +749,8 @@ Prints this help screen.
             parseResult.Errors[0].GetErrorMessage().Should().Be("The option --optionA is used more than once. Please only use each option once.");
         }
 
-        [Test]
-        public void TestParse_UnknownCommandError()
+        [Test(Description = "Parse should return a UnknownCommandError when an unknown command was specified.")]
+        public void Parse_UnknownCommand_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -689,8 +770,8 @@ Prints this help screen.
             parseResult.Errors[0].GetErrorMessage().Should().Be("The command 'unknownCommand' is unknown.");
         }
 
-        [Test]
-        public void TestParse_OptionValueFormatError()
+        [Test(Description = "Parse should return a OptionValueFormatError when the value of an option has an invalid format.")]
+        public void Parse_OptionValueHasInvalidFormat_ShouldReturnError()
         {
             var parser = new Parser();
 
@@ -706,12 +787,12 @@ Prints this help screen.
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueFormatError>();
+            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
             parseResult.Errors[0].GetErrorMessage().Should().Be("The value 'NotANumber' of the option --int64 has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
         }
 
-        [Test]
-        public void TestParse_UnknownOptionError()
+        [Test(Description = "Parse should return a UnknownOptionError when an unknown option was specified.")]
+        public void Parse_UnknownOption_ShouldReturnError()
         {
             var parser = new Parser();
 

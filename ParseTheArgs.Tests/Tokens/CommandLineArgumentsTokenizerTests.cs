@@ -37,7 +37,7 @@ namespace ParseTheArgs.Tests.Tokens
             CommandLineArgumentsTokenizer.Tokenize(new String[] { "command", "--option" }).Should().BeEquivalentTo(new CommandToken("command"), new OptionToken("option"));
         }
 
-        [Test(Description = "Tokenize should throw an exception when the given arguments is null.")]
+        [Test(Description = "Tokenize should throw an exception when the given arguments array is null.")]
         public void Tokenize_Null_ShouldThrowException()
         {
             Invoking(() => CommandLineArgumentsTokenizer.Tokenize(null).ToList()).Should().Throw<ArgumentNullException>();

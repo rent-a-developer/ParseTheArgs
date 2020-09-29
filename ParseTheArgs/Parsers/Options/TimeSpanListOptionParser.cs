@@ -52,7 +52,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!TimeSpan.TryParseExact(optionValue, this.TimeSpanFormat, this.FormatProvider, this.TimeSpanStyles, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
                     return false;
                 }
 
@@ -62,7 +62,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!TimeSpan.TryParse(optionValue, this.FormatProvider, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
                     return false;
                 }
 

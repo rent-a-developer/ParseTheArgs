@@ -133,12 +133,12 @@
             </summary>
             <returns>The error message that describes the error.</returns>
         </member>
-        <member name="T:ParseTheArgs.Errors.OptionValueFormatError">
+        <member name="T:ParseTheArgs.Errors.OptionValueInvalidFormatError">
             <summary>
             Represents an error that indicates that the value of an option has an invalid format.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.OptionValueFormatError.#ctor(System.String,System.String,System.String)">
+        <member name="M:ParseTheArgs.Errors.OptionValueInvalidFormatError.#ctor(System.String,System.String,System.String)">
             <summary>
             Initializes a new instance of this class.
             </summary>
@@ -146,17 +146,17 @@
             <param name="invalidOptionValue">The option value that has an invalid format.</param>
             <param name="expectedValueFormat">The format the value was expected to have.</param>
         </member>
-        <member name="P:ParseTheArgs.Errors.OptionValueFormatError.ExpectedValueFormat">
+        <member name="P:ParseTheArgs.Errors.OptionValueInvalidFormatError.ExpectedValueFormat">
             <summary>
             The format the value was expected to have.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Errors.OptionValueFormatError.InvalidOptionValue">
+        <member name="P:ParseTheArgs.Errors.OptionValueInvalidFormatError.InvalidOptionValue">
             <summary>
             The option value that has an invalid format.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Errors.OptionValueFormatError.GetErrorMessage">
+        <member name="M:ParseTheArgs.Errors.OptionValueInvalidFormatError.GetErrorMessage">
             <summary>
             Gets the error message that describes the error.
             </summary>

@@ -73,7 +73,7 @@ namespace ParseTheArgs.Setup
         /// <param name="textWriter">The text writer to write error messages to.</param>
         /// <returns>A reference to this instance for further configuration.</returns>
         /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
-        public ParserSetup ErrorTextWriter(TextWriter textWriter)
+        public ParserSetup ErrorTextWriter(TextWriter? textWriter)
         {
             this.parser.ErrorTextWriter = textWriter;
             return this;
@@ -88,7 +88,7 @@ namespace ParseTheArgs.Setup
         /// <param name="textWriter">The text writer to write help messages to.</param>
         /// <returns>A reference to this instance for further configuration.</returns>
         /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
-        public ParserSetup HelpTextWriter(TextWriter textWriter)
+        public ParserSetup HelpTextWriter(TextWriter? textWriter)
         {
             this.parser.HelpTextWriter = textWriter;
             return this;

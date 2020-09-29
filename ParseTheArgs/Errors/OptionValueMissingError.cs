@@ -21,7 +21,7 @@ namespace ParseTheArgs.Errors
         /// <returns>The error message that describes the error.</returns>
         public override String GetErrorMessage()
         {
-            return $"The value for the option --{this.OptionName} is missing.";
+            return $"The option --{this.OptionName} requires a value, but no value was specified.";
         }
     }
 }

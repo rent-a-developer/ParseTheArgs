@@ -29,7 +29,7 @@ namespace ParseTheArgs.Parsers.Options
         {
             if (!Decimal.TryParse(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
             {
-                parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, $"A decimal number in the range from {Decimal.MinValue} to {Decimal.MaxValue}"));
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"A decimal number in the range from {Decimal.MinValue} to {Decimal.MaxValue}"));
                 return false;
             }
 

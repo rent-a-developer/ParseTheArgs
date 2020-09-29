@@ -38,8 +38,10 @@ namespace ParseTheArgs.Extensions
             for (var i = 0; i < text.Length; i++)
             {
                 var character = text[i];
+
                 if (character == ' ' || character == '_')
                 {
+                    // We hit a word boundary, so we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
                     {
                         yield return currentWordBuilder.ToString();
@@ -48,13 +50,15 @@ namespace ParseTheArgs.Extensions
                 }
                 else if (i > 0 && Char.IsLower(text[i - 1]) && Char.IsUpper(character))
                 {
-                    // Casing has changed from lower case to upper case, so a new word started.
+                    // Casing has changed from lower case to upper case indicating the start of a new word.
+                    // Since we hit a word boundary we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
                     {
                         yield return currentWordBuilder.ToString();
                     }
 
                     currentWordBuilder.Clear();
+
                     currentWordBuilder.Append(Char.ToLower(character));
                 }
                 else

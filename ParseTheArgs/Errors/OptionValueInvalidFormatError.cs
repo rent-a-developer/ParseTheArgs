@@ -5,7 +5,7 @@ namespace ParseTheArgs.Errors
     /// <summary>
     /// Represents an error that indicates that the value of an option has an invalid format.
     /// </summary>
-    public class OptionValueFormatError : OptionError
+    public class OptionValueInvalidFormatError : OptionError
     {
         /// <summary>
         /// Initializes a new instance of this class.
@@ -13,7 +13,7 @@ namespace ParseTheArgs.Errors
         /// <param name="optionName">The name of the option whose value has an invalid format.</param>
         /// <param name="invalidOptionValue">The option value that has an invalid format.</param>
         /// <param name="expectedValueFormat">The format the value was expected to have.</param>
-        public OptionValueFormatError(String optionName, String invalidOptionValue, String expectedValueFormat) : base(optionName)
+        public OptionValueInvalidFormatError(String optionName, String invalidOptionValue, String expectedValueFormat) : base(optionName)
         {
             this.InvalidOptionValue = invalidOptionValue;
             this.ExpectedValueFormat = expectedValueFormat;

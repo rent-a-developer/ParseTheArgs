@@ -29,7 +29,7 @@ namespace ParseTheArgs.Parsers.Options
         {
             if (!Int64.TryParse(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
             {
-                parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, $"An integer in the range from {Int64.MinValue} to {Int64.MaxValue}"));
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"An integer in the range from {Int64.MinValue} to {Int64.MaxValue}"));
                 return false;
             }
 

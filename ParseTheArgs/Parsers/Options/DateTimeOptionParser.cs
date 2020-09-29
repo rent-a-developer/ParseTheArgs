@@ -52,7 +52,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!DateTime.TryParseExact(optionValue, this.DateTimeFormat, this.FormatProvider, this.DateTimeStyles, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, "A valid DateTime"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid DateTime"));
                     return false;
                 }
 
@@ -62,7 +62,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!DateTime.TryParse(optionValue, this.FormatProvider, this.DateTimeStyles, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueFormatError(this.OptionName, optionValue, "A valid DateTime"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid DateTime"));
                     return false;
                 }
 

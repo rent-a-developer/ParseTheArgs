@@ -5,10 +5,10 @@ using NUnit.Framework;
 namespace ParseTheArgs.Tests.CustomOption
 {
     [TestFixture]
-    public class Tests
+    public class CustomOptionValueTests
     {
         [Test(Description = "Parse should parse our custom value option correctly.")]
-        public void TestParse()
+        public void Parse_CustomOptionValue_ShouldParseCorrectly()
         {
             var parser = new Parser();
 

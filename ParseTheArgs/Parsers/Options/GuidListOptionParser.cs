@@ -37,7 +37,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!Guid.TryParseExact(optionValue, this.GuidFormat, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "Value is not a valid Guid"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
                     return false;
                 }
 
@@ -47,7 +47,7 @@ namespace ParseTheArgs.Parsers.Options
             {
                 if (!Guid.TryParse(optionValue, out resultValue))
                 {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "Value is not a valid Guid"));
+                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
                     return false;
                 }
 

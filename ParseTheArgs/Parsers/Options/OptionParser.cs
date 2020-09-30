@@ -36,7 +36,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <summary>
         /// The type of the option the parser parses.
         /// </summary>
-        public virtual OptionType OptionType => OptionType.ValuelessOption;
+        public abstract OptionType OptionType { get; }
 
         /// <summary>
         /// Determines if the option is required.

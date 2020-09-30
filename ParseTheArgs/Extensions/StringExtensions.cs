@@ -74,14 +74,14 @@ namespace ParseTheArgs.Extensions
         }
 
         /// <summary>
-        /// Converts the given string into lower camel case (see https://en.wikipedia.org/wiki/Camel_case).
+        /// Converts the given string into camel case (see https://en.wikipedia.org/wiki/Camel_case).
         /// </summary>
         /// <param name="value">The string to convert to lower camel case.</param>
         /// <returns>The given string converted to lower camel case.</returns>
-        /// "commandLineArgument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "CommandLineArgument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "command_line_argument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "command line argument".ToLowerCamelCase(); // Returns "commandLineArgument".
+        /// "commandLineArgument".ToCamelCase();   // Returns "commandLineArgument".
+        /// "CommandLineArgument".ToCamelCase();   // Returns "commandLineArgument".
+        /// "command_line_argument".ToCamelCase(); // Returns "commandLineArgument".
+        /// "command line argument".ToCamelCase(); // Returns "commandLineArgument".
         public static String ToCamelCase(this String value)
         {
             if (String.IsNullOrEmpty(value))

@@ -67,7 +67,7 @@ namespace ParseTheArgs.Parsers.Options
         {
             if (!Enum.TryParse(optionValue, true, out resultValue))
             {
-                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "One of the valid options (see help)"));
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "One of the valid values (see help)"));
                 resultValue = default;
                 return false;
             }

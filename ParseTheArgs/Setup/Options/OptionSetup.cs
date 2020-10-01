@@ -31,14 +31,7 @@ namespace ParseTheArgs.Setup.Options
 
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
 
-            this.OptionParser = commandParser.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);
-
-            if (this.OptionParser == null)
-            {
-                this.OptionParser = (TOptionParser) Activator.CreateInstance(typeof(TOptionParser), new Object[] { targetProperty, targetProperty.Name.ToCamelCase() });
-
-                commandParser.OptionParsers.Add(this.OptionParser);
-            }
+            this.OptionParser = commandParser.GetOrCreateOptionParser<TOptionParser>(targetProperty);
         }
 
         /// <summary>
@@ -73,7 +66,7 @@ namespace ParseTheArgs.Setup.Options
         /// <summary>
         /// Defines the parser for the option.
         /// </summary>
-        protected readonly TOptionParser OptionParser;
+        internal readonly TOptionParser OptionParser;
 
         /// <summary>
         /// Defines the parser for the command the option belongs to.

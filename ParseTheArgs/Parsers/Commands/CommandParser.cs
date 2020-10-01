@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Options;
@@ -159,6 +160,21 @@ namespace ParseTheArgs.Parsers.Commands
             {
                 this.Validator?.Invoke(new CommandValidatorContext<TCommandOptions>(this, parseResult));
             }
+        }
+
+        internal virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
+            where TOptionParser : OptionParser
+        {
+            var optionParser = this.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);
+
+            if (optionParser == null)
+            {
+                optionParser = (TOptionParser) Activator.CreateInstance(typeof(TOptionParser), new Object[] { targetProperty, targetProperty.Name.ToCamelCase() });
+
+                this.OptionParsers.Add(optionParser);
+            }
+
+            return optionParser;
         }
 
         private static String GetOptionLongHelpPart(OptionParser optionParser)

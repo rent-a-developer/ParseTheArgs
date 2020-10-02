@@ -79,7 +79,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
         }
 
         [Test(Description = "Parse should parse valid time spans in the correct custom format and put the time span values into the correct property of the options object.")]
-        public void Parse_CustomFormat_ShouldParseAndPutEnumConstantInOptionsObject()
+        public void Parse_CustomFormat_ShouldParseAndPutTimeSpanValuesInOptionsObject()
         {
             var parser = new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
             parser.TimeSpanFormat = @"h\:mm";

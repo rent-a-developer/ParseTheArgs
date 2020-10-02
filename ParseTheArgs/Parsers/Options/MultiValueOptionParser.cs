@@ -8,7 +8,7 @@ using ParseTheArgs.Tokens;
 namespace ParseTheArgs.Parsers.Options
 {
     /// <summary>
-    /// Parses a command line option that accepts one or more <typeparamref name="TOptionValue" /> values.
+    /// Parses a command line option that accepts one or more values of type <typeparamref name="TOptionValue" />.
     /// </summary>
     /// <typeparam name="TOptionValue">The type of the option value.</typeparam>
     public abstract class MultiValueOptionParser<TOptionValue> : OptionParser

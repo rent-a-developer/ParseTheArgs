@@ -18,8 +18,25 @@ namespace ParseTheArgs.Parsers.Options
         /// </summary>
         /// <param name="targetProperty">The property where the value of the option will be stored.</param>
         /// <param name="optionName">The name of the option the parser parses.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="Boolean"/> or <see cref="Nullable{Boolean}"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         public BooleanOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
+            if (targetProperty == null)
+            {
+                throw new ArgumentNullException(nameof(targetProperty));
+            }
+
+            if (String.IsNullOrEmpty(optionName))
+            {
+                throw new ArgumentException("Value cannot be null or an empty string.", nameof(optionName));
+            }
+
+            if (targetProperty.PropertyType != typeof(Boolean) && targetProperty.PropertyType != typeof(Nullable<Boolean>))
+            {
+                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Boolean or System.Nullable<System.Boolean>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
+            }
         }
 
         /// <summary>

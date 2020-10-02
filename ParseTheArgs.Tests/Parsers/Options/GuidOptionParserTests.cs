@@ -79,7 +79,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
         }
 
         [Test(Description = "Parse should parse a valid Guid in the correct custom format and put the Guid value into the correct property of the options object.")]
-        public void Parse_CustomFormat_ShouldParseAndPutEnumConstantInOptionsObject()
+        public void Parse_CustomFormat_ShouldParseAndPutGuidValueInOptionsObject()
         {
             var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
             parser.GuidFormat = "N";

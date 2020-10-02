@@ -27,7 +27,7 @@ namespace ParseTheArgs
             this.Banner = String.Empty;
             this.ProgramName = Process.GetCurrentProcess().ProcessName;
 
-            if (ConsoleHelper.IsConsolePresent())
+            if (IsConsolePresent())
             {
                 this.HelpTextWriter = Console.Out;
                 this.ErrorTextWriter = Console.Error;
@@ -107,7 +107,7 @@ namespace ParseTheArgs
 
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("Try the following command to get help:");
-            
+
             stringBuilder.Append($"{this.ProgramName} help");
             if (!String.IsNullOrEmpty(parseResult.CommandName))
             {
@@ -185,21 +185,21 @@ namespace ParseTheArgs
             {
                 // There are no command line arguments specified, so print the help.
                 this.PrintHelp();
-                return new ParseResult {IsHelpCalled = true};
+                return new ParseResult { IsHelpCalled = true };
             }
 
             if (args.Length == 1 && args[0] == "help")
             {
                 // There is only one command line argument and it is 'help', so print the help.
                 this.PrintHelp();
-                return new ParseResult {IsHelpCalled = true};
+                return new ParseResult { IsHelpCalled = true };
             }
 
             if (args.Length == 2 && args[0] == "help")
             {
                 // There are only two command line argument and the first one is 'help', so the second must be a command name, so print the help for that command.
                 this.PrintCommandHelp(args[1]);
-                return new ParseResult {IsHelpCalled = true};
+                return new ParseResult { IsHelpCalled = true };
             }
 
             var result = new ParseResult();
@@ -300,6 +300,21 @@ namespace ParseTheArgs
         private void PrintHelp()
         {
             this.HelpTextWriter?.Write(this.GetHelpText());
+        }
+
+        private static Boolean IsConsolePresent()
+        {
+            try
+            {
+#pragma warning disable S1481 // Unused local variables should be removed
+                var windowHeight = Console.WindowHeight;
+#pragma warning restore S1481 // Unused local variables should be removed
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
         }
     }
 }

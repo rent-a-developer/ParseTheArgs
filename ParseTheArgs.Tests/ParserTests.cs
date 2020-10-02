@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
 using ParseTheArgs.Tests.TestData;
@@ -41,7 +41,7 @@ namespace ParseTheArgs.Tests
         {
             var parser = new Parser();
 
-            var helpTextWriterMock = new Mock<TextWriter>();
+            var helpTextWriter = A.Fake<TextWriter>();
 
             var setup = parser.Setup;
 
@@ -54,11 +54,11 @@ namespace ParseTheArgs.Tests
                 .Name("command1");
 
             setup
-                .HelpTextWriter(helpTextWriterMock.Object);
+                .HelpTextWriter(helpTextWriter);
 
             parser.Parse(new String[] {});
 
-            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
+            A.CallTo(() => helpTextWriter.Write(@"Banner Text
 
 tool <command> [options]
 
@@ -70,7 +70,7 @@ Prints this help screen.
 
 tool help <command>
 Prints the help screen for the specified command.
-"), Times.Once);
+")).MustHaveHappened();
         }
 
         [Test(Description = "Parse should write the command help screen to the help text writer when command help was called.")]
@@ -78,7 +78,7 @@ Prints the help screen for the specified command.
         {
             var parser = new Parser();
 
-            var helpTextWriterMock = new Mock<TextWriter>();
+            var helpTextWriter = A.Fake<TextWriter>();
 
             var setup = parser.Setup;
 
@@ -91,16 +91,16 @@ Prints the help screen for the specified command.
                 .Name("command1");
 
             setup
-                .HelpTextWriter(helpTextWriterMock.Object);
+                .HelpTextWriter(helpTextWriter);
 
             parser.Parse(new String[] { "help", "command1" });
 
-            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
+            A.CallTo(() => helpTextWriter.Write(@"Banner Text
 
 tool command1 
 
 Options:
-"), Times.Once);
+")).MustHaveHappened();
         }
 
         [Test(Description = "Parse should write the error screen to the error writer when there is an issue with an argument.")]
@@ -108,7 +108,7 @@ Options:
         {
             var parser = new Parser();
 
-            var errorTextWriterMock = new Mock<TextWriter>();
+            var errorTextWriter = A.Fake<TextWriter>();
 
             var setup = parser.Setup;
 
@@ -121,18 +121,18 @@ Options:
                 .Name("command1");
 
             setup
-                .ErrorTextWriter(errorTextWriterMock.Object);
+                .ErrorTextWriter(errorTextWriter);
 
             parser.Parse(new String[] {"command1", "--unknownOption"});
 
-            errorTextWriterMock.Verify(a => a.Write(@"Banner Text
+            A.CallTo(() => errorTextWriter.Write(@"Banner Text
 
 Invalid or missing option(s):
 - The option --unknownOption is unknown.
 
 Try the following command to get help:
 tool help command1
-"), Times.Once);
+")).MustHaveHappened();
         }
 
         [Test(Description = "GetCommandHelpText should return the help of the specified command.")]

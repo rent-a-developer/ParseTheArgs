@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
@@ -17,12 +17,12 @@ namespace ParseTheArgs.Tests.Setup.Options
         [Test(Description = "Name should throw an exception when another option already has the same name.")]
         public void Name_DuplicateName_ShouldThrowException()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<Command1Options>>(parserMock.Object);
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
             var duplicateOptionParser = new StringOptionParser(typeof(Command1Options).GetProperty("OptionA"), "optionA");
             
-            commandParserMock.Setup(a => a.OptionParsers).Returns(new List<OptionParser> {duplicateOptionParser});
-            var setup = new StringOptionSetup<Command1Options>(commandParserMock.Object, (Expression<Func<Command1Options, Object>>)(a => a.OptionB));
+            A.CallTo(() => commandParser.OptionParsers).Returns(new List<OptionParser> {duplicateOptionParser});
+            var setup = new StringOptionSetup<Command1Options>(commandParser, (Expression<Func<Command1Options, Object>>)(a => a.OptionB));
 
             setup.Invoking(a => a.Name("optionA"))
                 .Should()

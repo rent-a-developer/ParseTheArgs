@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Reflection;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
@@ -18,52 +17,52 @@ namespace ParseTheArgs.Tests.Setup.Options
         [Test(Description = "FormatProvider should apply the specified format to the parser.")]
         public void FormatProvider_CustomFormat_ShouldSetFormatOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<TimeSpanListOptionParser>(It.Is<PropertyInfo>(p => p.Name == "TimeSpans"))).Returns(optionParserMock.Object);
-            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"))).Returns(optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
 
             var returnedSetup = setup.Format(@"h\:mm");
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.TimeSpanFormat = It.Is<String>(s => s == @"h\:mm"), Times.Once());
+            A.CallToSet(() => optionParser.TimeSpanFormat).To(@"h\:mm").MustHaveHappened();
         }
 
         [Test(Description = "FormatProvider should apply the specified format provider to the parser.")]
         public void FormatProvider_CustomFormatProvider_ShouldSetFormatProviderOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<TimeSpanListOptionParser>(It.Is<PropertyInfo>(p => p.Name == "TimeSpans"))).Returns(optionParserMock.Object);
-            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"))).Returns(optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
 
             var returnedSetup = setup.FormatProvider(new CultureInfo("en-GB"));
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.FormatProvider = It.Is<CultureInfo>(ci => ci.Name == "en-GB"), Times.Once());
+            A.CallToSet(() => optionParser.FormatProvider).To(new CultureInfo("en-GB")).MustHaveHappened();
         }
 
         [Test(Description = "Styles should apply the specified styles to the parser.")]
         public void Styles_CustomStyles_ShouldSetStylesOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<TimeSpanListOptionParser>(It.Is<PropertyInfo>(p => p.Name == "TimeSpans"))).Returns(optionParserMock.Object);
-            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"))).Returns(optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.TimeSpans));
 
             var returnedSetup = setup.Styles(TimeSpanStyles.AssumeNegative);
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.TimeSpanStyles = It.Is<TimeSpanStyles>(tss => tss == TimeSpanStyles.AssumeNegative), Times.Once());
+            A.CallToSet(() => optionParser.TimeSpanStyles).To(TimeSpanStyles.AssumeNegative).MustHaveHappened();
         }
     }
 }

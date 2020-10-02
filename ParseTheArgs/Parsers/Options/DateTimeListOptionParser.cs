@@ -25,19 +25,19 @@ namespace ParseTheArgs.Parsers.Options
         /// Defines the format to use when parsing the option value to a <see cref="DateTime" />.
         /// For supported formats see the documentation of <see cref="DateTime.Parse(string)" />.
         /// </summary>
-        public String? DateTimeFormat { get; set; }
+        public virtual String? DateTimeFormat { get; set; }
 
         /// <summary>
         /// Defines the date time styles that are permitted when parsing the option value to a <see cref="DateTime" />.
         /// The default is <see cref="System.Globalization.DateTimeStyles.None" />.
         /// </summary>
-        public DateTimeStyles DateTimeStyles { get; set; }
+        public virtual DateTimeStyles DateTimeStyles { get; set; }
 
         /// <summary>
         /// Defines the format provider to use to parse the option value to a <see cref="DateTime" />.
         /// The default is <see cref="CultureInfo.CurrentCulture" />.
         /// </summary>
-        public IFormatProvider FormatProvider { get; set; }
+        public virtual IFormatProvider FormatProvider { get; set; }
 
         /// <summary>
         /// Parses the given value to the desired option value type of the option parser.

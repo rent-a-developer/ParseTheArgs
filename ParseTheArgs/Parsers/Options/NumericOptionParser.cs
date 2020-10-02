@@ -25,12 +25,12 @@ namespace ParseTheArgs.Parsers.Options
         /// Defines the format provider to use to parse the option value to a numeric value.
         /// The default is <see cref="CultureInfo.CurrentCulture" />.
         /// </summary>
-        public IFormatProvider FormatProvider { get; set; }
+        public virtual IFormatProvider FormatProvider { get; set; }
 
         /// <summary>
         /// Defines the number styles that are permitted when parsing the option value to a numeric value.
         /// The default is <see cref="System.Globalization.NumberStyles.Any" />.
         /// </summary>
-        public NumberStyles NumberStyles { get; set; }
+        public virtual NumberStyles NumberStyles { get; set; }
     }
 }

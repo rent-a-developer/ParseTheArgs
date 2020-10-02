@@ -25,19 +25,19 @@ namespace ParseTheArgs.Parsers.Options
         /// Defines the format provider to use to parse the option value to a <see cref="TimeSpan" />.
         /// The default is <see cref="CultureInfo.CurrentCulture" />.
         /// </summary>
-        public IFormatProvider FormatProvider { get; set; }
+        public virtual IFormatProvider FormatProvider { get; set; }
 
         /// <summary>
         /// Defines the format to use when parsing the option value to a <see cref="TimeSpan" />.
         /// For supported formats see the documentation of <see cref="TimeSpan.Parse(string)" />.
         /// </summary>
-        public String? TimeSpanFormat { get; set; }
+        public virtual String? TimeSpanFormat { get; set; }
 
         /// <summary>
         /// Defines the date time styles that are permitted when parsing the option value to a <see cref="TimeSpan" />.
         /// The default is <see cref="System.Globalization.TimeSpanStyles.None" />.
         /// </summary>
-        public TimeSpanStyles TimeSpanStyles { get; set; }
+        public virtual TimeSpanStyles TimeSpanStyles { get; set; }
 
         /// <summary>
         /// Parses the given value to the desired option value type of the option parser.

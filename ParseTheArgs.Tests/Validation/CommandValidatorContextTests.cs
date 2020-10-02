@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
@@ -16,16 +16,16 @@ namespace ParseTheArgs.Tests.Validation
         [Test(Description = "GetOptionName should return the name of the option that is mapped to the property the given expression points to.")]
         public void GetOptionName_ValidExpression_ShouldReturnOptionName()
         {
-            var commandParserMock = new Mock<ICommandParser>();
-            var parseResultMock = new Mock<ParseResult>();
-            var optionParserMock = new Mock<OptionParser>(null, null);
+            var commandParser = A.Fake<ICommandParser>();
+            var parseResult = A.Fake<ParseResult>();
+            var optionParser = A.Fake<OptionParser>(ob => ob.WithArgumentsForConstructor(new object[] { null, null }));
 
-            commandParserMock.Setup(a => a.OptionParsers).Returns(new List<OptionParser> { optionParserMock.Object });
+            A.CallTo(() => commandParser.OptionParsers).Returns(new List<OptionParser> {optionParser});
 
-            var context = new CommandValidatorContext<Command1Options>(commandParserMock.Object, parseResultMock.Object);
+            var context = new CommandValidatorContext<Command1Options>(commandParser, parseResult);
 
-            optionParserMock.Setup(a => a.TargetProperty).Returns(typeof(Command1Options).GetProperty("OptionA"));
-            optionParserMock.Setup(a => a.OptionName).Returns("optionA");
+            A.CallTo(() => optionParser.TargetProperty).Returns(typeof(Command1Options).GetProperty("OptionA"));
+            A.CallTo(() => optionParser.OptionName).Returns("optionA");
 
             context.GetOptionName(a => a.OptionA).Should().BeEquivalentTo("optionA");
         }
@@ -33,10 +33,10 @@ namespace ParseTheArgs.Tests.Validation
         [Test(Description = "GetOptionName should throw an exception when the given expression is null.")]
         public void GetOptionName_Null_ShouldThrowException()
         {
-            var commandParserMock = new Mock<ICommandParser>();
-            var parseResultMock = new Mock<ParseResult>();
+            var commandParser = A.Fake<ICommandParser>();
+            var parseResult = A.Fake<ParseResult>();
 
-            var context = new CommandValidatorContext<Command1Options>(commandParserMock.Object, parseResultMock.Object);
+            var context = new CommandValidatorContext<Command1Options>(commandParser, parseResult);
 
             context.Invoking(a => a.GetOptionName(null))
                 .Should()
@@ -46,12 +46,12 @@ namespace ParseTheArgs.Tests.Validation
         [Test(Description = "GetOptionName should throw an exception when the given expression doe point to a property that is not mapped to an option.")]
         public void GetOptionName_UnmappedOption_ShouldThrowException()
         {
-            var commandParserMock = new Mock<ICommandParser>();
-            var parseResultMock = new Mock<ParseResult>();
+            var commandParser = A.Fake<ICommandParser>();
+            var parseResult = A.Fake<ParseResult>();
 
-            commandParserMock.Setup(a => a.OptionParsers).Returns(new List<OptionParser>());
+            A.CallTo(() => commandParser.OptionParsers).Returns(new List<OptionParser>());
 
-            var context = new CommandValidatorContext<Command1Options>(commandParserMock.Object, parseResultMock.Object);
+            var context = new CommandValidatorContext<Command1Options>(commandParser, parseResult);
 
             context.Invoking(a => a.GetOptionName(b => b.OptionB))
                 .Should()

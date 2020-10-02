@@ -1,6 +1,6 @@
 ﻿using System;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
 using ParseTheArgs.Tests.TestData;
@@ -100,17 +100,17 @@ namespace ParseTheArgs.Tests
         public void Handle_NoCommandOptions_ShouldNotCallHandlers()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
 
-            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
-            result.ErrorHandler(handlersMock.Object.HandleError);
+            result.CommandHandler<Command1Options>(handlers.HandleCommand1);
+            result.ErrorHandler(handlers.HandleError);
             
             result.CommandOptions = null;
 
             result.Handle();
 
-            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Options>()), Times.Never);
-            handlersMock.Verify(a => a.HandleError(It.IsAny<ParseResult>()), Times.Never);
+            A.CallTo(() => handlers.HandleCommand1(A<Command1Options>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handlers.HandleError(A<ParseResult>.Ignored)).MustNotHaveHappened();
         }
 
         [Test(Description = "Handle should return 0 when there are no command handlers.")]
@@ -128,10 +128,10 @@ namespace ParseTheArgs.Tests
         public void Handle_NoMatchingCommandHandler_ShouldReturn0()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
             var command1Options = new Command1Options();
 
-            result.CommandHandler<Command2Options>(handlersMock.Object.HandleCommand2);
+            result.CommandHandler<Command2Options>(handlers.HandleCommand2);
 
             result.CommandOptions = command1Options;
 
@@ -142,18 +142,18 @@ namespace ParseTheArgs.Tests
         public void Handle_NoMatchingCommandHandler_ShouldNotCallNonMatchingCommandHandlers()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
             var command1Options = new Command1Options();
 
-            result.CommandHandler<Command2Options>(handlersMock.Object.HandleCommand2);
-            result.CommandHandler<Command3Options>(handlersMock.Object.HandleCommand3);
+            result.CommandHandler<Command2Options>(handlers.HandleCommand2);
+            result.CommandHandler<Command3Options>(handlers.HandleCommand3);
 
             result.CommandOptions = command1Options;
 
             result.Handle();
             
-            handlersMock.Verify(a => a.HandleCommand2(It.IsAny<Command2Options>()), Times.Never);
-            handlersMock.Verify(a => a.HandleCommand3(It.IsAny<Command3Options>()), Times.Never);
+            A.CallTo(() => handlers.HandleCommand2(A<Command2Options>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handlers.HandleCommand3(A<Command3Options>.Ignored)).MustNotHaveHappened();
         }
 
         [Test(Description = "Handle should return 0 when there is an error, but there is no error handler.")]
@@ -170,39 +170,39 @@ namespace ParseTheArgs.Tests
         public void Handle_HasErrors_ShouldNotCallAnyCommandHandler()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
 
-            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
+            result.CommandHandler<Command1Options>(handlers.HandleCommand1);
             
             result.AddError(new OptionMissingError("optionA"));
 
             result.Handle();
-            handlersMock.Verify(a => a.HandleCommand1(It.IsAny<Command1Options>()), Times.Never);
+            A.CallTo(() => handlers.HandleCommand1(A<Command1Options>.Ignored)).MustNotHaveHappened();
         }
 
         [Test(Description = "Handle should call the error handler when there is an error.")]
         public void Handle_HasErrors_ShouldCallCallErrorHandler()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
 
-            result.ErrorHandler(handlersMock.Object.HandleError);
+            result.ErrorHandler(handlers.HandleError);
 
             result.AddError(new OptionMissingError("optionA"));
 
             result.Handle();
 
-            handlersMock.Verify(a => a.HandleError(result), Times.Once);
+            A.CallTo(() => handlers.HandleError(result)).MustHaveHappenedOnceExactly();
         }
 
         [Test(Description = "Handle should return the return value of the error handler when there is an error.")]
         public void Handle_HasErrors_ShouldReturnValueOfErrorHandler()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
 
-            handlersMock.Setup(a => a.HandleError(It.Is<ParseResult>(parseResult => parseResult == result))).Returns(1);
-            result.ErrorHandler(handlersMock.Object.HandleError);
+            A.CallTo(() => handlers.HandleError(result)).Returns(1);
+            result.ErrorHandler(handlers.HandleError);
 
             result.AddError(new OptionMissingError("optionA"));
 
@@ -213,27 +213,27 @@ namespace ParseTheArgs.Tests
         public void Handle_MatchingCommandHandlerExists_ShouldCallMatchingCommandHandler()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
             var command1Options = new Command1Options();
 
-            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
+            result.CommandHandler<Command1Options>(handlers.HandleCommand1);
 
             result.CommandOptions = command1Options;
 
             result.Handle();
 
-            handlersMock.Verify(a => a.HandleCommand1(command1Options), Times.Once);
+            A.CallTo(() => handlers.HandleCommand1(command1Options)).MustHaveHappenedOnceExactly();
         }
 
         [Test(Description = "Handle should return the return value of the matching command handler.")]
         public void Handle_MatchingCommandHandlerExists_ShouldReturnValueOfCommandHandler()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
             var command1Options = new Command1Options();
 
-            handlersMock.Setup(a => a.HandleCommand1(It.Is<Command1Options>(options => options == command1Options))).Returns(1);
-            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
+            A.CallTo(() => handlers.HandleCommand1(command1Options)).Returns(1);
+            result.CommandHandler<Command1Options>(handlers.HandleCommand1);
 
             result.CommandOptions = command1Options;
 
@@ -244,11 +244,11 @@ namespace ParseTheArgs.Tests
         public void Handle_CommandHandlerThrows_ShouldForwardCommandHandlerException()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
             var command1Options = new Command1Options();
 
-            handlersMock.Setup(a => a.HandleCommand1(It.IsAny<Command1Options>())).Throws(new Exception("Command Handler Exception"));
-            result.CommandHandler<Command1Options>(handlersMock.Object.HandleCommand1);
+            A.CallTo(() => handlers.HandleCommand1(command1Options)).Throws(new Exception("Command Handler Exception"));
+            result.CommandHandler<Command1Options>(handlers.HandleCommand1);
 
             result.CommandOptions = command1Options;
 
@@ -262,10 +262,10 @@ namespace ParseTheArgs.Tests
         public void Handle_ErrorHandlerThrows_ShouldForwardErrorHandlerException()
         {
             var result = new ParseResult();
-            var handlersMock = new Mock<ICommandHandlers>();
+            var handlers = A.Fake<ICommandHandlers>();
 
-            handlersMock.Setup(a => a.HandleError(It.IsAny<ParseResult>())).Throws(new Exception("Error Handler Exception"));
-            result.ErrorHandler(handlersMock.Object.HandleError);
+            A.CallTo(() => handlers.HandleError(result)).Throws(new Exception("Error Handler Exception"));
+            result.ErrorHandler(handlers.HandleError);
 
             result.AddError(new OptionMissingError("optionA"));
 

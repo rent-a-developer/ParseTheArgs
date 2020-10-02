@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Reflection;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
@@ -18,52 +17,52 @@ namespace ParseTheArgs.Tests.Setup.Options
         [Test(Description = "FormatProvider should apply the specified format to the parser.")]
         public void FormatProvider_CustomFormat_ShouldSetFormatOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<DateTimeOptionParser>(ob => ob.WithArgumentsForConstructor(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<DateTimeOptionParser>(It.Is<PropertyInfo>(p => p.Name == "DateTime"))).Returns(optionParserMock.Object);
-            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"))).Returns(optionParser);
+            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
 
             var returnedSetup = setup.Format("ddd dd MMM yyyy h:mm tt");
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.DateTimeFormat = It.Is<String>(s => s == "ddd dd MMM yyyy h:mm tt"), Times.Once());
+            A.CallToSet(() => optionParser.DateTimeFormat).To("ddd dd MMM yyyy h:mm tt").MustHaveHappened();
         }
 
         [Test(Description = "FormatProvider should apply the specified format provider to the parser.")]
         public void FormatProvider_CustomFormatProvider_ShouldSetFormatProviderOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<DateTimeOptionParser>(ob => ob.WithArgumentsForConstructor(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<DateTimeOptionParser>(It.Is<PropertyInfo>(p => p.Name == "DateTime"))).Returns(optionParserMock.Object);
-            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"))).Returns(optionParser);
+            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
 
             var returnedSetup = setup.FormatProvider(new CultureInfo("en-GB"));
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.FormatProvider = It.Is<CultureInfo>(ci => ci.Name == "en-GB"), Times.Once());
+            A.CallToSet(() => optionParser.FormatProvider).To(new CultureInfo("en-GB")).MustHaveHappened();
         }
 
         [Test(Description = "Styles should apply the specified styles to the parser.")]
         public void Styles_CustomStyles_ShouldSetStylesOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<DateTimeOptionParser>(ob => ob.WithArgumentsForConstructor(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<DateTimeOptionParser>(It.Is<PropertyInfo>(p => p.Name == "DateTime"))).Returns(optionParserMock.Object);
-            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(typeof(DataTypesCommandOptions).GetProperty("DateTime"))).Returns(optionParser);
+            var setup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.DateTime));
 
             var returnedSetup = setup.Styles(DateTimeStyles.AdjustToUniversal);
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.DateTimeStyles = It.Is<DateTimeStyles>(tss => tss == DateTimeStyles.AdjustToUniversal), Times.Once());
+            A.CallToSet(() => optionParser.DateTimeStyles).To(DateTimeStyles.AdjustToUniversal).MustHaveHappened();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace ParseTheArgs.Parsers.Options
         /// Defines the format to use when parsing the option value to a <see cref="Guid" />.
         /// For supported formats see the documentation of <see cref="Guid.Parse(string)" />.
         /// </summary>
-        public String? GuidFormat { get; set; }
+        public virtual String? GuidFormat { get; set; }
 
         /// <summary>
         /// Parses the given value to the desired option value type of the option parser.

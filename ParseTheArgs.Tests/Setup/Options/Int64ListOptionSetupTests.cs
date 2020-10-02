@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Reflection;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
@@ -18,35 +17,35 @@ namespace ParseTheArgs.Tests.Setup.Options
         [Test(Description = "FormatProvider should apply the specified format provider to the parser.")]
         public void FormatProvider_CustomFormatProvider_ShouldSetFormatProviderOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<Int64ListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<Int64ListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new Int64ListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<Int64ListOptionParser>(It.Is<PropertyInfo>(p => p.Name == "Int64s"))).Returns(optionParserMock.Object);
-            var setup = new Int64ListOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.Int64s));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64ListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("Int64s"))).Returns(optionParser);
+            var setup = new Int64ListOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.Int64s));
 
             var returnedSetup = setup.FormatProvider(new CultureInfo("en-GB"));
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.FormatProvider = It.Is<CultureInfo>(ci => ci.Name == "en-GB"), Times.Once());
+            A.CallToSet(() => optionParser.FormatProvider).To(new CultureInfo("en-GB")).MustHaveHappened();
         }
 
         [Test(Description = "Styles should apply the specified styles to the parser.")]
         public void Styles_CustomStyles_ShouldSetStylesOnParser()
         {
-            var parserMock = new Mock<Parser>();
-            var commandParserMock = new Mock<CommandParser<DataTypesCommandOptions>>(parserMock.Object);
-            var optionParserMock = new Mock<Int64ListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s");
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+            var optionParser = A.Fake<Int64ListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new Int64ListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s")));
 
-            commandParserMock.Setup(cp => cp.GetOrCreateOptionParser<Int64ListOptionParser>(It.Is<PropertyInfo>(p => p.Name == "Int64s"))).Returns(optionParserMock.Object);
-            var setup = new Int64ListOptionSetup<DataTypesCommandOptions>(commandParserMock.Object, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.Int64s));
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64ListOptionParser>(typeof(DataTypesCommandOptions).GetProperty("Int64s"))).Returns(optionParser);
+            var setup = new Int64ListOptionSetup<DataTypesCommandOptions>(commandParser, (Expression<Func<DataTypesCommandOptions, Object>>)(a => a.Int64s));
 
             var returnedSetup = setup.Styles(NumberStyles.AllowDecimalPoint);
 
             returnedSetup.Should().Be(setup);
 
-            optionParserMock.VerifySet(op => op.NumberStyles = It.Is<NumberStyles>(ns => ns == NumberStyles.AllowDecimalPoint), Times.Once());
+            A.CallToSet(() => optionParser.NumberStyles).To(NumberStyles.AllowDecimalPoint).MustHaveHappened();
         }
     }
 }

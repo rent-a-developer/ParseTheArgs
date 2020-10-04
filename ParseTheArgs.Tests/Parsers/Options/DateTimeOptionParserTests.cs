@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
@@ -123,10 +124,12 @@ Parameter name: targetProperty");
             parser.GetHelpText().Should().Be("Help text for option dateTime.");
         }
 
-        [Test(Description = "Parse should parse a valid date time value and assign it to the target property.")]
-        public void Parse_ValidValue_ShouldParseAndPutDateTimeValueInOptionsObject()
+        [Test(Description = "Parse should parse a valid option value using the value parser and assign it to the target property.")]
+        public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
         {
+            var valueParser = A.Fake<ValueParser>();
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
@@ -139,16 +142,27 @@ Parameter name: targetProperty");
             var dataTypesCommandOptions = new DataTypesCommandOptions();
             parseResult.CommandOptions = dataTypesCommandOptions;
 
+            DateTime dateTime;
+            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime))
+                .Returns(true)
+                .AssignsOutAndRefParameters(new DateTime(2020, 12, 31, 23, 59, 59));
+
             parser.Parse(tokens, parseResult);
 
             dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
+
+            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime)).MustHaveHappened();
         }
 
-        [Test(Description = "Parse should parse a valid date time value in the correct custom format and assign it to the target property.")]
-        public void Parse_ValidValueCustomFormat_ShouldParseAndPutDateTimeValueInOptionsObject()
+        [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
+        public void Parse_CustomFormatSettings_ShouldPassCustomFormatToValueParser()
         {
+            var valueParser = A.Fake<ValueParser>(ob => ob.CallsBaseMethods());
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.ValueParser = valueParser;
             parser.DateTimeFormat = "ddd dd MMM yyyy h:mm tt";
+            parser.DateTimeStyles = DateTimeStyles.NoCurrentDateDefault;
+            parser.FormatProvider = new CultureInfo("de-DE");
 
             var tokens = new List<Token>
             {
@@ -163,14 +177,16 @@ Parameter name: targetProperty");
 
             parser.Parse(tokens, parseResult);
 
-            parseResult.HasErrors.Should().BeFalse();
-            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2008, 6, 15, 8, 30, 0));
+            DateTime dateTime;
+            A.CallTo(() => valueParser.TryParseDateTime("Sun 15 Jun 2008 8:30 AM", "ddd dd MMM yyyy h:mm tt", new CultureInfo("de-DE"), DateTimeStyles.NoCurrentDateDefault, out dateTime)).MustHaveHappened();
         }
 
         [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid date time.")]
         public void Parse_InvalidValue_ShouldAddError()
         {
+            var valueParser = A.Fake<ValueParser>();
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
@@ -181,6 +197,10 @@ Parameter name: targetProperty");
             };
             var parseResult = new ParseResult();
             parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            DateTime dateTime;
+            A.CallTo(() => valueParser.TryParseDateTime("NotADateTime", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime))
+                .Returns(false);
 
             parser.Parse(tokens, parseResult);
 
@@ -193,35 +213,6 @@ Parameter name: targetProperty");
             error.InvalidOptionValue.Should().Be("NotADateTime");
             error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day)");
             error.GetErrorMessage().Should().Be("The value 'NotADateTime' of the option --dateTime has an invalid format. The expected format is: A valid date (and optionally time of day).");
-        }
-
-        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid date time in the specified custom format.")]
-        public void Parse_CustomFormatInvalidValue_ShouldAddError()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-            parser.DateTimeFormat = "ddd dd MMM yyyy h:mm tt";
-
-            var tokens = new List<Token>
-            {
-                new OptionToken("dateTime")
-                {
-                    OptionValues = { "2020-12-31 23:59:59" }
-                }
-            };
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
-
-            var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
-            error.OptionName.Should().Be("dateTime");
-            error.InvalidOptionValue.Should().Be("2020-12-31 23:59:59");
-            error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day) in the format 'ddd dd MMM yyyy h:mm tt'");
-            error.GetErrorMessage().Should().Be("The value '2020-12-31 23:59:59' of the option --dateTime has an invalid format. The expected format is: A valid date (and optionally time of day) in the format 'ddd dd MMM yyyy h:mm tt'.");
         }
     }
 }

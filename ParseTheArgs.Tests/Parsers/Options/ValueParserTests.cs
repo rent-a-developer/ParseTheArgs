@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Parsers.Options;
@@ -10,20 +9,13 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class ValueParserTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-            // We fix the current culture to en-US so that parsing of values is done with a known format provider.
-            Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-        }
-
         [Test(Description = "TryParseDateTime should parse a valid string into a DateTime value.")]
         public void TryParseDateTime_ValidValue_ShouldParseValue()
         {
             var parser = new ValueParser();
 
             parser
-                .TryParseDateTime("2020-12-31 23:59:59", null, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result)
+                .TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result)
                 .Should()
                 .BeTrue();
 
@@ -36,7 +28,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .TryParseDateTime("Sun 15 Jun 2008 8:30 AM", "ddd dd MMM yyyy h:mm tt", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result)
+                .TryParseDateTime("Sun 15 Jun 2008 8:30 AM", "ddd dd MMM yyyy h:mm tt", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result)
                 .Should()
                 .BeTrue();
 
@@ -62,7 +54,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .TryParseDateTime("23:59:59", null, CultureInfo.CurrentCulture, DateTimeStyles.NoCurrentDateDefault, out DateTime result)
+                .TryParseDateTime("23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.NoCurrentDateDefault, out DateTime result)
                 .Should()
                 .BeTrue();
 
@@ -75,7 +67,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .TryParseDateTime("NotADateTime", null, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result)
+                .TryParseDateTime("NotADateTime", null, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result)
                 .Should()
                 .BeFalse();
 
@@ -88,7 +80,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .TryParseDateTime("2020-12-31 23:59:59", "ddd dd MMM yyyy h:mm tt", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result)
+                .TryParseDateTime("2020-12-31 23:59:59", "ddd dd MMM yyyy h:mm tt", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result)
                 .Should()
                 .BeFalse();
 
@@ -114,7 +106,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseDateTime(null, null, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))
+                .Invoking(a => a.TryParseDateTime(null, null, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -125,12 +117,104 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseDateTime("", null, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))
+                .Invoking(a => a.TryParseDateTime("", null, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result))
                 .Should()
                 .Throw<ArgumentException>();
 
             parser
-                .Invoking(a => a.TryParseDateTime(" ", null, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result))
+                .Invoking(a => a.TryParseDateTime(" ", null, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime result))
+                .Should()
+                .Throw<ArgumentException>();
+        }
+
+        [Test(Description = "TryParseDecimal should parse a valid string into a Decimal value.")]
+        public void TryParseDecimal_ValidValue_ShouldParseValue()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .TryParseDecimal("1.23", NumberStyles.Any, new CultureInfo("en-US"), out Decimal result)
+                .Should()
+                .BeTrue();
+
+            result.Should().Be(1.23M);
+        }
+
+        [Test(Description = "TryParseDecimal should parse a valid string in the format of the specified custom format provider into a Decimal value.")]
+        public void TryParseDecimal_ValidValueCustomFormatProvider_ShouldParseValue()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .TryParseDecimal("1,23", NumberStyles.Any, new CultureInfo("de-DE"), out Decimal result)
+                .Should()
+                .BeTrue();
+
+            result.Should().Be(1.23M);
+        }
+
+        [Test(Description = "TryParseDecimal should parse a valid string accordingly to the specified number styles into a Decimal value.")]
+        public void TryParseDecimal_ValidValueCustomNumberStyles_ShouldParseValue()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .TryParseDecimal("(1)", NumberStyles.AllowParentheses, new CultureInfo("en-US"), out Decimal result)
+                .Should()
+                .BeTrue();
+
+            result.Should().Be(-1M);
+        }
+
+        [Test(Description = "TryParseDecimal should return false when the given value is invalid.")]
+        public void TryParseDecimal_InvalidValue_ShouldReturnFalse()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .TryParseDecimal("NotANumber", NumberStyles.AllowParentheses, new CultureInfo("en-US"), out Decimal result)
+                .Should()
+                .BeFalse();
+
+            result.Should().Be(default);
+        }
+
+        [Test(Description = "TryParseDecimal should return false when the given value is not in the format of the specified custom format provider.")]
+        public void TryParseDecimal_InvalidValueCustomFormatProvider_ShouldReturnFalse()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .TryParseDecimal("1,2.3", NumberStyles.Any, new CultureInfo("de-DE"), out Decimal result)
+                .Should()
+                .BeFalse();
+
+            result.Should().Be(default);
+        }
+
+        [Test(Description = "TryParseDecimal throw an exception when the given value is null.")]
+        public void TryParseDecimal_ValueIsNull_ShouldThrowException()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .Invoking(a => a.TryParseDecimal(null, NumberStyles.Any, new CultureInfo("en-US"), out Decimal result))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test(Description = "TryParseDecimal throw an exception when the given value is an empty string.")]
+        public void TryParseDecimal_ValueIsEmptyOrWhitespace_ShouldThrowException()
+        {
+            var parser = new ValueParser();
+
+            parser
+                .Invoking(a => a.TryParseDecimal("", NumberStyles.Any, new CultureInfo("en-US"), out Decimal result))
+                .Should()
+                .Throw<ArgumentException>();
+
+            parser
+                .Invoking(a => a.TryParseDecimal(" ", NumberStyles.Any, new CultureInfo("en-US"), out Decimal result))
                 .Should()
                 .Throw<ArgumentException>();
         }

@@ -45,8 +45,8 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
             error.OptionName.Should().Be("timeSpans");
             error.InvalidOptionValue.Should().Be("NotATimeSpan");
-            error.ExpectedValueFormat.Should().Be("A valid TimeSpan");
-            error.GetErrorMessage().Should().Be("The value 'NotATimeSpan' of the option --timeSpans has an invalid format. The expected format is: A valid TimeSpan.");
+            error.ExpectedValueFormat.Should().Be("A valid time interval");
+            error.GetErrorMessage().Should().Be("The value 'NotATimeSpan' of the option --timeSpans has an invalid format. The expected format is: A valid time interval.");
         }
 
         [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when one of the specified values is not a valid time span in the specified custom format.")]
@@ -74,8 +74,8 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
             error.OptionName.Should().Be("timeSpans");
             error.InvalidOptionValue.Should().Be("23:59:59");
-            error.ExpectedValueFormat.Should().Be("A valid TimeSpan");
-            error.GetErrorMessage().Should().Be("The value '23:59:59' of the option --timeSpans has an invalid format. The expected format is: A valid TimeSpan.");
+            error.ExpectedValueFormat.Should().Be(@"A valid time interval in the format 'h\:mm'");
+            error.GetErrorMessage().Should().Be(@"The value '23:59:59' of the option --timeSpans has an invalid format. The expected format is: A valid time interval in the format 'h\:mm'.");
         }
 
         [Test(Description = "Parse should parse valid time spans in the correct custom format and put the time span values into the correct property of the options object.")]

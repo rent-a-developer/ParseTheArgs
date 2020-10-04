@@ -48,26 +48,14 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out TimeSpan resultValue)
         {
-            if (!String.IsNullOrEmpty(this.TimeSpanFormat))
+            if (!this.ValueParser.TryParseTimeSpan(optionValue, this.TimeSpanFormat, this.FormatProvider, this.TimeSpanStyles, out resultValue))
             {
-                if (!TimeSpan.TryParseExact(optionValue, this.TimeSpanFormat, this.FormatProvider, this.TimeSpanStyles, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
-                    return false;
-                }
-
-                return true;
+                var errorMessage = !String.IsNullOrEmpty(this.TimeSpanFormat) ? $"A valid time interval in the format '{this.TimeSpanFormat}'" : "A valid time interval";
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, errorMessage));
+                return false;
             }
-            else
-            {
-                if (!TimeSpan.TryParse(optionValue, this.FormatProvider, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid TimeSpan"));
-                    return false;
-                }
 
-                return true;
-            }
+            return true;
         }
     }
 }

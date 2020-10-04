@@ -66,26 +66,14 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out DateTime resultValue)
         {
-            if (!String.IsNullOrEmpty(this.DateTimeFormat))
+            if (!this.ValueParser.TryParseDateTime(optionValue, this.DateTimeFormat, this.FormatProvider, this.DateTimeStyles, out resultValue))
             {
-                if (!DateTime.TryParseExact(optionValue, this.DateTimeFormat, this.FormatProvider, this.DateTimeStyles, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"A valid date (and optionally time of day) in the format '{this.DateTimeFormat}'"));
-                    return false;
-                }
-
-                return true;
+                var errorMessage = !String.IsNullOrEmpty(this.DateTimeFormat) ? $"A valid date (and optionally time of day) in the format '{this.DateTimeFormat}'" : "A valid date (and optionally time of day)";
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, errorMessage));
+                return false;
             }
-            else
-            {
-                if (!DateTime.TryParse(optionValue, this.FormatProvider, this.DateTimeStyles, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid date (and optionally time of day)"));
-                    return false;
-                }
 
-                return true;
-            }
+            return true;
         }
     }
 }

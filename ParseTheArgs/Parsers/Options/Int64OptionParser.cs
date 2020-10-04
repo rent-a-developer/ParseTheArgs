@@ -27,7 +27,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out Int64 resultValue)
         {
-            if (!Int64.TryParse(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
+            if (!this.ValueParser.TryParseInt64(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
             {
                 parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"An integer in the range from {Int64.MinValue} to {Int64.MaxValue}"));
                 return false;

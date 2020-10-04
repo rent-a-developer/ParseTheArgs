@@ -63,5 +63,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <param name="tokens">The tokens to parse.</param>
         /// <param name="parseResult">The parse result to put result of the parsing into.</param>
         public abstract void Parse(List<Token> tokens, ParseResult parseResult);
+
+        internal virtual ValueParser ValueParser { get; set; } = new ValueParser();
     }
 }

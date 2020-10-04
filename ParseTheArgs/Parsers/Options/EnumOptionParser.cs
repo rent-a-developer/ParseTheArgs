@@ -65,7 +65,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out TEnum resultValue)
         {
-            if (!Enum.TryParse(optionValue, true, out resultValue))
+            if (!this.ValueParser.TryParseEnum(optionValue, out resultValue))
             {
                 parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "One of the valid values (see help)"));
                 resultValue = default;

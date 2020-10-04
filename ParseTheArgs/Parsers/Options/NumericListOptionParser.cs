@@ -17,8 +17,8 @@ namespace ParseTheArgs.Parsers.Options
         /// <param name="optionName">The name of the option the parser parses.</param>
         protected NumericListOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
-            this.NumberStyles = NumberStyles.Any;
             this.FormatProvider = CultureInfo.CurrentCulture;
+            this.NumberStyles = NumberStyles.Any;
         }
 
         /// <summary>

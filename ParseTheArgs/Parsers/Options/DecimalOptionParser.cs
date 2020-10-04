@@ -27,7 +27,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out Decimal resultValue)
         {
-            if (!Decimal.TryParse(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
+            if (!this.ValueParser.TryParseDecimal(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
             {
                 parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"A decimal number in the range from {Decimal.MinValue} to {Decimal.MaxValue}"));
                 return false;

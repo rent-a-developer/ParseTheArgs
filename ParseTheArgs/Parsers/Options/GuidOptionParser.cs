@@ -33,26 +33,13 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out Guid resultValue)
         {
-            if (!String.IsNullOrEmpty(this.GuidFormat))
+            if (!this.ValueParser.TryParseGuid(optionValue, this.GuidFormat, out resultValue))
             {
-                if (!Guid.TryParseExact(optionValue, this.GuidFormat, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
-                    return false;
-                }
-
-                return true;
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
+                return false;
             }
-            else
-            {
-                if (!Guid.TryParse(optionValue, out resultValue))
-                {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
-                    return false;
-                }
 
-                return true;
-            }
+            return true;
         }
     }
 }

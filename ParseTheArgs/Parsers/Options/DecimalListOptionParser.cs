@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using ParseTheArgs.Errors;
 
@@ -16,6 +17,21 @@ namespace ParseTheArgs.Parsers.Options
         /// <param name="optionName">The name of the option the parser parses.</param>
         public DecimalListOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
+            if (targetProperty == null)
+            {
+                throw new ArgumentNullException(nameof(targetProperty));
+            }
+
+            if (String.IsNullOrEmpty(optionName))
+            {
+                throw new ArgumentException("Value cannot be null or an empty string.", nameof(optionName));
+            }
+
+            if (targetProperty.PropertyType != typeof(List<Decimal>))
+            {
+                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<Decimal>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
+            }
+
         }
 
         /// <summary>
@@ -27,7 +43,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out Decimal resultValue)
         {
-            if (!Decimal.TryParse(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
+            if (!this.ValueParser.TryParseDecimal(optionValue, this.NumberStyles, this.FormatProvider, out resultValue))
             {
                 parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, $"A decimal number in the range from {Decimal.MinValue} to {Decimal.MaxValue}"));
                 return false;

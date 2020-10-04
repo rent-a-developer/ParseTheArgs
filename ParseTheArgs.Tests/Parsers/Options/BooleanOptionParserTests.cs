@@ -90,7 +90,22 @@ Parameter name: targetProperty");
             parser.GetHelpText().Should().Be("Help text for option boolean.");
         }
 
-        [Test(Description = "Parse should set the target property to true when the option is present.")]
+        [Test(Description = "Parse should not assign the value true to the target property when the option is not present.")]
+        public void Parse_OptionNotPresent_ShouldSetTargetPropertyToTrue()
+        {
+            var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Boolean.Should().BeFalse();
+        }
+
+        [Test(Description = "Parse should assign the value true to the target property when the option is present.")]
         public void Parse_OptionPresent_ShouldSetTargetPropertyToTrue()
         {
             var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");

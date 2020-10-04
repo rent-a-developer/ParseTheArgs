@@ -17,6 +17,19 @@ namespace ParseTheArgs.Setup
         }
 
         /// <summary>
+        /// Sets the name of the program to display in help texts.
+        /// 
+        /// Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
+        /// </summary>
+        /// <param name="programName">The name of the program to display in help texts.</param>
+        /// <returns>A reference to this instance for further configuration.</returns>
+        public ParserSetup ProgramName(String programName)
+        {
+            this.parser.ProgramName = programName;
+            return this;
+        }
+
+        /// <summary>
         /// Sets a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
         /// </summary>
         /// <param name="banner">The banner text to display in help texts.</param>
@@ -104,19 +117,6 @@ namespace ParseTheArgs.Setup
         public ParserSetup IgnoreUnknownOptions()
         {
             this.parser.IgnoreUnknownOptions = true;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the name of the program to display in help texts.
-        /// 
-        /// Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
-        /// </summary>
-        /// <param name="programName">The name of the program to display in help texts.</param>
-        /// <returns>A reference to this instance for further configuration.</returns>
-        public ParserSetup ProgramName(String programName)
-        {
-            this.parser.ProgramName = programName;
             return this;
         }
 

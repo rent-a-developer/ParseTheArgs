@@ -1941,6 +1941,15 @@
             Can be used to configure a parser (e.g. setup commands and options).
             </summary>
         </member>
+        <member name="M:ParseTheArgs.Setup.ParserSetup.ProgramName(System.String)">
+            <summary>
+            Sets the name of the program to display in help texts.
+            
+            Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
+            </summary>
+            <param name="programName">The name of the program to display in help texts.</param>
+            <returns>A reference to this instance for further configuration.</returns>
+        </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)">
             <summary>
             Sets a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)" /> or <see cref="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)" />).
@@ -2004,15 +2013,6 @@
             The default behavior is that unknown options will cause parse errors (see <see cref="P:ParseTheArgs.ParseResult.Errors" />) when they encountered during parsing.
             After this method has been called unknown options will be ignored, so they will not cause errors.
             </summary>
-            <returns>A reference to this instance for further configuration.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Setup.ParserSetup.ProgramName(System.String)">
-            <summary>
-            Sets the name of the program to display in help texts.
-            
-            Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
-            </summary>
-            <param name="programName">The name of the program to display in help texts.</param>
             <returns>A reference to this instance for further configuration.</returns>
         </member>
         <member name="T:ParseTheArgs.Tokens.CommandLineArgumentsTokenizer">

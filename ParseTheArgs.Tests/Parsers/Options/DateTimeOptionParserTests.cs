@@ -51,7 +51,7 @@ Parameter name: optionName");
         [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
         public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "dateTimes"))
+            Invoking(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "dateTime"))
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(@"The given target property has an incompatible property type. Expected type is System.DateTime or System.Nullable<System.DateTime>, actual type was System.String.
@@ -90,8 +90,16 @@ Parameter name: targetProperty");
             parser.IsOptionRequired.Should().BeFalse();
         }
 
-        [Test(Description = "DateTimeFormat should return None initially.")]
-        public void DateTimeFormat_Initially_ShouldReturnNone()
+        [Test(Description = "DateTimeFormat should return null initially.")]
+        public void DateTimeFormat_Initially_ShouldReturnNull()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+
+            parser.DateTimeFormat.Should().BeNull();
+        }
+
+        [Test(Description = "DateTimeStyles should return None initially.")]
+        public void DateTimeStyles_Initially_ShouldReturnNone()
         {
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
 
@@ -106,14 +114,6 @@ Parameter name: targetProperty");
             parser.FormatProvider.Should().Be(new CultureInfo("en-US"));
         }
 
-        [Test(Description = "DateTimeStyles should return null initially.")]
-        public void DateTimeStyles_Initially_ShouldReturnNull()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.DateTimeFormat.Should().BeNull();
-        }
-
         [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
@@ -123,8 +123,8 @@ Parameter name: targetProperty");
             parser.GetHelpText().Should().Be("Help text for option dateTime.");
         }
 
-        [Test(Description = "Parse should parse a valid date time in the correct default format and put the date time value into the correct property of the options object.")]
-        public void Parse_DefaultFormat_ShouldParseAndPutDateTimeValueInOptionsObject()
+        [Test(Description = "Parse should parse a valid date time value and assign it to the target property.")]
+        public void Parse_ValidValue_ShouldParseAndPutDateTimeValueInOptionsObject()
         {
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
 
@@ -142,6 +142,29 @@ Parameter name: targetProperty");
             parser.Parse(tokens, parseResult);
 
             dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
+        }
+
+        [Test(Description = "Parse should parse a valid date time value in the correct custom format and assign it to the target property.")]
+        public void Parse_ValidValueCustomFormat_ShouldParseAndPutDateTimeValueInOptionsObject()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.DateTimeFormat = "ddd dd MMM yyyy h:mm tt";
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTime")
+                {
+                    OptionValues = { "Sun 15 Jun 2008 8:30 AM" }
+                }
+            };
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeFalse();
+            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2008, 6, 15, 8, 30, 0));
         }
 
         [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid date time.")]
@@ -199,29 +222,6 @@ Parameter name: targetProperty");
             error.InvalidOptionValue.Should().Be("2020-12-31 23:59:59");
             error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day) in the format 'ddd dd MMM yyyy h:mm tt'");
             error.GetErrorMessage().Should().Be("The value '2020-12-31 23:59:59' of the option --dateTime has an invalid format. The expected format is: A valid date (and optionally time of day) in the format 'ddd dd MMM yyyy h:mm tt'.");
-        }
-
-        [Test(Description = "Parse should parse a valid date time in the correct custom format and put the date time value into the correct property of the options object.")]
-        public void Parse_CustomFormat_ShouldParseAndPutDateTimeValueInOptionsObject()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-            parser.DateTimeFormat = "ddd dd MMM yyyy h:mm tt";
-
-            var tokens = new List<Token>
-            {
-                new OptionToken("dateTime")
-                {
-                    OptionValues = { "Sun 15 Jun 2008 8:30 AM" }
-                }
-            };
-            var parseResult = new ParseResult();
-            var dataTypesCommandOptions = new DataTypesCommandOptions();
-            parseResult.CommandOptions = dataTypesCommandOptions;
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeFalse();
-            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2008, 6, 15, 8, 30, 0));
         }
     }
 }

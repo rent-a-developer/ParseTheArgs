@@ -55,7 +55,7 @@ Parameter name: optionName");
             Invoking(() => new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "decimals"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<Decimal>, actual type was System.String.
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.Decimal>, actual type was System.String.
 Parameter name: targetProperty");
         }
 

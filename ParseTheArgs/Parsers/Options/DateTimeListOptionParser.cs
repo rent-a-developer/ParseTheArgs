@@ -33,7 +33,7 @@ namespace ParseTheArgs.Parsers.Options
 
             if (targetProperty.PropertyType != typeof(List<DateTime>))
             {
-                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<DateTime>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
+                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.DateTime>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
             }
 
             this.FormatProvider = CultureInfo.CurrentCulture;

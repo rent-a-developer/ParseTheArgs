@@ -55,7 +55,7 @@ Parameter name: optionName");
             Invoking(() => new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Strings"), "dateTimes"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<DateTime>, actual type was System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]].
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.DateTime>, actual type was System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]].
 Parameter name: targetProperty");
         }
 

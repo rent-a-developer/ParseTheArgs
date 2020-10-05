@@ -32,7 +32,7 @@ namespace ParseTheArgs.Parsers.Options
 
             if (targetProperty.PropertyType != typeof(List<Decimal>))
             {
-                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<Decimal>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
+                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.Decimal>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
             }
 
         }

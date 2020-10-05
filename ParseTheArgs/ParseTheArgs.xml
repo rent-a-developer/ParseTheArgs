@@ -496,14 +496,14 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put the result of the parsing into.</param>
         </member>
         <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Validates the given tokens and puts the result of the validation into the given parse result object.
             </summary>
             <param name="tokens">The tokens to validate.</param>
-            <param name="parseResult">The parse result to put result of the validation into.</param>
+            <param name="parseResult">The object where to put the result of the validation into.</param>
         </member>
         <member name="T:ParseTheArgs.Parsers.Commands.ICommandParser">
             <summary>
@@ -543,14 +543,14 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put the result of the parsing into.</param>
         </member>
         <member name="M:ParseTheArgs.Parsers.Commands.ICommandParser.Validate(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Validates the given tokens and puts the result of the validation into the given parse result object.
             </summary>
             <param name="tokens">The tokens to validate.</param>
-            <param name="parseResult">The parse result to put result of the validation into.</param>
+            <param name="parseResult">The object where to put the result of the validation into.</param>
         </member>
         <member name="T:ParseTheArgs.Parsers.Options.BooleanOptionParser">
             <summary>
@@ -584,7 +584,7 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put result of the parsing into.</param>
         </member>
         <member name="T:ParseTheArgs.Parsers.Options.DateTimeListOptionParser">
             <summary>
@@ -624,7 +624,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -666,7 +666,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -690,7 +690,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -714,7 +714,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -750,7 +750,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -786,7 +786,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -816,7 +816,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -846,7 +846,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -870,7 +870,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -894,7 +894,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -926,14 +926,14 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put result of the parsing into.</param>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.MultiValueOptionParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -1035,7 +1035,7 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put result of the parsing into.</param>
         </member>
         <member name="T:ParseTheArgs.Parsers.Options.OptionType">
             <summary>
@@ -1085,14 +1085,14 @@
             Parses the given tokens and puts the result of the parsing into the given parse result object.
             </summary>
             <param name="tokens">The tokens to parse.</param>
-            <param name="parseResult">The parse result to put result of the parsing into.</param>
+            <param name="parseResult">The object where to put result of the parsing into.</param>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.SingleValueOptionParser`1.TryParseValue(System.String,ParseTheArgs.ParseResult,`0@)">
             <summary>
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -1116,7 +1116,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -1140,7 +1140,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -1182,7 +1182,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>
@@ -1224,7 +1224,7 @@
             Parses the given value to the desired option value type of the option parser.
             </summary>
             <param name="optionValue">The option value to parse.</param>
-            <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+            <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
             <param name="resultValue">The parsed value.</param>
             <returns>True if the given option value could be parsed; otherwise false.</returns>
         </member>

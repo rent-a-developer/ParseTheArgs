@@ -78,7 +78,7 @@ namespace ParseTheArgs.Parsers.Options
         /// Parses the given value to the desired option value type of the option parser.
         /// </summary>
         /// <param name="optionValue">The option value to parse.</param>
-        /// <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+        /// <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
         /// <param name="resultValue">The parsed value.</param>
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected override Boolean TryParseValue(String optionValue, ParseResult parseResult, out TEnum resultValue)

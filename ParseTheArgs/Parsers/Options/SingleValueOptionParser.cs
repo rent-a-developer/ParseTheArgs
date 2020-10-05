@@ -45,7 +45,7 @@ namespace ParseTheArgs.Parsers.Options
         /// Parses the given tokens and puts the result of the parsing into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
-        /// <param name="parseResult">The parse result to put result of the parsing into.</param>
+        /// <param name="parseResult">The object where to put result of the parsing into.</param>
         public override void Parse(List<Token> tokens, ParseResult parseResult)
         {
             var optionToken = tokens.OfType<OptionToken>().FirstOrDefault(a => this.OptionName == a.OptionName);
@@ -84,7 +84,7 @@ namespace ParseTheArgs.Parsers.Options
         /// Parses the given value to the desired option value type of the option parser.
         /// </summary>
         /// <param name="optionValue">The option value to parse.</param>
-        /// <param name="parseResult">The parse result to put parse errors in if a parse error occurred.</param>
+        /// <param name="parseResult">The object where to put parse errors in if a parse error occurred.</param>
         /// <param name="resultValue">The parsed value.</param>
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected abstract Boolean TryParseValue(String optionValue, ParseResult parseResult, out TOptionValue resultValue);

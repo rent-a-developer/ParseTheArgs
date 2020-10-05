@@ -42,14 +42,14 @@ namespace ParseTheArgs.Parsers.Commands
         /// Parses the given tokens and puts the result of the parsing into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
-        /// <param name="parseResult">The parse result to put result of the parsing into.</param>
+        /// <param name="parseResult">The object where to put the result of the parsing into.</param>
         void Parse(List<Token> tokens, ParseResult parseResult);
 
         /// <summary>
         /// Validates the given tokens and puts the result of the validation into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to validate.</param>
-        /// <param name="parseResult">The parse result to put result of the validation into.</param>
+        /// <param name="parseResult">The object where to put the result of the validation into.</param>
         void Validate(List<Token> tokens, ParseResult parseResult);
     }
 }

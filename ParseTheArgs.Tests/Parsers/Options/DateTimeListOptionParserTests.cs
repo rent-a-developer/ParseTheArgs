@@ -14,6 +14,9 @@ using static FluentAssertions.FluentActions;
 namespace ParseTheArgs.Tests.Parsers.Options
 {
     // TODO: Tests for DefaultValue is missing for all option parser tests.
+    // TODO: Test OptionValueMissingError
+    // TODO: Test OptionMultipleValuesError
+    // TODO: Test OptionMissingError
     [TestFixture]
     public class DateTimeListOptionParserTests
     {

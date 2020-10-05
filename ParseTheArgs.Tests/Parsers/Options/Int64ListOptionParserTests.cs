@@ -119,9 +119,9 @@ Parameter name: targetProperty");
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
             var parser = new Int64ListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s");
-            parser.OptionHelp = "Help text for option int64.";
+            parser.OptionHelp = "Help text for option int64s.";
 
-            parser.GetHelpText().Should().Be("Help text for option int64.");
+            parser.GetHelpText().Should().Be("Help text for option int64s.");
         }
 
         [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]

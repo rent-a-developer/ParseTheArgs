@@ -94,22 +94,22 @@ Parameter name: targetProperty");
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
             var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
-            parser.OptionHelp = "Help text for option enum.";
+            parser.OptionHelp = "Help text for option enums.";
 
-            parser.GetHelpText().Should().Be(@"Help text for option enum. Possible values: Trace, Debug, Info, Error.");
+            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.");
         }
 
         [Test(Description = "GetHelpText should include the specified help texts for the enum values in the returned help text.")]
         public void GetHelpText_EnumValuesHelpPresent_ShouldReturnSpecifiedHelpText()
         {
             var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
-            parser.OptionHelp = "Help text for option enum.";
+            parser.OptionHelp = "Help text for option enums.";
             parser.EnumValuesHelps.Add(LogLevel.Trace, "Trace help.");
             parser.EnumValuesHelps.Add(LogLevel.Debug, "Debug help.");
             parser.EnumValuesHelps.Add(LogLevel.Info, "Info help.");
             parser.EnumValuesHelps.Add(LogLevel.Error, "Error help.");
 
-            parser.GetHelpText().Should().Be(@"Help text for option enum. Possible values: Trace, Debug, Info, Error.
+            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.
 Trace: Trace help.
 Debug: Debug help.
 Info: Info help.

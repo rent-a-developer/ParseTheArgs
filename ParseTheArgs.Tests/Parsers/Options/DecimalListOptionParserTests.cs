@@ -119,9 +119,9 @@ Parameter name: targetProperty");
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
             var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
-            parser.OptionHelp = "Help text for option decimal.";
+            parser.OptionHelp = "Help text for option decimals.";
 
-            parser.GetHelpText().Should().Be("Help text for option decimal.");
+            parser.GetHelpText().Should().Be("Help text for option decimals.");
         }
 
         [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]

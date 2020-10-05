@@ -16,7 +16,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
         [SetUp]
         public void SetUp()
         {
-            // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
+            // Fix the current culture to a known value.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 

@@ -354,12 +354,12 @@ Options:
 --optionA [value]           (Optional) OptionA help.
 --optionB [value]           (Optional) OptionB help.
 --optionC                   (Optional) OptionC help.
---optionD [value]           (Optional) OptionD help. Possible values: Trace, Info, Debug, Error.
+--optionD [value]           (Optional) OptionD help. Possible values: Trace, Debug, Info, Error.
 --optionE [value]           (Optional) OptionE help. Possible values: ASCII, UTF8, UTF16.
                                        ASCII: ASCII help.
                                        UTF8: UTF8 help.
                                        UTF16: UTF16 help.
---optionF [value value ...] (Optional) OptionF help. Possible values: Trace, Info, Debug, Error.
+--optionF [value value ...] (Optional) OptionF help. Possible values: Trace, Debug, Info, Error.
 --optionG [value value ...] (Optional) OptionG help. Possible values: ASCII, UTF8, UTF16.
                                        ASCII: ASCII help.
                                        UTF8: UTF8 help.

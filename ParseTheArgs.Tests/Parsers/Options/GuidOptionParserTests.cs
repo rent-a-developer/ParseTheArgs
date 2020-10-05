@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
@@ -14,13 +12,6 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class GuidOptionParserTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-            // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
-            Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-        }
-
         [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid Guid.")]
         public void Parse_InvalidValue_ShouldAddError()
         {

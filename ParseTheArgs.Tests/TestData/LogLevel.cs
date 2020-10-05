@@ -3,8 +3,8 @@ namespace ParseTheArgs.Tests.TestData
     public enum LogLevel
     {
         Trace,
-        Info,
         Debug,
+        Info,
         Error
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
@@ -18,7 +19,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
         [SetUp]
         public void SetUp()
         {
-            // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
+            // Fix the current culture to a known value.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
@@ -51,10 +52,10 @@ Parameter name: optionName");
         [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
         public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Strings"), "decimals"))
+            Invoking(() => new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "decimals"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<Decimal>, actual type was System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]].
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<Decimal>, actual type was System.String.
 Parameter name: targetProperty");
         }
 
@@ -110,21 +111,61 @@ Parameter name: targetProperty");
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
             var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
-            parser.OptionHelp = "Help text for option decimals.";
+            parser.OptionHelp = "Help text for option decimal.";
 
-            parser.GetHelpText().Should().Be("Help text for option decimals.");
+            parser.GetHelpText().Should().Be("Help text for option decimal.");
         }
 
-        [Test(Description = "Parse should parse a valid decimal value and assign it to the target property.")]
-        public void Parse_ValidValue_ShouldParseAndPutDecimalValuesInOptionsObject()
+        [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]
+        public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
         {
+            var valueParser = A.Fake<ValueParser>();
             var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
+            parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
                 new OptionToken("decimals")
                 {
-                    OptionValues = { "1", "1.23" }
+                    OptionValues = { "123.456", "514.548" }
+                }
+            };
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            Decimal decimalValue;
+
+            A.CallTo(() => valueParser.TryParseDecimal("123.456", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue))
+                .Returns(true)
+                .AssignsOutAndRefParameters(123.456M);
+
+            A.CallTo(() => valueParser.TryParseDecimal("514.548", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue))
+                .Returns(true)
+                .AssignsOutAndRefParameters(514.548M);
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Decimals.Should().BeEquivalentTo(123.456M, 514.548M);
+
+            A.CallTo(() => valueParser.TryParseDecimal("123.456", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue)).MustHaveHappened();
+            A.CallTo(() => valueParser.TryParseDecimal("514.548", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue)).MustHaveHappened();
+        }
+
+        [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
+        public void Parse_CustomFormatSettings_ShouldPassCustomFormatToValueParser()
+        {
+            var valueParser = A.Fake<ValueParser>(ob => ob.CallsBaseMethods());
+            var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
+            parser.ValueParser = valueParser;
+            parser.NumberStyles = NumberStyles.Currency;
+            parser.FormatProvider = new CultureInfo("de-DE");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("decimals")
+                {
+                    OptionValues = { "123.456" }
                 }
             };
             var parseResult = new ParseResult();
@@ -133,23 +174,30 @@ Parameter name: targetProperty");
 
             parser.Parse(tokens, parseResult);
 
-            dataTypesCommandOptions.Decimals.Should().BeEquivalentTo(1M, 1.23M);
+            Decimal decimalValue;
+            A.CallTo(() => valueParser.TryParseDecimal("123.456", NumberStyles.Currency, new CultureInfo("de-DE"), out decimalValue)).MustHaveHappened();
         }
 
-        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when one of the specified values is not a valid decimal number.")]
+        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when one of the specified values is not a valid decimal.")]
         public void Parse_InvalidValue_ShouldAddError()
         {
+            var valueParser = A.Fake<ValueParser>();
             var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
+            parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
                 new OptionToken("decimals")
                 {
-                    OptionValues = { "1", "NotANumber" }
+                    OptionValues = { "NotADecimal" }
                 }
             };
             var parseResult = new ParseResult();
             parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            Decimal decimalValue;
+            A.CallTo(() => valueParser.TryParseDecimal("NotADecimal", NumberStyles.None, new CultureInfo("en-US"), out decimalValue))
+                .Returns(false);
 
             parser.Parse(tokens, parseResult);
 
@@ -157,11 +205,11 @@ Parameter name: targetProperty");
             parseResult.Errors.Should().HaveCount(1);
             parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
 
-            var error = (OptionValueInvalidFormatError) parseResult.Errors[0];
+            var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
             error.OptionName.Should().Be("decimals");
-            error.InvalidOptionValue.Should().Be("NotANumber");
+            error.InvalidOptionValue.Should().Be("NotADecimal");
             error.ExpectedValueFormat.Should().Be("A decimal number in the range from -79228162514264337593543950335 to 79228162514264337593543950335");
-            error.GetErrorMessage().Should().Be("The value 'NotANumber' of the option --decimals has an invalid format. The expected format is: A decimal number in the range from -79228162514264337593543950335 to 79228162514264337593543950335.");
+            error.GetErrorMessage().Should().Be("The value 'NotADecimal' of the option --decimals has an invalid format. The expected format is: A decimal number in the range from -79228162514264337593543950335 to 79228162514264337593543950335.");
         }
     }
 }

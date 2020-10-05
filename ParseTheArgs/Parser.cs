@@ -252,7 +252,7 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
         /// </summary>
-        internal String Banner { get; set; }
+        internal virtual String Banner { get; set; }
 
         /// <summary>
         /// Defines a list of parsers for commands.
@@ -263,29 +263,29 @@ namespace ParseTheArgs
         /// Defines the text writer to write error messages to.
         /// </summary>
         /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
-        internal TextWriter? ErrorTextWriter { get; set; }
+        internal virtual TextWriter? ErrorTextWriter { get; set; }
 
         /// <summary>
         /// Defines the text writer to write help messages to.
         /// </summary>
         /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
-        internal TextWriter? HelpTextWriter { get; set; }
+        internal virtual TextWriter? HelpTextWriter { get; set; }
 
         /// <summary>
         /// Defines the maximum length a line of a help text can have.
         /// If not explicitly set via <see cref="ParserSetup.HelpTextMaxLineLength" /> the current width of the console width is used or, if no console is available, <see cref="Int32.MaxValue" /> is used.
         /// </summary>
-        internal Int32 HelpTextMaxLineLength { get; set; }
+        internal virtual Int32 HelpTextMaxLineLength { get; set; }
 
         /// <summary>
         /// Determines whether to ignore options that are unknown when options are parsed.
         /// </summary>
-        internal Boolean IgnoreUnknownOptions { get; set; }
+        internal virtual Boolean IgnoreUnknownOptions { get; set; }
 
         /// <summary>
         /// Defines the name of the program to display in help texts.
         /// </summary>
-        internal String ProgramName { get; set; }
+        internal virtual String ProgramName { get; set; }
 
         private void PrintCommandHelp(String command)
         {

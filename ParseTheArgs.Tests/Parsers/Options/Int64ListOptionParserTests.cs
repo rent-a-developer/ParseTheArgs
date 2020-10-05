@@ -235,5 +235,50 @@ Parameter name: targetProperty");
             error.ExpectedValueFormat.Should().Be("An integer in the range from -9223372036854775808 to 9223372036854775807");
             error.GetErrorMessage().Should().Be("The value 'NotAInt64' of the option --int64s has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
         }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new Int64ListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("int64s");
+            error.GetErrorMessage().Should().Be("The option --int64s is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new Int64ListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64s"), "int64s");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("int64s")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("int64s");
+            error.GetErrorMessage().Should().Be("The option --int64s requires a value, but no value was specified.");
+        }
     }
 }

@@ -13,10 +13,6 @@ using static FluentAssertions.FluentActions;
 
 namespace ParseTheArgs.Tests.Parsers.Options
 {
-    // TODO: Tests for DefaultValue is missing for all option parser tests.
-    // TODO: Test OptionValueMissingError
-    // TODO: Test OptionMultipleValuesError
-    // TODO: Test OptionMissingError
     [TestFixture]
     public class DateTimeListOptionParserTests
     {
@@ -247,6 +243,51 @@ Parameter name: targetProperty");
             error.InvalidOptionValue.Should().Be("NotADateTime");
             error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day)");
             error.GetErrorMessage().Should().Be("The value 'NotADateTime' of the option --dateTimes has an invalid format. The expected format is: A valid date (and optionally time of day).");
+        }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTimes"), "dateTimes");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("dateTimes");
+            error.GetErrorMessage().Should().Be("The option --dateTimes is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTimes"), "dateTimes");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTimes")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("dateTimes");
+            error.GetErrorMessage().Should().Be("The option --dateTimes requires a value, but no value was specified.");
         }
     }
 }

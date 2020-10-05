@@ -244,5 +244,50 @@ Parameter name: targetProperty");
             error.ExpectedValueFormat.Should().Be("A valid time interval");
             error.GetErrorMessage().Should().Be("The value 'NotATimeSpan' of the option --timeSpans has an invalid format. The expected format is: A valid time interval.");
         }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("timeSpans");
+            error.GetErrorMessage().Should().Be("The option --timeSpans is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new TimeSpanListOptionParser(typeof(DataTypesCommandOptions).GetProperty("TimeSpans"), "timeSpans");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("timeSpans")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("timeSpans");
+            error.GetErrorMessage().Should().Be("The option --timeSpans requires a value, but no value was specified.");
+        }
     }
 }

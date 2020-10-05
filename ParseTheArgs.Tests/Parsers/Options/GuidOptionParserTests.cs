@@ -212,5 +212,77 @@ Parameter name: targetProperty");
             error.ExpectedValueFormat.Should().Be("A valid Guid");
             error.GetErrorMessage().Should().Be("The value 'NotAGuid' of the option --guid has an invalid format. The expected format is: A valid Guid.");
         }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("guid");
+            error.GetErrorMessage().Should().Be("The option --guid is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("guid")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("guid");
+            error.GetErrorMessage().Should().Be("The option --guid requires a value, but no value was specified.");
+        }
+
+        [Test(Description = "Parse should add an OptionMultipleValuesError error to the parse result when more than one value was supplied for the option.")]
+        public void Parse_MoreThanOneOptionValue_ShouldAddError()
+        {
+            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("guid")
+                {
+                    OptionValues = { "13d02a84-84f7-4a2d-8f09-2f96defb8c79", "9e6a5202-102f-4eb9-a217-0a58f4db40b6" }
+                }
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMultipleValuesError>();
+
+            var error = (OptionMultipleValuesError)parseResult.Errors[0];
+            error.OptionName.Should().Be("guid");
+            error.GetErrorMessage().Should().Be("Multiple values are given for the option --guid, but the option expects a single value.");
+        }
     }
 }

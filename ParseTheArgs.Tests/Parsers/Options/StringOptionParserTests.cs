@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
+using ParseTheArgs.Errors;
 using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tests.TestData;
 using ParseTheArgs.Tokens;
@@ -132,6 +133,78 @@ Parameter name: targetProperty");
             parser.Parse(tokens, parseResult);
 
             dataTypesCommandOptions.String.Should().Be("value");
+        }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new StringOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "string");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("string");
+            error.GetErrorMessage().Should().Be("The option --string is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new StringOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "string");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("string")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("string");
+            error.GetErrorMessage().Should().Be("The option --string requires a value, but no value was specified.");
+        }
+
+        [Test(Description = "Parse should add an OptionMultipleValuesError error to the parse result when more than one value was supplied for the option.")]
+        public void Parse_MoreThanOneOptionValue_ShouldAddError()
+        {
+            var parser = new StringOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "string");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("string")
+                {
+                    OptionValues = { "value1", "value2" }
+                }
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMultipleValuesError>();
+
+            var error = (OptionMultipleValuesError)parseResult.Errors[0];
+            error.OptionName.Should().Be("string");
+            error.GetErrorMessage().Should().Be("Multiple values are given for the option --string, but the option expects a single value.");
         }
     }
 }

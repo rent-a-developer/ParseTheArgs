@@ -238,5 +238,77 @@ Parameter name: targetProperty");
             error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day)");
             error.GetErrorMessage().Should().Be("The value 'NotADateTime' of the option --dateTime has an invalid format. The expected format is: A valid date (and optionally time of day).");
         }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("dateTime");
+            error.GetErrorMessage().Should().Be("The option --dateTime is required.");
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTime")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError)parseResult.Errors[0];
+            error.OptionName.Should().Be("dateTime");
+            error.GetErrorMessage().Should().Be("The option --dateTime requires a value, but no value was specified.");
+        }
+
+        [Test(Description = "Parse should add an OptionMultipleValuesError error to the parse result when more than one value was supplied for the option.")]
+        public void Parse_MoreThanOneOptionValue_ShouldAddError()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTime")
+                {
+                    OptionValues = { "2020-12-31 23:59:59", "2020-01-01 10:30:59" }
+                }
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMultipleValuesError>();
+
+            var error = (OptionMultipleValuesError)parseResult.Errors[0];
+            error.OptionName.Should().Be("dateTime");
+            error.GetErrorMessage().Should().Be("Multiple values are given for the option --dateTime, but the option expects a single value.");
+        }
     }
 }

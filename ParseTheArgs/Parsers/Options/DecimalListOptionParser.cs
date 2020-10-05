@@ -34,7 +34,6 @@ namespace ParseTheArgs.Parsers.Options
             {
                 throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.Decimal>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
             }
-
         }
 
         /// <summary>

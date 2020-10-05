@@ -59,6 +59,14 @@ Parameter name: targetProperty");
             parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Guids"));
         }
 
+        [Test(Description = "OptionDefaultValue should return null initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnNull()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+
+            parser.OptionDefaultValue.Should().BeNull();
+        }
+
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
         public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
         {
@@ -98,6 +106,22 @@ Parameter name: targetProperty");
             parser.OptionHelp = "Help text for option guids.";
 
             parser.GetHelpText().Should().Be("Help text for option guids.");
+        }
+
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+            parser.OptionDefaultValue = new List<Guid> { new Guid("13d02a84-84f7-4a2d-8f09-2f96defb8c79"), new Guid("9e6a5202-102f-4eb9-a217-0a58f4db40b6") };
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Guids.Should().BeEquivalentTo(new Guid("13d02a84-84f7-4a2d-8f09-2f96defb8c79"), new Guid("9e6a5202-102f-4eb9-a217-0a58f4db40b6"));
         }
 
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]

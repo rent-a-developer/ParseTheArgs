@@ -58,6 +58,14 @@ Parameter name: targetProperty");
             parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Enums"));
         }
 
+        [Test(Description = "OptionDefaultValue should return null initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnNull()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+
+            parser.OptionDefaultValue.Should().BeNull();
+        }
+
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
         public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
         {
@@ -107,6 +115,22 @@ Debug: Debug help.
 Info: Info help.
 Error: Error help.
 ");
+        }
+
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "logLevels");
+            parser.OptionDefaultValue = new List<LogLevel> { LogLevel.Info, LogLevel.Error };
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Enums.Should().BeEquivalentTo(LogLevel.Info, LogLevel.Error);
         }
 
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]

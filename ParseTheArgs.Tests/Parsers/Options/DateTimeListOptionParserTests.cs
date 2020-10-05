@@ -13,6 +13,7 @@ using static FluentAssertions.FluentActions;
 
 namespace ParseTheArgs.Tests.Parsers.Options
 {
+    // TODO: Tests for DefaultValue is missing for all option parser tests.
     [TestFixture]
     public class DateTimeListOptionParserTests
     {
@@ -65,6 +66,14 @@ Parameter name: targetProperty");
             var parser = new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTimes"), "dateTimes");
 
             parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("DateTimes"));
+        }
+
+        [Test(Description = "OptionDefaultValue should return null initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnNull()
+        {
+            var parser = new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTimes"), "dateTimes");
+
+            parser.OptionDefaultValue.Should().BeNull();
         }
 
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
@@ -122,6 +131,22 @@ Parameter name: targetProperty");
             parser.OptionHelp = "Help text for option dateTimes.";
 
             parser.GetHelpText().Should().Be("Help text for option dateTimes.");
+        }
+
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new DateTimeListOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTimes"), "dateTimes");
+            parser.OptionDefaultValue = new List<DateTime> { new DateTime(2020, 12, 31, 23, 59, 59), new DateTime(2020, 1, 1, 10, 30, 59) };
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.DateTimes.Should().BeEquivalentTo(new DateTime(2020, 12, 31, 23, 59, 59), new DateTime(2020, 1, 1, 10, 30, 59));
         }
 
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
@@ -13,12 +14,19 @@ using static FluentAssertions.FluentActions;
 namespace ParseTheArgs.Tests.Parsers.Options
 {
     [TestFixture]
-    public class GuidOptionParserTests
+    public class Int64OptionParserTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            // Fix the current culture to a known value.
+            Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
+
         [Test(Description = "Constructor should throw an exception when the given target property is null.")]
         public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new GuidOptionParser(null, "guid"))
+            Invoking(() => new Int64OptionParser(null, "int64"))
                 .Should()
                 .Throw<ArgumentNullException>()
                 .WithMessage(@"Value cannot be null.
@@ -28,13 +36,13 @@ Parameter name: targetProperty");
         [Test(Description = "Constructor should throw an exception when the given option name is null or an empty string.")]
         public void Constructor_OptionNameIsNullOrEmpty_ShouldThrowException()
         {
-            Invoking(() => new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), null))
+            Invoking(() => new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), null))
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(@"Value cannot be null or an empty string.
 Parameter name: optionName");
 
-            Invoking(() => new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), ""))
+            Invoking(() => new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), ""))
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(@"Value cannot be null or an empty string.
@@ -44,41 +52,41 @@ Parameter name: optionName");
         [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
         public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "guid"))
+            Invoking(() => new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "int64"))
                 .Should()
                 .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Guid or System.Nullable<System.Guid>, actual type was System.String.
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Int64 or System.Nullable<System.Int64>, actual type was System.String.
 Parameter name: targetProperty");
         }
 
         [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
         public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
-            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Guid"));
+            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Int64"));
         }
 
-        [Test(Description = "OptionDefaultValue should return default(Guid) initially.")]
-        public void OptionDefaultValue_Initially_ShouldReturnDefaultOfGuid()
+        [Test(Description = "OptionDefaultValue should return default(Int64) initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnDefaultOfInt64()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
-            parser.OptionDefaultValue.Should().Be(default(Guid));
+            parser.OptionDefaultValue.Should().Be(default);
         }
 
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
         public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
-            parser.OptionName.Should().Be("guid");
+            parser.OptionName.Should().Be("int64");
         }
 
         [Test(Description = "OptionType should return SingleValueOption.")]
         public void OptionType_ShouldReturnSingleValueOption()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
             parser.OptionType.Should().Be(OptionType.SingleValueOption);
         }
@@ -86,33 +94,41 @@ Parameter name: targetProperty");
         [Test(Description = "IsOptionRequired should return false initially.")]
         public void IsOptionRequired_Initially_ShouldReturnFalse()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
             parser.IsOptionRequired.Should().BeFalse();
         }
 
-        [Test(Description = "GuidFormat should return null initially.")]
-        public void GuidFormat_Initially_ShouldReturnNull()
+        [Test(Description = "NumberStyles should return Any initially.")]
+        public void NumberStyles_Initially_ShouldReturnAny()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
 
-            parser.GuidFormat.Should().BeNull();
+            parser.NumberStyles.Should().Be(NumberStyles.Any);
+        }
+
+        [Test(Description = "FormatProvider should return the value of CultureInfo.CurrentCulture initially.")]
+        public void FormatProvider_Initially_ShouldReturnValueOfCurrentCulture()
+        {
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
+
+            parser.FormatProvider.Should().Be(new CultureInfo("en-US"));
         }
 
         [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
         public void GetHelpText_ShouldReturnSpecifiedHelpText()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
-            parser.OptionHelp = "Help text for option guid.";
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
+            parser.OptionHelp = "Help text for option int64.";
 
-            parser.GetHelpText().Should().Be("Help text for option guid.");
+            parser.GetHelpText().Should().Be("Help text for option int64.");
         }
 
         [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
         public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
         {
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
-            parser.OptionDefaultValue = new Guid("501a44e0-6d8f-4dd8-994e-773300572d37");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
+            parser.OptionDefaultValue = 123L;
 
             var tokens = new List<Token>();
             var parseResult = new ParseResult();
@@ -121,52 +137,53 @@ Parameter name: targetProperty");
 
             parser.Parse(tokens, parseResult);
 
-            dataTypesCommandOptions.Guid.Should().Be(new Guid("501a44e0-6d8f-4dd8-994e-773300572d37"));
+            dataTypesCommandOptions.Int64.Should().Be(123L);
         }
 
         [Test(Description = "Parse should parse a valid option value using the value parser and assign it to the target property.")]
         public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
         {
             var valueParser = A.Fake<ValueParser>();
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
             parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
-                new OptionToken("guid")
+                new OptionToken("int64")
                 {
-                    OptionValues = { "501a44e0-6d8f-4dd8-994e-773300572d37" }
+                    OptionValues = { "123" }
                 }
             };
             var parseResult = new ParseResult();
             var dataTypesCommandOptions = new DataTypesCommandOptions();
             parseResult.CommandOptions = dataTypesCommandOptions;
 
-            Guid guid;
-            A.CallTo(() => valueParser.TryParseGuid("501a44e0-6d8f-4dd8-994e-773300572d37", null, out guid))
+            Int64 int64;
+            A.CallTo(() => valueParser.TryParseInt64("123", NumberStyles.Any, new CultureInfo("en-US"), out int64))
                 .Returns(true)
-                .AssignsOutAndRefParameters(new Guid("501a44e0-6d8f-4dd8-994e-773300572d37"));
+                .AssignsOutAndRefParameters(123L);
 
             parser.Parse(tokens, parseResult);
 
-            dataTypesCommandOptions.Guid.Should().Be(new Guid("501a44e0-6d8f-4dd8-994e-773300572d37"));
+            dataTypesCommandOptions.Int64.Should().Be(123L);
 
-            A.CallTo(() => valueParser.TryParseGuid("501a44e0-6d8f-4dd8-994e-773300572d37", null, out guid)).MustHaveHappened();
+            A.CallTo(() => valueParser.TryParseInt64("123", NumberStyles.Any, new CultureInfo("en-US"), out int64)).MustHaveHappened();
         }
 
         [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
         public void Parse_CustomFormatSettings_ShouldPassCustomFormatToValueParser()
         {
             var valueParser = A.Fake<ValueParser>(ob => ob.CallsBaseMethods());
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
             parser.ValueParser = valueParser;
-            parser.GuidFormat = "X";
+            parser.NumberStyles = NumberStyles.Currency;
+            parser.FormatProvider = new CultureInfo("de-DE");
 
             var tokens = new List<Token>
             {
-                new OptionToken("guid")
+                new OptionToken("int64")
                 {
-                    OptionValues = { "{0x501a44e0,0x6d8f,0x4dd8,{0x99,0x4e,0x77,0x33,0x00,0x57,0x2d,0x37}}" }
+                    OptionValues = { "123" }
                 }
             };
             var parseResult = new ParseResult();
@@ -175,29 +192,29 @@ Parameter name: targetProperty");
 
             parser.Parse(tokens, parseResult);
 
-            Guid guid;
-            A.CallTo(() => valueParser.TryParseGuid("{0x501a44e0,0x6d8f,0x4dd8,{0x99,0x4e,0x77,0x33,0x00,0x57,0x2d,0x37}}", "X", out guid)).MustHaveHappened();
+            Int64 int64;
+            A.CallTo(() => valueParser.TryParseInt64("123", NumberStyles.Currency, new CultureInfo("de-DE"), out int64)).MustHaveHappened();
         }
 
-        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid decimal.")]
+        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when the specified value is not a valid int64.")]
         public void Parse_InvalidValue_ShouldAddError()
         {
             var valueParser = A.Fake<ValueParser>();
-            var parser = new GuidOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guid"), "guid");
+            var parser = new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), "int64");
             parser.ValueParser = valueParser;
 
             var tokens = new List<Token>
             {
-                new OptionToken("guid")
+                new OptionToken("int64")
                 {
-                    OptionValues = { "NotAGuid" }
+                    OptionValues = { "NotAInt64" }
                 }
             };
             var parseResult = new ParseResult();
             parseResult.CommandOptions = new DataTypesCommandOptions();
 
-            Guid guid;
-            A.CallTo(() => valueParser.TryParseGuid("NotAGuid", null, out guid))
+            Int64 int64;
+            A.CallTo(() => valueParser.TryParseInt64("NotAInt64", NumberStyles.None, new CultureInfo("en-US"), out int64))
                 .Returns(false);
 
             parser.Parse(tokens, parseResult);
@@ -207,10 +224,10 @@ Parameter name: targetProperty");
             parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
 
             var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
-            error.OptionName.Should().Be("guid");
-            error.InvalidOptionValue.Should().Be("NotAGuid");
-            error.ExpectedValueFormat.Should().Be("A valid Guid");
-            error.GetErrorMessage().Should().Be("The value 'NotAGuid' of the option --guid has an invalid format. The expected format is: A valid Guid.");
+            error.OptionName.Should().Be("int64");
+            error.InvalidOptionValue.Should().Be("NotAInt64");
+            error.ExpectedValueFormat.Should().Be("An integer in the range from -9223372036854775808 to 9223372036854775807");
+            error.GetErrorMessage().Should().Be("The value 'NotAInt64' of the option --int64 has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
         }
     }
 }

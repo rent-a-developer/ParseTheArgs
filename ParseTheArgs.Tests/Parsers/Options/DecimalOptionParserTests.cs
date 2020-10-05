@@ -67,6 +67,14 @@ Parameter name: targetProperty");
             parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Decimal"));
         }
 
+        [Test(Description = "OptionDefaultValue should return default(Decimal) initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnDefaultOfDecimal()
+        {
+            var parser = new DecimalOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimal"), "decimal");
+
+            parser.OptionDefaultValue.Should().Be(default);
+        }
+
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
         public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
         {
@@ -114,6 +122,22 @@ Parameter name: targetProperty");
             parser.OptionHelp = "Help text for option decimal.";
 
             parser.GetHelpText().Should().Be("Help text for option decimal.");
+        }
+
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new DecimalOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimal"), "decimal");
+            parser.OptionDefaultValue = 123.456M;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Decimal.Should().Be(123.456M);
         }
 
         [Test(Description = "Parse should parse a valid option value using the value parser and assign it to the target property.")]

@@ -67,6 +67,14 @@ Parameter name: targetProperty");
             parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Decimals"));
         }
 
+        [Test(Description = "OptionDefaultValue should return null initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnNull()
+        {
+            var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
+
+            parser.OptionDefaultValue.Should().BeNull();
+        }
+
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
         public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
         {
@@ -116,6 +124,22 @@ Parameter name: targetProperty");
             parser.GetHelpText().Should().Be("Help text for option decimal.");
         }
 
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new DecimalListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Decimals"), "decimals");
+            parser.OptionDefaultValue = new List<Decimal> { 123.456M, 456.789M };
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.Decimals.Should().BeEquivalentTo(123.456M, 456.789M);
+        }
+
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]
         public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
         {
@@ -127,7 +151,7 @@ Parameter name: targetProperty");
             {
                 new OptionToken("decimals")
                 {
-                    OptionValues = { "123.456", "514.548" }
+                    OptionValues = { "123.456", "456.789" }
                 }
             };
             var parseResult = new ParseResult();
@@ -140,16 +164,16 @@ Parameter name: targetProperty");
                 .Returns(true)
                 .AssignsOutAndRefParameters(123.456M);
 
-            A.CallTo(() => valueParser.TryParseDecimal("514.548", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue))
+            A.CallTo(() => valueParser.TryParseDecimal("456.789", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue))
                 .Returns(true)
-                .AssignsOutAndRefParameters(514.548M);
+                .AssignsOutAndRefParameters(456.789M);
 
             parser.Parse(tokens, parseResult);
 
-            dataTypesCommandOptions.Decimals.Should().BeEquivalentTo(123.456M, 514.548M);
+            dataTypesCommandOptions.Decimals.Should().BeEquivalentTo(123.456M, 456.789M);
 
             A.CallTo(() => valueParser.TryParseDecimal("123.456", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue)).MustHaveHappened();
-            A.CallTo(() => valueParser.TryParseDecimal("514.548", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue)).MustHaveHappened();
+            A.CallTo(() => valueParser.TryParseDecimal("456.789", NumberStyles.Any, new CultureInfo("en-US"), out decimalValue)).MustHaveHappened();
         }
 
         [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]

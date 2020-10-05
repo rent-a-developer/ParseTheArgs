@@ -831,11 +831,14 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Guid"/> or <see cref="T:System.Nullable`1"/>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.GuidOptionParser.GuidFormat">
             <summary>
             Defines the format to use when parsing the option value to a <see cref="T:System.Guid" />.
-            For supported formats see the documentation of <see cref="M:System.Guid.Parse(System.String)" />.
+            For supported formats see the documentation of <see cref="M:System.Guid.ParseExact(System.String,System.String)" />.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.GuidOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Guid@)">
@@ -858,6 +861,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.Int64ListOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>
@@ -879,6 +885,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Int64"/> or <see cref="T:System.Nullable`1"/>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.Int64OptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>

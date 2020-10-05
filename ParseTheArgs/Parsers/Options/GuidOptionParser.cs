@@ -14,13 +14,30 @@ namespace ParseTheArgs.Parsers.Options
         /// </summary>
         /// <param name="targetProperty">The property where the value of the option will be stored.</param>
         /// <param name="optionName">The name of the option the parser parses.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="Guid"/> or <see cref="Nullable{Guid}"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         public GuidOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
+            if (targetProperty == null)
+            {
+                throw new ArgumentNullException(nameof(targetProperty));
+            }
+
+            if (String.IsNullOrEmpty(optionName))
+            {
+                throw new ArgumentException("Value cannot be null or an empty string.", nameof(optionName));
+            }
+
+            if (targetProperty.PropertyType != typeof(Guid) && targetProperty.PropertyType != typeof(Nullable<Guid>))
+            {
+                throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Guid or System.Nullable<System.Guid>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));
+            }
         }
 
         /// <summary>
         /// Defines the format to use when parsing the option value to a <see cref="Guid" />.
-        /// For supported formats see the documentation of <see cref="Guid.Parse(string)" />.
+        /// For supported formats see the documentation of <see cref="Guid.ParseExact(String, String)" />.
         /// </summary>
         public virtual String? GuidFormat { get; set; }
 

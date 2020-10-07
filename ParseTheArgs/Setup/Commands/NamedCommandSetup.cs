@@ -79,13 +79,8 @@ namespace ParseTheArgs.Setup.Commands
 
             if (commandParser == null)
             {
-                commandParser = new CommandParser<TCommandOptions>(parser)
-                {
-                    CommandName = typeof(TCommandOptions)
-                        .Name
-                        .ToCamelCase()
-                        .Replace("Options", "")
-                };
+                commandParser = Dependencies.Resolver.Resolve<CommandParser<TCommandOptions>>(parser);
+                commandParser.CommandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
 
                 parser.CommandParsers.Add(commandParser);
             }

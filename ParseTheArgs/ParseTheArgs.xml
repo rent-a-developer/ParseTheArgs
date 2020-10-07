@@ -4,6 +4,32 @@
         <name>ParseTheArgs</name>
     </assembly>
     <members>
+        <member name="T:ParseTheArgs.IDependencyResolver">
+            <summary>
+            Resolves dependencies.
+            </summary>
+        </member>
+        <member name="M:ParseTheArgs.IDependencyResolver.Resolve``1(System.Object[])">
+            <summary>
+            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
+            </summary>
+            <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
+            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
+            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
+        </member>
+        <member name="T:ParseTheArgs.DefaultDependencyResolver">
+            <summary>
+            The default dependency resolver.
+            </summary>
+        </member>
+        <member name="M:ParseTheArgs.DefaultDependencyResolver.Resolve``1(System.Object[])">
+            <summary>
+            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
+            </summary>
+            <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
+            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
+            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
+        </member>
         <member name="T:ParseTheArgs.Errors.DuplicateOptionError">
             <summary>
             Represents an error that indicates that an option is given multiple times.

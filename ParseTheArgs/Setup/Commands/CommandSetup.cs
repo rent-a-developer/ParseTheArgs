@@ -47,7 +47,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="BooleanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public BooleanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Boolean>> propertyExpression)
         {
-            return new BooleanOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<BooleanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public StringOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, String>> propertyExpression)
         {
-            return new StringOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<StringOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public StringListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<String>>> propertyExpression)
         {
-            return new StringListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<StringListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, DateTime>> propertyExpression)
         {
-            return new DateTimeOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<DateTime>>> propertyExpression)
         {
-            return new DateTimeListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DateTimeListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, DateTime?>> propertyExpression)
         {
-            return new DateTimeOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, TimeSpan>> propertyExpression)
         {
-            return new TimeSpanOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<TimeSpan>>> propertyExpression)
         {
-            return new TimeSpanListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<TimeSpanListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, TimeSpan?>> propertyExpression)
         {
-            return new TimeSpanOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64OptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64OptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Int64>> propertyExpression)
         {
-            return new Int64OptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64ListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64ListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Int64>>> propertyExpression)
         {
-            return new Int64ListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<Int64ListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64OptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64OptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Int64?>> propertyExpression)
         {
-            return new Int64OptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Guid>> propertyExpression)
         {
-            return new GuidOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Guid>>> propertyExpression)
         {
-            return new GuidListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<GuidListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Guid?>> propertyExpression)
         {
-            return new GuidOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Decimal>> propertyExpression)
         {
-            return new DecimalOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Decimal>>> propertyExpression)
         {
-            return new DecimalListOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DecimalListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Decimal?>> propertyExpression)
         {
-            return new DecimalOptionSetup<TCommandOptions>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace ParseTheArgs.Setup.Commands
         public EnumOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, TEnum>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return new EnumOptionSetup<TCommandOptions, TEnum>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace ParseTheArgs.Setup.Commands
         public EnumOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, TEnum?>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return new EnumOptionSetup<TCommandOptions, TEnum>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace ParseTheArgs.Setup.Commands
         public EnumListOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, List<TEnum>>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return new EnumListOptionSetup<TCommandOptions, TEnum>(this.CommandParser, propertyExpression);
+            return Dependencies.Resolver.Resolve<EnumListOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ using static FluentAssertions.FluentActions;
 namespace ParseTheArgs.Tests.Setup.Commands
 {
     [TestFixture]
-    public class NamedCommandSetupTests
+    public class NamedCommandSetupTests : BaseTestFixture
     {
         [Test(Description = "Constructor should throw an exception when the given parser is null.")]
         public void Constructor_ParserIsNull_ShouldThrowException()
@@ -31,13 +32,18 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var commandParsers = new List<ICommandParser>();
             A.CallTo(() => parser.CommandParsers).Returns(commandParsers);
 
+            var commandParser = new CommandParser<Command1Options>(parser);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).Returns(commandParser);
+
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
-            setup.CommandParser.Should().BeOfType<CommandParser<Command1Options>>();
+            setup.CommandParser.Should().Be(commandParser);
             setup.CommandParser.CommandName.Should().Be("command1");
 
             commandParsers.Should().HaveCount(1);
-            commandParsers[0].Should().BeOfType<CommandParser<Command1Options>>();
+            commandParsers[0].Should().Be(commandParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappened();
         }
 
         [Test(Description = "Constructor should reuse an existing command parser.")]
@@ -47,7 +53,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
 
             var commandParsers = new List<ICommandParser>();
             commandParsers.Add(new CommandParser<Command1Options>(parser));
-            
+
             A.CallTo(() => parser.CommandParsers).Returns(commandParsers);
 
             new NamedCommandSetup<Command1Options>(parser);
@@ -61,7 +67,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
-            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser>{ commandParser });
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -86,7 +92,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
-            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser>{ commandParser });
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -111,7 +117,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
-            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser>{ commandParser });
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -137,7 +143,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var validator = A.Fake<Action<CommandValidatorContext<Command1Options>>>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
-            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser>{ commandParser });
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -176,15 +182,424 @@ Parameter name: name");
 
         }
 
-        [Test(Description = "Name should throw an exception when another command already has the same name.")]
-        public void Option_Boolean_ShouldReturnBooleanOptionSetup()
+        [Test(Description = "Option should return a new instance of BooleanOptionSetup when called for a Boolean target property.")]
+        public void Option_BooleanTargetProperty_ShouldReturnANewBooleanOptionSetup()
         {
             var parser = A.Fake<Parser>();
 
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
             var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
 
-            setup.Option(a => a.Boolean).Should().BeOfType<BooleanOptionSetup<DataTypesCommandOptions>>();
+            Expression<Func<DataTypesCommandOptions, Boolean>> propertyExpression = a => a.Boolean;
 
+            var optionSetup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<BooleanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<BooleanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of StringOptionSetup when called for a String target property.")]
+        public void Option_StringTargetProperty_ShouldReturnANewStringOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, String>> propertyExpression = a => a.String;
+
+            var optionSetup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of StringListOptionSetup when called for a List<String> target property.")]
+        public void Option_StringListTargetProperty_ShouldReturnANewStringListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<String>>> propertyExpression = a => a.Strings;
+
+            var optionSetup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<StringListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DateTimeOptionSetup when called for a DateTime target property.")]
+        public void Option_DateTimeTargetProperty_ShouldReturnANewDateTimeOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, DateTime>> propertyExpression = a => a.DateTime;
+
+            var optionSetup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DateTimeOptionSetup when called for a Nullable<DateTime> target property.")]
+        public void Option_NullableDateTimeTargetProperty_ShouldReturnANewDateTimeOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<DateTime>>> propertyExpression = a => a.NullableDateTime;
+
+            var optionSetup = new DateTimeOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DateTimeListOptionSetup when called for a List<DateTime> target property.")]
+        public void Option_DateTimeListTargetProperty_ShouldReturnANewDateTimeListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<DateTime>>> propertyExpression = a => a.DateTimes;
+
+            var optionSetup = new DateTimeListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DateTimeListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of TimeSpanOptionSetup when called for a TimeSpan target property.")]
+        public void Option_TimeSpanTargetProperty_ShouldReturnANewTimeSpanOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, TimeSpan>> propertyExpression = a => a.TimeSpan;
+
+            var optionSetup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of TimeSpanOptionSetup when called for a Nullable<TimeSpan> target property.")]
+        public void Option_NullableTimeSpanTargetProperty_ShouldReturnANewTimeSpanOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<TimeSpan>>> propertyExpression = a => a.NullableTimeSpan;
+
+            var optionSetup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of TimeSpanListOptionSetup when called for a List<TimeSpan> target property.")]
+        public void Option_TimeSpanListTargetProperty_ShouldReturnANewTimeSpanListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<TimeSpan>>> propertyExpression = a => a.TimeSpans;
+
+            var optionSetup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of Int64OptionSetup when called for a Int64 target property.")]
+        public void Option_Int64TargetProperty_ShouldReturnANewInt64OptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Int64>> propertyExpression = a => a.Int64;
+
+            var optionSetup = new Int64OptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64OptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64OptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of Int64OptionSetup when called for a Nullable<Int64> target property.")]
+        public void Option_NullableInt64TargetProperty_ShouldReturnANewInt64OptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<Int64>>> propertyExpression = a => a.NullableInt64;
+
+            var optionSetup = new Int64OptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64OptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64OptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of Int64ListOptionSetup when called for a List<Int64> target property.")]
+        public void Option_Int64ListTargetProperty_ShouldReturnANewInt64ListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<Int64>>> propertyExpression = a => a.Int64s;
+
+            var optionSetup = new Int64ListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64ListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<Int64ListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of GuidOptionSetup when called for a Guid target property.")]
+        public void Option_GuidTargetProperty_ShouldReturnANewGuidOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Guid>> propertyExpression = a => a.Guid;
+
+            var optionSetup = new GuidOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of GuidOptionSetup when called for a Nullable<Guid> target property.")]
+        public void Option_NullableGuidTargetProperty_ShouldReturnANewGuidOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<Guid>>> propertyExpression = a => a.NullableGuid;
+
+            var optionSetup = new GuidOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of GuidListOptionSetup when called for a List<Guid> target property.")]
+        public void Option_GuidListTargetProperty_ShouldReturnANewGuidListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<Guid>>> propertyExpression = a => a.Guids;
+
+            var optionSetup = new GuidListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<GuidListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DecimalOptionSetup when called for a Decimal target property.")]
+        public void Option_DecimalTargetProperty_ShouldReturnANewDecimalOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Decimal>> propertyExpression = a => a.Decimal;
+
+            var optionSetup = new DecimalOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DecimalOptionSetup when called for a Nullable<Decimal> target property.")]
+        public void Option_NullableDecimalTargetProperty_ShouldReturnANewDecimalOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<Decimal>>> propertyExpression = a => a.NullableDecimal;
+
+            var optionSetup = new DecimalOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of DecimalListOptionSetup when called for a List<Decimal> target property.")]
+        public void Option_DecimalListTargetProperty_ShouldReturnANewDecimalListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<Decimal>>> propertyExpression = a => a.Decimals;
+
+            var optionSetup = new DecimalListOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<DecimalListOptionSetup<DataTypesCommandOptions>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of EnumOptionSetup when called for a Enum target property.")]
+        public void Option_EnumTargetProperty_ShouldReturnANewEnumOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, LogLevel>> propertyExpression = a => a.Enum;
+
+            var optionSetup = new EnumOptionSetup<DataTypesCommandOptions, LogLevel>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of EnumOptionSetup when called for a Nullable<Enum> target property.")]
+        public void Option_NullableEnumTargetProperty_ShouldReturnANewEnumOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, Nullable<LogLevel>>> propertyExpression = a => a.NullableEnum;
+
+            var optionSetup = new EnumOptionSetup<DataTypesCommandOptions, LogLevel>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).MustHaveHappened();
+        }
+
+        [Test(Description = "Option should return a new instance of EnumListOptionSetup when called for a List<Enum> target property.")]
+        public void Option_EnumListTargetProperty_ShouldReturnANewEnumListOptionSetup()
+        {
+            var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            A.CallTo(() => parser.CommandParsers).Returns(new List<ICommandParser> { commandParser });
+
+            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+
+            Expression<Func<DataTypesCommandOptions, List<LogLevel>>> propertyExpression = a => a.Enums;
+
+            var optionSetup = new EnumListOptionSetup<DataTypesCommandOptions, LogLevel>(commandParser, propertyExpression);
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumListOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).Returns(optionSetup);
+
+            setup.Option(propertyExpression).Should().Be(optionSetup);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<EnumListOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, propertyExpression)).MustHaveHappened();
         }
     }
 }

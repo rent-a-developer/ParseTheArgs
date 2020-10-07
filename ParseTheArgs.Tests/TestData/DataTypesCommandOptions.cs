@@ -22,7 +22,6 @@ namespace ParseTheArgs.Tests.TestData
         public List<String> Strings { get; set; }
         public List<TimeSpan> TimeSpans { get; set; }
 
-        public Nullable<Boolean> NullableBoolean { get; set; }
         public Nullable<DateTime> NullableDateTime { get; set; }
         public Nullable<Decimal> NullableDecimal { get; set; }
         public Nullable<LogLevel> NullableEnum { get; set; }

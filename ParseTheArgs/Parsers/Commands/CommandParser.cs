@@ -169,7 +169,7 @@ namespace ParseTheArgs.Parsers.Commands
 
             if (optionParser == null)
             {
-                optionParser = (TOptionParser) Activator.CreateInstance(typeof(TOptionParser), new Object[] { targetProperty, targetProperty.Name.ToCamelCase() });
+                optionParser = Dependencies.Resolver.Resolve<TOptionParser>(targetProperty, targetProperty.Name.ToCamelCase());
 
                 this.OptionParsers.Add(optionParser);
             }

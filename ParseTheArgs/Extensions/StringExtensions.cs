@@ -13,7 +13,12 @@ namespace ParseTheArgs.Extensions
     {
         /// <summary>
         /// Splits the given text into individual words in the order they appear in the text.
-        /// The text is split each time a space or underscore character is found or when the casing of the text changes form lower case to upper case.
+        /// 
+        /// The text is split each time:
+        /// - A space character is found or
+        /// - A underscore character is found or
+        /// - When the casing in the text changes form lower to upper case.
+        /// 
         /// Each word is returned in lower case.
         /// </summary>
         /// <param name="text">The text to split into words.</param>
@@ -24,6 +29,7 @@ namespace ParseTheArgs.Extensions
         /// "CommandLineArgument".SplitWords();   // Returns ["command", "line", "argument"].
         /// "command_line_argument".SplitWords(); // Returns ["command", "line", "argument"].
         /// "command line argument".SplitWords(); // Returns ["command", "line", "argument"].
+        /// "command1options".SplitWords();       // Returns ["command1", "options"].
         /// </code>
         /// </example>
         public static IEnumerable<String> SplitWords(this String text)
@@ -39,7 +45,10 @@ namespace ParseTheArgs.Extensions
             {
                 var character = text[i];
 
-                if (character == ' ' || character == '_')
+                var isWordSeparatorCharacter = character == ' ' || character == '_';
+                var isCasingChangingFromLoweToUpper = i > 0 && Char.IsUpper(character) && !Char.IsUpper(text[i - 1]);
+
+                if (isWordSeparatorCharacter)
                 {
                     // We hit a word boundary, so we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
@@ -48,10 +57,10 @@ namespace ParseTheArgs.Extensions
                         currentWordBuilder.Clear();
                     }
                 }
-                else if (i > 0 && Char.IsLower(text[i - 1]) && Char.IsUpper(character))
+                else if (isCasingChangingFromLoweToUpper)
                 {
-                    // Casing has changed from lower case to upper case indicating the start of a new word.
-                    // Since we hit a word boundary we return all the characters we have collected so far and clear the builder to start a new word.
+                    // Either the casing has changed from lower to upper case or the end of a number has been found.
+                    // Since we consider both cases as a word boundary we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
                     {
                         yield return currentWordBuilder.ToString();

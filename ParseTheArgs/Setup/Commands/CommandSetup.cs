@@ -17,8 +17,20 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
         /// <param name="commandParserFactory">A function that instantiates the command parser for the command.</param>
+        /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParserFactory"/> is null.</exception>
         protected CommandSetup(Parser parser, Func<CommandParser<TCommandOptions>> commandParserFactory)
         {
+            if (parser == null)
+            {
+                throw new ArgumentNullException(nameof(parser));
+            }
+
+            if (commandParserFactory == null)
+            {
+                throw new ArgumentNullException(nameof(commandParserFactory));
+            }
+
             this.Parser = parser;
             this.CommandParser = commandParserFactory();
         }

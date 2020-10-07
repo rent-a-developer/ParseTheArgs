@@ -239,7 +239,12 @@
         <member name="M:ParseTheArgs.Extensions.StringExtensions.SplitWords(System.String)">
             <summary>
             Splits the given text into individual words in the order they appear in the text.
-            The text is split each time a space or underscore character is found or when the casing of the text changes form lower case to upper case.
+            
+            The text is split each time:
+            - A space character is found or
+            - A underscore character is found or
+            - When the casing in the text changes form lower to upper case.
+            
             Each word is returned in lower case.
             </summary>
             <param name="text">The text to split into words.</param>
@@ -250,6 +255,7 @@
             "CommandLineArgument".SplitWords();   // Returns ["command", "line", "argument"].
             "command_line_argument".SplitWords(); // Returns ["command", "line", "argument"].
             "command line argument".SplitWords(); // Returns ["command", "line", "argument"].
+            "command1options".SplitWords();       // Returns ["command1", "options"].
             </code>
             </example>
         </member>
@@ -1317,6 +1323,8 @@
             </summary>
             <param name="parser">The parser the command belongs to.</param>
             <param name="commandParserFactory">A function that instantiates the command parser for the command.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParserFactory"/> is null.</exception>
         </member>
         <member name="P:ParseTheArgs.Setup.Commands.CommandSetup`1.CommandParser">
             <summary>
@@ -1489,6 +1497,7 @@
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command belongs to.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.ExampleUsage(System.String)">
             <summary>
@@ -1523,6 +1532,7 @@
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command belongs to.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Name(System.String)">
             <summary>

@@ -16,6 +16,7 @@ namespace ParseTheArgs.Setup.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
+        /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
         internal NamedCommandSetup(Parser parser) : base(parser, () => CreateCommandParser(parser))
         {
         }

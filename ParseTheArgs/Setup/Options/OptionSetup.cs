@@ -65,7 +65,7 @@ namespace ParseTheArgs.Setup.Options
         /// <exception cref="ArgumentException">Throw if another option with the same name as the given one already exists for the command the option belongs to.</exception>
         public TOptionSetup Name(String name)
         {
-            if (this.commandParser.OptionParsers.Any(a => a != this.OptionParser && a.OptionName == name))
+            if (!this.commandParser.CanOptionParserUseOptionName(this.OptionParser, name))
             {
                 throw new ArgumentException($"The given option name '{name}' is already in use by another option. Please use a different name.", nameof(name));
             }

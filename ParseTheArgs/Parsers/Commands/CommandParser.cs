@@ -24,17 +24,12 @@ namespace ParseTheArgs.Parsers.Commands
         public CommandParser(Parser parser)
         {
             this.parser = parser;
-
             this.OptionParsers = new List<OptionParser>();
+
             this.CommandName = String.Empty;
             this.CommandHelp = String.Empty;
             this.CommandExampleUsage = String.Empty;
         }
-
-        /// <summary>
-        /// Defines the list of option parsers for the command.
-        /// </summary>
-        public virtual List<OptionParser> OptionParsers { get; }
 
         /// <summary>
         /// Defines a text that describes an example usage of the command.
@@ -162,6 +157,8 @@ namespace ParseTheArgs.Parsers.Commands
             }
         }
 
+        internal List<OptionParser> OptionParsers { get; }
+
         /// <summary>
         /// Gets an existing option parser of type <typeparamref name="TOptionParser"/> for the specified target property <paramref name="targetProperty"/>.
         /// In case no such option parser exists yet a new one will be created.
@@ -182,6 +179,35 @@ namespace ParseTheArgs.Parsers.Commands
             }
 
             return optionParser;
+        }
+
+        // TODO: Add unit test and documentation.
+        internal virtual Boolean TryGetOptionName(PropertyInfo targetProperty, out String optionName)
+        {
+            var optionParser = this.OptionParsers.FirstOrDefault(a => a.TargetProperty == targetProperty);
+
+            if (optionParser == null)
+            {
+                optionName = String.Empty;
+                return false;
+            }
+
+            optionName = optionParser.OptionName;
+            return true;
+        }
+
+        // TODO: Add unit test.
+        /// <summary>
+        /// Determines whether the specified option parser can use the specified option name.
+        /// If no other option parser than the specified one currently uses the specified option name this method returns true.
+        /// In another option parser than the specified one currently uses the specified option name this method returns false.
+        /// </summary>
+        /// <param name="optionParser">The option parser that wants to use the specified option name.</param>
+        /// <param name="optionName">The option name to check.</param>
+        /// <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
+        internal virtual Boolean CanOptionParserUseOptionName(OptionParser optionParser, String optionName)
+        {
+            return !this.OptionParsers.Any(a => a.OptionName == optionName && a != optionParser);
         }
 
         private static String GetOptionLongHelpPart(OptionParser optionParser)

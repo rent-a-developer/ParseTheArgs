@@ -12,7 +12,7 @@ using ParseTheArgs.Validation;
 namespace ParseTheArgs.Tests.Parsers.Commands
 {
     [TestFixture]
-    public class CommandParserTests
+    public class CommandParserTests : BaseTestFixture
     {
         [Test(Description = "OptionParsers should be an empty list initially.")]
         public void OptionParsers_Initially_ShouldBeEmpty()
@@ -21,6 +21,49 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             var commandParser = new CommandParser<Command1Options>(parser);
 
             commandParser.OptionParsers.Should().BeEmpty();
+        }
+
+        [Test(Description = "GetOrCreateOptionParser should create a new option parser if no matching one exists already.")]
+        public void GetOrCreateOptionParser_OptionParserDoesNotExist_ShouldCreateNewOptionParser()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetProperty = typeof(Command1Options).GetProperty("OptionA");
+
+            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+            A.CallTo(() => optionParser.TargetProperty).Returns(targetProperty);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).Returns(optionParser);
+
+            commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty).Should().Be(optionParser);
+
+            commandParser.OptionParsers.Should().HaveCount(1);
+            commandParser.OptionParsers[0].Should().Be(optionParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).MustHaveHappened();
+        }
+
+        [Test(Description = "GetOrCreateOptionParser should return existing matching option parser.")]
+        public void GetOrCreateOptionParser_OptionParserDoesExist_ShouldReturnExistingOptionParser()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetProperty = typeof(Command1Options).GetProperty("OptionA");
+
+            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+            A.CallTo(() => optionParser.TargetProperty).Returns(targetProperty);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).Returns(optionParser);
+
+            commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty).Should().Be(optionParser);
+            commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty).Should().Be(optionParser);
+
+            commandParser.OptionParsers.Should().HaveCount(1);
+            commandParser.OptionParsers[0].Should().Be(optionParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).MustHaveHappenedOnceExactly();
         }
 
         [Test(Description = "CommandExampleUsage should be an empty string initially.")]

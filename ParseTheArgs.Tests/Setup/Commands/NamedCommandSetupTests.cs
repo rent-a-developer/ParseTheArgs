@@ -25,7 +25,9 @@ namespace ParseTheArgs.Tests.Setup.Commands
 
             A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
 
-            new NamedCommandSetup<Command1Options>(parser);
+            var setup = new NamedCommandSetup<Command1Options>(parser);
+
+            setup.CommandParser.Should().Be(commandParser);
 
             A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).MustHaveHappened();
         }
@@ -111,7 +113,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
-            A.CallTo(() => parser.CanCommandParserUseName(commandParser, "command2")).Returns(false);
+            A.CallTo(() => parser.CanCommandParserUseCommandName(commandParser, "command2")).Returns(false);
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -130,6 +132,7 @@ Parameter name: name");
             var commandParser = new CommandParser<Command1Options>(parser);
 
             A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.CanCommandParserUseCommandName(commandParser, "newCommandName")).Returns(true);
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
@@ -142,6 +145,11 @@ Parameter name: name");
         public void Name_ShouldReturnCommandSetup()
         {
             var parser = A.Fake<Parser>();
+
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.CanCommandParserUseCommandName(commandParser, "name")).Returns(true);
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 

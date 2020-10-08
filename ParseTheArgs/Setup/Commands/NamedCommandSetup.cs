@@ -29,7 +29,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
         public NamedCommandSetup<TCommandOptions> Name(String name)
         {
-            if (!this.Parser.CanCommandParserUseName(this.CommandParser, name))
+            if (!this.Parser.CanCommandParserUseCommandName(this.CommandParser, name))
             {
                 throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
             }

@@ -18,7 +18,7 @@ namespace ParseTheArgs.Validation
         /// </summary>
         /// <param name="commandParser">The parser of the command.</param>
         /// <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
-        public CommandValidatorContext(ICommandParser commandParser, ParseResult parseResult)
+        public CommandValidatorContext(CommandParser<TCommandOptions> commandParser, ParseResult parseResult)
         {
             this.commandParser = commandParser;
             this.ParseResult = parseResult;
@@ -83,16 +83,17 @@ namespace ParseTheArgs.Validation
             }
 
             var propertyInfo = ExpressionHelper.GetPropertyFromPropertyExpression(optionSelector);
-            var optionParser = this.commandParser.OptionParsers.FirstOrDefault(a => a.TargetProperty == propertyInfo);
 
-            if (optionParser == null)
+            if (this.commandParser.TryGetOptionName(propertyInfo, out String optionName))
+            {
+                return optionName;
+            }
+            else
             {
                 throw new ArgumentException($"The property {propertyInfo.Name} of the type {propertyInfo.DeclaringType.FullName} is not mapped to any option.", nameof(optionSelector));
             }
-
-            return optionParser.OptionName;
         }
 
-        private readonly ICommandParser commandParser;
+        private readonly CommandParser<TCommandOptions> commandParser;
     }
 }

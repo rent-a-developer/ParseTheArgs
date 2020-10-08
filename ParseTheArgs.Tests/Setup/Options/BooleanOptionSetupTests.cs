@@ -24,20 +24,24 @@ namespace ParseTheArgs.Tests.Setup.Options
                 .Throw<ArgumentNullException>();
         }
 
-        [Test(Description = "Constructor should reuse an existing option parser.")]
-        public void Constructor_OptionParserExistsAlready_ShouldReuseExistingOptionParser()
+        [Test(Description = "Constructor should get the option parser from the command parser.")]
+        public void Constructor_ShouldGetOptionParserFromCommandParser()
         {
             var parser = A.Fake<Parser>();
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
 
-            Expression<Func<DataTypesCommandOptions, Boolean>> propertyExpression = a => a.Boolean;
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Boolean");
+            var optionParser = A.Fake<BooleanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new BooleanOptionParser(targetProperty, "boolean")));
 
-            A.CallTo(() => commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty));
+            Expression<Func<DataTypesCommandOptions, Boolean>> propertyExpression = a => a.Boolean;
 
-            Invoking(() => new BooleanOptionSetup<DataTypesCommandOptions>(null, propertyExpression))
-                .Should()
-                .Throw<ArgumentNullException>();
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty)).Returns(optionParser);
+
+            var setup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+
+            setup.OptionParser.Should().Be(optionParser);
+
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty)).MustHaveHappened();
         }
     }
 }

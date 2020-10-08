@@ -322,7 +322,7 @@ namespace ParseTheArgs
         /// <param name="commandParser">The command parser that wants to use the specified command name.</param>
         /// <param name="commandName">The command name to check.</param>
         /// <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
-        internal virtual Boolean CanCommandParserUseName(ICommandParser commandParser, String commandName)
+        internal virtual Boolean CanCommandParserUseCommandName(ICommandParser commandParser, String commandName)
         {
             return !this.commandParsers.Any(a => a.CommandName == commandName && a != commandParser);
         }

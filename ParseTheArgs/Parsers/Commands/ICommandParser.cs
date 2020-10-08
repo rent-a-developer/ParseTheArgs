@@ -11,11 +11,6 @@ namespace ParseTheArgs.Parsers.Commands
     public interface ICommandParser
     {
         /// <summary>
-        /// Defines the list of option parsers for the command.
-        /// </summary>
-        List<OptionParser> OptionParsers { get; }
-
-        /// <summary>
         /// Defines the help text of the command.
         /// </summary>
         String CommandHelp { get; }

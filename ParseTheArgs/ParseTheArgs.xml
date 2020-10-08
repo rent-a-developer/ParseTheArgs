@@ -405,7 +405,7 @@
             <param name="commandName">The name of the command. If not specified (null) the command parser for the default command will be returned.</param>
             <returns>The command parser for the specified command.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parser.CanCommandParserUseName(ParseTheArgs.Parsers.Commands.ICommandParser,System.String)">
+        <member name="M:ParseTheArgs.Parser.CanCommandParserUseCommandName(ParseTheArgs.Parsers.Commands.ICommandParser,System.String)">
             <summary>
             Determines whether the specified command parser can use the specified command name.
             If no other command parser than the specified one currently uses the specified command name this method returns true.
@@ -499,11 +499,6 @@
             </summary>
             <param name="parser">The parser the command parser belongs to.</param>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.OptionParsers">
-            <summary>
-            Defines the list of option parsers for the command.
-            </summary>
-        </member>
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.CommandExampleUsage">
             <summary>
             Defines a text that describes an example usage of the command.
@@ -560,14 +555,19 @@
             <param name="targetProperty">The target property to get or create the option parser for.</param>
             <returns>The option parser of the specified type and for the specified target property.</returns>
         </member>
+        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.CanOptionParserUseOptionName(ParseTheArgs.Parsers.Options.OptionParser,System.String)">
+            <summary>
+            Determines whether the specified option parser can use the specified option name.
+            If no other option parser than the specified one currently uses the specified option name this method returns true.
+            In another option parser than the specified one currently uses the specified option name this method returns false.
+            </summary>
+            <param name="optionParser">The option parser that wants to use the specified option name.</param>
+            <param name="optionName">The option name to check.</param>
+            <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
+        </member>
         <member name="T:ParseTheArgs.Parsers.Commands.ICommandParser">
             <summary>
             Represents a parser that parses a command line command and its options.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Commands.ICommandParser.OptionParsers">
-            <summary>
-            Defines the list of option parsers for the command.
             </summary>
         </member>
         <member name="P:ParseTheArgs.Parsers.Commands.ICommandParser.CommandHelp">
@@ -2296,7 +2296,7 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Validation.CommandValidatorContext`1.#ctor(ParseTheArgs.Parsers.Commands.ICommandParser,ParseTheArgs.ParseResult)">
+        <member name="M:ParseTheArgs.Validation.CommandValidatorContext`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.ParseResult)">
             <summary>
             Initializes a new instance of this class.
             </summary>

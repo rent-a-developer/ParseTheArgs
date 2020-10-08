@@ -162,6 +162,13 @@ namespace ParseTheArgs.Parsers.Commands
             }
         }
 
+        /// <summary>
+        /// Gets an existing option parser of type <typeparamref name="TOptionParser"/> for the specified target property <paramref name="targetProperty"/>.
+        /// In case no such option parser exists yet a new one will be created.
+        /// </summary>
+        /// <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
+        /// <param name="targetProperty">The target property to get or create the option parser for.</param>
+        /// <returns>The option parser of the specified type and for the specified target property.</returns>
         internal virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
             where TOptionParser : OptionParser
         {
@@ -197,7 +204,7 @@ namespace ParseTheArgs.Parsers.Commands
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supported.");
             }
 
             return result;
@@ -223,7 +230,7 @@ namespace ParseTheArgs.Parsers.Commands
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supported.");
             }
 
             result += "]";

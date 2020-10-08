@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Validation;
@@ -30,7 +29,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
         public NamedCommandSetup<TCommandOptions> Name(String name)
         {
-            if (this.Parser.CommandParsers.Any(a => a != this.CommandParser && a.CommandName == name))
+            if (!this.Parser.CanCommandParserUseName(this.CommandParser, name))
             {
                 throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
             }
@@ -75,17 +74,8 @@ namespace ParseTheArgs.Setup.Commands
 
         private static CommandParser<TCommandOptions> CreateCommandParser(Parser parser)
         {
-            var commandParser = parser.CommandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault();
-
-            if (commandParser == null)
-            {
-                commandParser = Dependencies.Resolver.Resolve<CommandParser<TCommandOptions>>(parser);
-                commandParser.CommandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
-
-                parser.CommandParsers.Add(commandParser);
-            }
-
-            return commandParser;
+            var commandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
+            return parser.GetOrCreateCommandParser<TCommandOptions>(commandName);
         }
     }
 }

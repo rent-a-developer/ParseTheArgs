@@ -18,6 +18,8 @@ namespace ParseTheArgs.Setup.Options
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
         public DateTimeOptionSetup(CommandParser<TCommandOptions> commandParser, LambdaExpression propertyExpression) : base(commandParser, propertyExpression)
         {
         }

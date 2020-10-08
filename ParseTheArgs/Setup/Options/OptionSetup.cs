@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
 
@@ -25,8 +24,20 @@ namespace ParseTheArgs.Setup.Options
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
         protected OptionSetup(CommandParser<TCommandOptions> commandParser, LambdaExpression propertyExpression)
         {
+            if (commandParser == null)
+            {
+                throw new ArgumentNullException(nameof(commandParser));
+            }
+
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException(nameof(propertyExpression));
+            }
+
             this.commandParser = commandParser;
 
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);

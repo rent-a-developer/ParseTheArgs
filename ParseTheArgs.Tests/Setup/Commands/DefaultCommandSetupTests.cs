@@ -9,12 +9,11 @@ using ParseTheArgs.Setup.Commands;
 using ParseTheArgs.Setup.Options;
 using ParseTheArgs.Tests.TestData;
 using ParseTheArgs.Validation;
-using static FluentAssertions.FluentActions;
 
 namespace ParseTheArgs.Tests.Setup.Commands
 {
     [TestFixture]
-    public class NamedCommandSetupTests : BaseTestFixture
+    public class DefaultCommandSetupTests : BaseTestFixture
     {
         [Test(Description = "Constructor should get the command parser from the parser.")]
         public void Constructor_ShouldGetCommandParserFromParser()
@@ -22,18 +21,19 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).Returns(commandParser);
 
-            new NamedCommandSetup<Command1Options>(parser);
+            new DefaultCommandSetup<Command1Options>(parser);
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).MustHaveHappened();
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).MustHaveHappened();
         }
 
         [Test(Description = "Constructor should throw an exception when the given parser is null.")]
         public void Constructor_ParserIsNull_ShouldThrowException()
         {
-            Invoking(() => new NamedCommandSetup<Command1Options>(null))
+            FluentActions.Invoking(() => new DefaultCommandSetup<Command1Options>(null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -44,10 +44,11 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.CommandParser.Should().Be(commandParser);
         }
@@ -58,10 +59,11 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.ExampleUsage("newExampleUsage");
 
@@ -73,7 +75,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         {
             var parser = A.Fake<Parser>();
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.ExampleUsage("exampleUsage").Should().Be(setup);
         }
@@ -84,10 +86,11 @@ namespace ParseTheArgs.Tests.Setup.Commands
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.Help("newHelpText");
 
@@ -99,53 +102,9 @@ namespace ParseTheArgs.Tests.Setup.Commands
         {
             var parser = A.Fake<Parser>();
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.Help("helpText").Should().Be(setup);
-        }
-
-        [Test(Description = "Name should throw an exception when another command already has the same name.")]
-        public void Name_DuplicateName_ShouldThrowException()
-        {
-            var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>();
-
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
-            A.CallTo(() => parser.CanCommandParserUseName(commandParser, "command2")).Returns(false);
-
-            var setup = new NamedCommandSetup<Command1Options>(parser);
-
-            setup.Invoking(a => a.Name("command2"))
-                .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given command name 'command2' is already in use by another command. Please use a different name.
-Parameter name: name");
-        }
-
-        [Test(Description = "Name should assign the given name to the command parser.")]
-        public void Name_ShouldAssignNameToCommandParser()
-        {
-            var parser = A.Fake<Parser>();
-
-            var commandParser = new CommandParser<Command1Options>(parser);
-
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
-
-            var setup = new NamedCommandSetup<Command1Options>(parser);
-
-            setup.Name("newCommandName");
-
-            commandParser.CommandName.Should().Be("newCommandName");
-        }
-
-        [Test(Description = "Name should return the same instance of the command setup.")]
-        public void Name_ShouldReturnCommandSetup()
-        {
-            var parser = A.Fake<Parser>();
-
-            var setup = new NamedCommandSetup<Command1Options>(parser);
-
-            setup.Name("name").Should().Be(setup);
         }
 
         [Test(Description = "Option should return a new instance of BooleanOptionSetup when called for a Boolean target property.")]
@@ -154,10 +113,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Boolean>> propertyExpression = a => a.Boolean;
 
@@ -175,10 +135,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<DateTime>>> propertyExpression = a => a.DateTimes;
 
@@ -196,10 +157,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, DateTime>> propertyExpression = a => a.DateTime;
 
@@ -217,10 +179,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<Decimal>>> propertyExpression = a => a.Decimals;
 
@@ -238,10 +201,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Decimal>> propertyExpression = a => a.Decimal;
 
@@ -259,10 +223,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<LogLevel>>> propertyExpression = a => a.Enums;
 
@@ -280,10 +245,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, LogLevel>> propertyExpression = a => a.Enum;
 
@@ -301,10 +267,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<Guid>>> propertyExpression = a => a.Guids;
 
@@ -322,10 +289,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Guid>> propertyExpression = a => a.Guid;
 
@@ -343,10 +311,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<Int64>>> propertyExpression = a => a.Int64s;
 
@@ -364,10 +333,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Int64>> propertyExpression = a => a.Int64;
 
@@ -385,10 +355,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<DateTime>>> propertyExpression = a => a.NullableDateTime;
 
@@ -406,10 +377,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<Decimal>>> propertyExpression = a => a.NullableDecimal;
 
@@ -427,10 +399,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<LogLevel>>> propertyExpression = a => a.NullableEnum;
 
@@ -448,10 +421,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<Guid>>> propertyExpression = a => a.NullableGuid;
 
@@ -469,10 +443,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<Int64>>> propertyExpression = a => a.NullableInt64;
 
@@ -490,10 +465,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, Nullable<TimeSpan>>> propertyExpression = a => a.NullableTimeSpan;
 
@@ -511,10 +487,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<String>>> propertyExpression = a => a.Strings;
 
@@ -532,10 +509,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, String>> propertyExpression = a => a.String;
 
@@ -553,10 +531,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, List<TimeSpan>>> propertyExpression = a => a.TimeSpans;
 
@@ -574,10 +553,11 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
 
             var commandParser = new CommandParser<DataTypesCommandOptions>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>("dataTypesCommand")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<DataTypesCommandOptions>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<DataTypesCommandOptions>(parser);
+            var setup = new DefaultCommandSetup<DataTypesCommandOptions>(parser);
 
             Expression<Func<DataTypesCommandOptions, TimeSpan>> propertyExpression = a => a.TimeSpan;
 
@@ -596,10 +576,11 @@ Parameter name: name");
             var validator = A.Fake<Action<CommandValidatorContext<Command1Options>>>();
 
             var commandParser = new CommandParser<Command1Options>(parser);
+            commandParser.IsCommandDefault = true;
 
-            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).Returns(commandParser);
+            A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>(null)).Returns(commandParser);
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.Validate(validator);
 
@@ -612,7 +593,7 @@ Parameter name: name");
             var parser = A.Fake<Parser>();
             var validator = A.Fake<Action<CommandValidatorContext<Command1Options>>>();
 
-            var setup = new NamedCommandSetup<Command1Options>(parser);
+            var setup = new DefaultCommandSetup<Command1Options>(parser);
 
             setup.Validate(validator).Should().Be(setup);
         }

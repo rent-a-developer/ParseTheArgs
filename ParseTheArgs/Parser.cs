@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ParseTheArgs.Errors;
+using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Setup;
 using ParseTheArgs.Tokens;
@@ -21,7 +22,7 @@ namespace ParseTheArgs
         /// </summary>
         public Parser()
         {
-            this.CommandParsers = new List<ICommandParser>();
+            this.commandParsers = new List<ICommandParser>();
             this.Setup = new ParserSetup(this);
 
             this.Banner = String.Empty;
@@ -60,7 +61,7 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine();
             }
 
-            var commandParser = this.CommandParsers.FirstOrDefault(a => a.CommandName == commandName);
+            var commandParser = this.commandParsers.FirstOrDefault(a => a.CommandName == commandName);
 
             if (commandParser == null)
             {
@@ -134,14 +135,14 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine();
             }
 
-            var defaultCommandParser = this.CommandParsers.FirstOrDefault(a => a.IsCommandDefault);
+            var defaultCommandParser = this.commandParsers.FirstOrDefault(a => a.IsCommandDefault);
 
             if (defaultCommandParser != null)
             {
                 stringBuilder.AppendLine(defaultCommandParser.GetHelpText());
             }
 
-            var nonDefaultCommandParsers = this.CommandParsers.Where(a => !a.IsCommandDefault).ToList();
+            var nonDefaultCommandParsers = this.commandParsers.Where(a => !a.IsCommandDefault).ToList();
 
             if (nonDefaultCommandParsers.Any())
             {
@@ -208,7 +209,7 @@ namespace ParseTheArgs
 
             var commandTokens = tokens.OfType<CommandToken>().ToList();
 
-            if (commandTokens.Count == 0 && !this.CommandParsers.Any(a => a.IsCommandDefault))
+            if (commandTokens.Count == 0 && !this.commandParsers.Any(a => a.IsCommandDefault))
             {
                 result.AddError(new MissingCommandError());
                 this.PrintErrors(result);
@@ -229,8 +230,8 @@ namespace ParseTheArgs
                 }
                 else
                 {
-                    this.CommandParsers.ForEach(a => a.Parse(tokens, result));
-                    this.CommandParsers.ForEach(a => a.Validate(tokens, result));
+                    this.commandParsers.ForEach(a => a.Parse(tokens, result));
+                    this.commandParsers.ForEach(a => a.Validate(tokens, result));
 
                     tokens.OfType<CommandToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownCommandError(a.CommandName)));
 
@@ -253,11 +254,6 @@ namespace ParseTheArgs
         /// Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
         /// </summary>
         internal virtual String Banner { get; set; }
-
-        /// <summary>
-        /// Defines a list of parsers for commands.
-        /// </summary>
-        internal virtual List<ICommandParser> CommandParsers { get; }
 
         /// <summary>
         /// Defines the text writer to write error messages to.
@@ -287,6 +283,50 @@ namespace ParseTheArgs
         /// </summary>
         internal virtual String ProgramName { get; set; }
 
+        /// <summary>
+        /// Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions"/>) and the specified command name.
+        /// In case no such command parser exists yet a new one will be created.
+        /// </summary>
+        /// <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
+        /// <param name="commandName">The name of the command. If not specified (null) the command parser for the default command will be returned.</param>
+        /// <returns>The command parser for the specified command.</returns>
+        internal virtual CommandParser<TCommandOptions> GetOrCreateCommandParser<TCommandOptions>(String? commandName = null)
+            where TCommandOptions : class
+        {
+            var commandParser = this.commandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault(a => String.IsNullOrEmpty(commandName) ? a.IsCommandDefault : a.CommandName == commandName);
+
+            if (commandParser == null)
+            {
+                commandParser = Dependencies.Resolver.Resolve<CommandParser<TCommandOptions>>(this);
+
+                if (String.IsNullOrEmpty(commandName))
+                {
+                    commandParser.IsCommandDefault = true;
+                }
+                else
+                {
+                    commandParser.CommandName = commandName!;
+                }
+
+                this.commandParsers.Add(commandParser);
+            }
+
+            return commandParser;
+        }
+
+        /// <summary>
+        /// Determines whether the specified command parser can use the specified command name.
+        /// If no other command parser than the specified one currently uses the specified command name this method returns true.
+        /// In another command parser than the specified one currently uses the specified command name this method returns false.
+        /// </summary>
+        /// <param name="commandParser">The command parser that wants to use the specified command name.</param>
+        /// <param name="commandName">The command name to check.</param>
+        /// <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
+        internal virtual Boolean CanCommandParserUseName(ICommandParser commandParser, String commandName)
+        {
+            return !this.commandParsers.Any(a => a.CommandName == commandName && a != commandParser);
+        }
+
         private void PrintCommandHelp(String command)
         {
             this.HelpTextWriter?.Write(this.GetCommandHelpText(command));
@@ -301,6 +341,8 @@ namespace ParseTheArgs
         {
             this.HelpTextWriter?.Write(this.GetHelpText());
         }
+
+        private readonly List<ICommandParser> commandParsers;
 
         private static Boolean IsConsolePresent()
         {

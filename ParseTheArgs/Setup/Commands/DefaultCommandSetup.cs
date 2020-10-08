@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Validation;
 
@@ -56,19 +55,7 @@ namespace ParseTheArgs.Setup.Commands
 
         private static CommandParser<TCommandOptions> CreateCommandParser(Parser parser)
         {
-            var commandParser = parser.CommandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault(a => a.IsCommandDefault);
-
-            if (commandParser == null)
-            {
-                commandParser = new CommandParser<TCommandOptions>(parser)
-                {
-                    IsCommandDefault = true
-                };
-
-                parser.CommandParsers.Add(commandParser);
-            }
-
-            return commandParser;
+            return parser.GetOrCreateCommandParser<TCommandOptions>();
         }
     }
 }

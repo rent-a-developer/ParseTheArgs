@@ -181,7 +181,12 @@ namespace ParseTheArgs.Parsers.Commands
             return optionParser;
         }
 
-        // TODO: Add unit test and documentation.
+        /// <summary>
+        /// Gets the name of the option that is associated with the given target property.
+        /// </summary>
+        /// <param name="targetProperty">The target property to get the option name for.</param>
+        /// <param name="optionName">The name of the option that is associated with the given target property.</param>
+        /// <returns>True if an option exists that is associated with the given target property; otherwise, false.</returns>
         internal virtual Boolean TryGetOptionName(PropertyInfo targetProperty, out String optionName)
         {
             var optionParser = this.OptionParsers.FirstOrDefault(a => a.TargetProperty == targetProperty);
@@ -196,7 +201,6 @@ namespace ParseTheArgs.Parsers.Commands
             return true;
         }
 
-        // TODO: Add unit test.
         /// <summary>
         /// Determines whether the specified option parser can use the specified option name.
         /// If no other option parser than the specified one currently uses the specified option name this method returns true.

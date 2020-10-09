@@ -32,8 +32,8 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             var targetProperty = typeof(Command1Options).GetProperty("OptionA");
 
             var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+            
             A.CallTo(() => optionParser.TargetProperty).Returns(targetProperty);
-
             A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).Returns(optionParser);
 
             commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty).Should().Be(optionParser);
@@ -53,8 +53,8 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             var targetProperty = typeof(Command1Options).GetProperty("OptionA");
 
             var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+            
             A.CallTo(() => optionParser.TargetProperty).Returns(targetProperty);
-
             A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).Returns(optionParser);
 
             commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty).Should().Be(optionParser);
@@ -64,6 +64,69 @@ namespace ParseTheArgs.Tests.Parsers.Commands
             commandParser.OptionParsers[0].Should().Be(optionParser);
 
             A.CallTo(() => this.DependencyResolver.Resolve<StringOptionParser>(targetProperty, "optionA")).MustHaveHappenedOnceExactly();
+        }
+
+        [Test(Description = "TryGetOptionName should return the option name from the option parser when a matching option parser exists.")]
+        public void TryGetOptionName_OptionParserDoesExist_ShouldReturnOptionName()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetProperty = typeof(Command1Options).GetProperty("OptionA");
+
+            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+            commandParser.OptionParsers.Add(optionParser);
+
+            A.CallTo(() => optionParser.TargetProperty).Returns(targetProperty);
+            A.CallTo(() => optionParser.OptionName).Returns("optionA");
+
+            commandParser.TryGetOptionName(targetProperty, out String optionName).Should().BeTrue();
+            optionName.Should().Be("optionA");
+
+            A.CallTo(() => optionParser.OptionName).MustHaveHappened();
+        }
+
+        [Test(Description = "TryGetOptionName should return false when no matching option parser exists.")]
+        public void TryGetOptionName_OptionParserDoesNotExist_ShouldReturnOptionName()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetProperty = typeof(Command1Options).GetProperty("OptionA");
+
+            commandParser.TryGetOptionName(targetProperty, out String optionName).Should().BeFalse();
+            optionName.Should().BeEmpty();
+        }
+
+        [Test(Description = "CanOptionParserUseOptionName should return true when no other option parser uses the specified option name.")]
+        public void CanOptionParserUseOptionName_OptionNameIsAvailable_ShouldReturnTrue()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetProperty = typeof(Command1Options).GetProperty("OptionA");
+
+            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "optionA")));
+
+            commandParser.CanOptionParserUseOptionName(optionParser, "optionA").Should().BeTrue();
+        }
+
+        [Test(Description = "CanOptionParserUseOptionName should return false when another option parser already uses the specified option name.")]
+        public void CanOptionParserUseOptionName_OptionNameIsNotAvailable_ShouldReturnFalse()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = new CommandParser<Command1Options>(parser);
+
+            var targetPropertyA = typeof(Command1Options).GetProperty("OptionA");
+            var targetPropertyB = typeof(Command1Options).GetProperty("OptionB");
+
+            var optionParser1 = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetPropertyA, "optionA")));
+            var optionParser2 = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetPropertyB, "optionB")));
+
+            commandParser.OptionParsers.Add(optionParser1);
+            commandParser.OptionParsers.Add(optionParser2);
+
+            commandParser.CanOptionParserUseOptionName(optionParser2, "optionA").Should().BeFalse();
         }
 
         [Test(Description = "CommandExampleUsage should be an empty string initially.")]

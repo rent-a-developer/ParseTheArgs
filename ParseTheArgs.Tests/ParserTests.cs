@@ -7,18 +7,66 @@ using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
+using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Tests.TestData;
 
 namespace ParseTheArgs.Tests
 {
     [TestFixture]
-    public class ParserTests
+    public class ParserTests : BaseTestFixture
     {
         [SetUp]
         public void SetUp()
         {
             // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
+
+        [Test(Description = "GetOrCreateCommandParser should create a new command parser when no matching command parser already exists.")]
+        public void GetOrCreateCommandParser_CommandParserDoesNotExist_ShouldCreateNewCommandParser()
+        {
+            var parser = new Parser();
+            var defaultCommandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var namedCommandParser = A.Fake<CommandParser<Command2Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command2Options>(parser)));
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).Returns(defaultCommandParser);
+
+            parser.GetOrCreateCommandParser<Command1Options>(null).Should().Be(defaultCommandParser);
+            
+            defaultCommandParser.IsCommandDefault.Should().BeTrue();
+            defaultCommandParser.CommandName.Should().BeEmpty();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappened();
+
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).Returns(namedCommandParser);
+
+            parser.GetOrCreateCommandParser<Command2Options>("command2").Should().Be(namedCommandParser);
+            
+            namedCommandParser.IsCommandDefault.Should().BeFalse();
+            namedCommandParser.CommandName.Should().Be("command2");
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).MustHaveHappened();
+        }
+
+        [Test(Description = "GetOrCreateCommandParser should return the existing command parser when a matching command parser already exists.")]
+        public void GetOrCreateCommandParser_CommandParserDoesExist_ShouldReturnExistingCommandParser()
+        {
+            var parser = new Parser();
+            var defaultCommandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var namedCommandParser = A.Fake<CommandParser<Command2Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command2Options>(parser)));
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).Returns(defaultCommandParser);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).Returns(namedCommandParser);
+
+            parser.GetOrCreateCommandParser<Command1Options>(null);
+            parser.GetOrCreateCommandParser<Command2Options>("command2");
+
+            parser.GetOrCreateCommandParser<Command1Options>(null).Should().Be(defaultCommandParser);
+            parser.GetOrCreateCommandParser<Command2Options>("command2").Should().Be(namedCommandParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).MustHaveHappenedOnceExactly();
         }
 
         [Test(Description = "Parse should set ParseResult.IsHelpCalled to true when the help was called.")]

@@ -5,9 +5,18 @@ using ParseTheArgs.Extensions;
 
 namespace ParseTheArgs
 {
-    internal static class ExpressionHelper
+    /// <summary>
+    /// Provides utility functions to deal with expressions.
+    /// </summary>
+    public static class ExpressionHelper
     {
-        internal static PropertyInfo GetPropertyFromPropertyExpression(LambdaExpression propertyExpression)
+        // TODO: Document
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyExpression"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetPropertyFromPropertyExpression(LambdaExpression propertyExpression)
         {
             MemberExpression? memberExpression = null;
 

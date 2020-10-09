@@ -39,9 +39,29 @@ namespace ParseTheArgs.Tests.Setup.Options
 
             var setup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
 
-            setup.OptionParser.Should().Be(optionParser);
+            setup.optionParser.Should().Be(optionParser);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty)).MustHaveHappened();
+        }
+
+        [Test(Description = "Constructor should get the option parser from the command parser.")]
+        public void Help_ShouldAssignHelpTextToOptionParser()
+        {
+            var parser = A.Fake<Parser>();
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<DataTypesCommandOptions>(parser)));
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Boolean");
+            var optionParser = A.Fake<BooleanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new BooleanOptionParser(targetProperty, "boolean")));
+
+            Expression<Func<DataTypesCommandOptions, Boolean>> propertyExpression = a => a.Boolean;
+
+            A.CallTo(() => commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty)).Returns(optionParser);
+
+            var setup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, propertyExpression);
+
+            setup.Help("boolean help");
+
+            optionParser.OptionHelp.Should().Be("boolean help");
         }
     }
 }

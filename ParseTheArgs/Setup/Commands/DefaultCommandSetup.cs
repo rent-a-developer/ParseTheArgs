@@ -14,8 +14,10 @@ namespace ParseTheArgs.Setup.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
+        /// <param name="commandParser">The command parser for the command.</param>
         /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
-        internal DefaultCommandSetup(Parser parser) : base(parser, () => CreateCommandParser(parser))
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        internal DefaultCommandSetup(Parser parser, CommandParser<TCommandOptions> commandParser) : base(parser, commandParser)
         {
         }
 
@@ -26,7 +28,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> ExampleUsage(String exampleUsageText)
         {
-            this.CommandParser.CommandExampleUsage = exampleUsageText;
+            this.commandParser.CommandExampleUsage = exampleUsageText;
             return this;
         }
 
@@ -37,7 +39,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> Help(String help)
         {
-            this.CommandParser.CommandHelp = help;
+            this.commandParser.CommandHelp = help;
             return this;
         }
 
@@ -49,13 +51,8 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> Validate(Action<CommandValidatorContext<TCommandOptions>> validator)
         {
-            this.CommandParser.Validator = validator;
+            this.commandParser.Validator = validator;
             return this;
-        }
-
-        private static CommandParser<TCommandOptions> CreateCommandParser(Parser parser)
-        {
-            return parser.GetOrCreateCommandParser<TCommandOptions>();
         }
     }
 }

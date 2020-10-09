@@ -15,8 +15,10 @@ namespace ParseTheArgs.Setup.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
+        /// <param name="commandParser">The command parser for the command.</param>
         /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
-        internal NamedCommandSetup(Parser parser) : base(parser, () => CreateCommandParser(parser))
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        internal NamedCommandSetup(Parser parser, CommandParser<TCommandOptions> commandParser) : base(parser, commandParser)
         {
         }
 
@@ -29,12 +31,12 @@ namespace ParseTheArgs.Setup.Commands
         /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
         public NamedCommandSetup<TCommandOptions> Name(String name)
         {
-            if (!this.Parser.CanCommandParserUseCommandName(this.CommandParser, name))
+            if (!this.Parser.CanCommandParserUseCommandName(this.commandParser, name))
             {
                 throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
             }
 
-            this.CommandParser.CommandName = name;
+            this.commandParser.CommandName = name;
             return this;
         }
 
@@ -45,7 +47,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> ExampleUsage(String exampleUsageText)
         {
-            this.CommandParser.CommandExampleUsage = exampleUsageText;
+            this.commandParser.CommandExampleUsage = exampleUsageText;
             return this;
         }
 
@@ -56,7 +58,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> Help(String help)
         {
-            this.CommandParser.CommandHelp = help;
+            this.commandParser.CommandHelp = help;
             return this;
         }
 
@@ -68,14 +70,8 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> Validate(Action<CommandValidatorContext<TCommandOptions>> validator)
         {
-            this.CommandParser.Validator = validator;
+            this.commandParser.Validator = validator;
             return this;
-        }
-
-        private static CommandParser<TCommandOptions> CreateCommandParser(Parser parser)
-        {
-            var commandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
-            return parser.GetOrCreateCommandParser<TCommandOptions>(commandName);
         }
     }
 }

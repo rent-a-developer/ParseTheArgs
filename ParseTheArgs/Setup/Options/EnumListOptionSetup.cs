@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
 
@@ -18,10 +17,10 @@ namespace ParseTheArgs.Setup.Options
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
-        /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+        /// <param name="optionParser">The parser for the option.</param>
         /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
-        public EnumListOptionSetup(CommandParser<TCommandOptions> commandParser, LambdaExpression propertyExpression) : base(commandParser, propertyExpression)
+        /// <exception cref="ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+        public EnumListOptionSetup(CommandParser<TCommandOptions> commandParser, EnumListOptionParser<TEnum> optionParser) : base(commandParser, optionParser)
         {
         }
 
@@ -33,7 +32,7 @@ namespace ParseTheArgs.Setup.Options
         /// <returns>A reference to this instance for further configuration.</returns>
         public EnumListOptionSetup<TCommandOptions, TEnum> OptionHelp(TEnum value, String help)
         {
-            this.OptionParser.EnumValuesHelps.Add(value, help);
+            this.optionParser.EnumValuesHelps.Add(value, help);
             return this;
         }
     }

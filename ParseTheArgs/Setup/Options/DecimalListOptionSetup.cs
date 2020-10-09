@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq.Expressions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
 
@@ -17,10 +16,10 @@ namespace ParseTheArgs.Setup.Options
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
-        /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+        /// <param name="optionParser">The parser for the option.</param>
         /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
-        public DecimalListOptionSetup(CommandParser<TCommandOptions> commandParser, LambdaExpression propertyExpression) : base(commandParser, propertyExpression)
+        /// <exception cref="ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+        public DecimalListOptionSetup(CommandParser<TCommandOptions> commandParser, DecimalListOptionParser optionParser) : base(commandParser, optionParser)
         {
         }
 
@@ -32,7 +31,7 @@ namespace ParseTheArgs.Setup.Options
         /// <returns>A reference to this instance for further configuration.</returns>
         public DecimalListOptionSetup<TCommandOptions> FormatProvider(IFormatProvider formatProvider)
         {
-            this.OptionParser.FormatProvider = formatProvider;
+            this.optionParser.FormatProvider = formatProvider;
             return this;
         }
 
@@ -44,7 +43,7 @@ namespace ParseTheArgs.Setup.Options
         /// <returns>A reference to this instance for further configuration.</returns>
         public DecimalListOptionSetup<TCommandOptions> Styles(NumberStyles numberStyles)
         {
-            this.OptionParser.NumberStyles = numberStyles;
+            this.optionParser.NumberStyles = numberStyles;
             return this;
         }
     }

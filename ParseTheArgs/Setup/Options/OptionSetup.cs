@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
 
@@ -23,26 +21,23 @@ namespace ParseTheArgs.Setup.Options
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
-        /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+        /// <param name="optionParser">The parser for the option.</param>
         /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
-        protected OptionSetup(CommandParser<TCommandOptions> commandParser, LambdaExpression propertyExpression)
+        /// <exception cref="ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+        protected OptionSetup(CommandParser<TCommandOptions> commandParser, TOptionParser optionParser)
         {
             if (commandParser == null)
             {
                 throw new ArgumentNullException(nameof(commandParser));
             }
 
-            if (propertyExpression == null)
+            if (optionParser == null)
             {
-                throw new ArgumentNullException(nameof(propertyExpression));
+                throw new ArgumentNullException(nameof(optionParser));
             }
 
             this.commandParser = commandParser;
-
-            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
-
-            this.OptionParser = commandParser.GetOrCreateOptionParser<TOptionParser>(targetProperty);
+            this.optionParser = optionParser;
         }
 
         /// <summary>
@@ -52,7 +47,7 @@ namespace ParseTheArgs.Setup.Options
         /// <returns>A reference to this instance for further configuration.</returns>
         public TOptionSetup Help(String help)
         {
-            this.OptionParser.OptionHelp = help;
+            this.optionParser.OptionHelp = help;
             return (TOptionSetup) this;
         }
 
@@ -65,19 +60,19 @@ namespace ParseTheArgs.Setup.Options
         /// <exception cref="ArgumentException">Throw if another option with the same name as the given one already exists for the command the option belongs to.</exception>
         public TOptionSetup Name(String name)
         {
-            if (!this.commandParser.CanOptionParserUseOptionName(this.OptionParser, name))
+            if (!this.commandParser.CanOptionParserUseOptionName(this.optionParser, name))
             {
                 throw new ArgumentException($"The given option name '{name}' is already in use by another option. Please use a different name.", nameof(name));
             }
 
-            this.OptionParser.OptionName = name;
+            this.optionParser.OptionName = name;
             return (TOptionSetup) this;
         }
 
         /// <summary>
         /// Defines the parser for the option.
         /// </summary>
-        internal readonly TOptionParser OptionParser;
+        protected readonly TOptionParser optionParser;
 
         /// <summary>
         /// Defines the parser for the command the option belongs to.

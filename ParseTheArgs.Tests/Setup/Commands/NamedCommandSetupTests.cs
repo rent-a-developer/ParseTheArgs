@@ -27,7 +27,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
-            setup.CommandParser.Should().Be(commandParser);
+            setup.commandParser.Should().Be(commandParser);
 
             A.CallTo(() => parser.GetOrCreateCommandParser<Command1Options>("command1")).MustHaveHappened();
         }
@@ -51,7 +51,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
 
             var setup = new NamedCommandSetup<Command1Options>(parser);
 
-            setup.CommandParser.Should().Be(commandParser);
+            setup.commandParser.Should().Be(commandParser);
         }
 
         [Test(Description = "ExampleUsage should assign the given example usage to the command parser.")]

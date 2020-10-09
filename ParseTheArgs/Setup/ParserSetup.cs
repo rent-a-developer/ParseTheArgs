@@ -63,7 +63,10 @@ namespace ParseTheArgs.Setup
         /// <returns>An instance of <see cref="NamedCommandSetup{TCommandOptions}" /> that can be used to configure the command.</returns>
         public NamedCommandSetup<TCommandOptions> Command<TCommandOptions>() where TCommandOptions : class, new()
         {
-            return new NamedCommandSetup<TCommandOptions>(this.parser);
+            var commandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
+            var commandParser = this.parser.GetOrCreateCommandParser<TCommandOptions>(commandName);
+
+            return new NamedCommandSetup<TCommandOptions>(this.parser, commandParser);
         }
 
         /// <summary>
@@ -76,7 +79,9 @@ namespace ParseTheArgs.Setup
         /// <returns>An instance of <see cref="DefaultCommandSetup{TCommandOptions}" /> that can be used to configure the command.</returns>
         public DefaultCommandSetup<TCommandOptions> DefaultCommand<TCommandOptions>() where TCommandOptions : class, new()
         {
-            return new DefaultCommandSetup<TCommandOptions>(this.parser);
+            var commandParser = parser.GetOrCreateCommandParser<TCommandOptions>();
+
+            return new DefaultCommandSetup<TCommandOptions>(this.parser, commandParser);
         }
 
         /// <summary>

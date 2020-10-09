@@ -244,6 +244,18 @@
             </summary>
             <returns>The error message that describes the error.</returns>
         </member>
+        <member name="T:ParseTheArgs.ExpressionHelper">
+            <summary>
+            Provides utility functions to deal with expressions.
+            </summary>
+        </member>
+        <member name="M:ParseTheArgs.ExpressionHelper.GetPropertyFromPropertyExpression(System.Linq.Expressions.LambdaExpression)">
+            <summary>
+            
+            </summary>
+            <param name="propertyExpression"></param>
+            <returns></returns>
+        </member>
         <member name="T:ParseTheArgs.Extensions.PropertyInfoExtensions">
             <summary>
             Provides extension methods for the <see cref="T:System.Reflection.PropertyInfo" /> type.
@@ -1374,19 +1386,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type where the values of the options of the command will be stored in.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.CommandSetup`1.#ctor(ParseTheArgs.Parser,System.Func{ParseTheArgs.Parsers.Commands.CommandParser{`0}})">
+        <member name="M:ParseTheArgs.Setup.Commands.CommandSetup`1.#ctor(ParseTheArgs.Parser,ParseTheArgs.Parsers.Commands.CommandParser{`0})">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command belongs to.</param>
-            <param name="commandParserFactory">A function that instantiates the command parser for the command.</param>
+            <param name="commandParser">The command parser for the command.</param>
             <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParserFactory"/> is null.</exception>
-        </member>
-        <member name="P:ParseTheArgs.Setup.Commands.CommandSetup`1.CommandParser">
-            <summary>
-            The parser for the command.
-            </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.CommandSetup`1.Option(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
             <summary>
@@ -1543,18 +1550,25 @@
             Defines the parser the command belongs to.
             </summary>
         </member>
+        <member name="F:ParseTheArgs.Setup.Commands.CommandSetup`1.commandParser">
+            <summary>
+            The parser for the command.
+            </summary>
+        </member>
         <member name="T:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1">
             <summary>
             Represents the configuration of the default (unnamed) command.
             </summary>
             <typeparam name="TCommandOptions">The type where the values of the options of the command will be stored in.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.#ctor(ParseTheArgs.Parser)">
+        <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.#ctor(ParseTheArgs.Parser,ParseTheArgs.Parsers.Commands.CommandParser{`0})">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command belongs to.</param>
+            <param name="commandParser">The command parser for the command.</param>
             <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.ExampleUsage(System.String)">
             <summary>
@@ -1584,12 +1598,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type where the values of the options of the command will be stored in.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.#ctor(ParseTheArgs.Parser)">
+        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.#ctor(ParseTheArgs.Parser,ParseTheArgs.Parsers.Commands.CommandParser{`0})">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command belongs to.</param>
+            <param name="commandParser">The command parser for the command.</param>
             <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Name(System.String)">
             <summary>
@@ -1629,14 +1645,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.BooleanOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.BooleanOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.BooleanOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1">
             <summary>
@@ -1644,14 +1660,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.DateTimeListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1.Format(System.String)">
             <summary>
@@ -1683,14 +1699,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.DateTimeOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.DateTimeOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.DateTimeOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DateTimeOptionSetup`1.Format(System.String)">
             <summary>
@@ -1722,14 +1738,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.DecimalListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.DecimalListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.DecimalListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DecimalListOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1753,14 +1769,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.DecimalOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.DecimalOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.DecimalOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DecimalOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1785,14 +1801,14 @@
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
             <typeparam name="TEnum">The type of the enum the option accepts as option values.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.EnumListOptionParser{`1})">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.OptionHelp(`1,System.String)">
             <summary>
@@ -1809,14 +1825,14 @@
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
             <typeparam name="TEnum">The type of the enum the option accepts as option value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.EnumOptionParser{`1})">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.OptionHelp(`1,System.String)">
             <summary>
@@ -1832,14 +1848,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.GuidListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.GuidListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.GuidListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.GuidListOptionSetup`1.Format(System.String)">
             <summary>
@@ -1855,14 +1871,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.GuidOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.GuidOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.GuidOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.GuidOptionSetup`1.Format(System.String)">
             <summary>
@@ -1878,14 +1894,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.Int64ListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.Int64ListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.Int64ListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.Int64ListOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1909,14 +1925,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.Int64OptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.Int64OptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.Int64OptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.Int64OptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1943,14 +1959,14 @@
             <typeparam name="TOptionSetup">The type of setup for the option.</typeparam>
             <typeparam name="TOptionValue">The type of the option value(s).</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.MultiValueOptionSetup`4.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.MultiValueOptionSetup`4.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},`1)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.MultiValueOptionSetup`4.DefaultValue(System.Collections.Generic.List{`3})">
             <summary>
@@ -1975,14 +1991,14 @@
             <typeparam name="TOptionParser">The type of parser for the option.</typeparam>
             <typeparam name="TOptionSetup">The type of setup for the option.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.OptionSetup`3.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.OptionSetup`3.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},`1)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.OptionSetup`3.Help(System.String)">
             <summary>
@@ -2000,7 +2016,7 @@
             <returns>A reference to this instance for further configuration.</returns>
             <exception cref="T:System.ArgumentException">Throw if another option with the same name as the given one already exists for the command the option belongs to.</exception>
         </member>
-        <member name="F:ParseTheArgs.Setup.Options.OptionSetup`3.OptionParser">
+        <member name="F:ParseTheArgs.Setup.Options.OptionSetup`3.optionParser">
             <summary>
             Defines the parser for the option.
             </summary>
@@ -2019,14 +2035,14 @@
             <typeparam name="TOptionSetup">The type of setup for the option.</typeparam>
             <typeparam name="TOptionValue">The type of the option value.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.SingleValueOptionSetup`4.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.SingleValueOptionSetup`4.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},`1)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.SingleValueOptionSetup`4.DefaultValue(`3)">
             <summary>
@@ -2049,14 +2065,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.StringListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.StringListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.StringListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.StringOptionSetup`1">
             <summary>
@@ -2064,14 +2080,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.StringOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.StringOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.StringOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1">
             <summary>
@@ -2079,14 +2095,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.TimeSpanListOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1.Format(System.String)">
             <summary>
@@ -2118,14 +2134,14 @@
             </summary>
             <typeparam name="TCommandOptions">The type in which the options of the command the option belongs to will be stored.</typeparam>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.TimeSpanOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},System.Linq.Expressions.LambdaExpression)">
+        <member name="M:ParseTheArgs.Setup.Options.TimeSpanOptionSetup`1.#ctor(ParseTheArgs.Parsers.Commands.CommandParser{`0},ParseTheArgs.Parsers.Options.TimeSpanOptionParser)">
             <summary>
             Initializes a new instance of this class.
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
-            <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
+            <param name="optionParser">The parser for the option.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.TimeSpanOptionSetup`1.Format(System.String)">
             <summary>

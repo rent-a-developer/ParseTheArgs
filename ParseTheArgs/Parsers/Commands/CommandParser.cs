@@ -166,7 +166,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
         /// <param name="targetProperty">The target property to get or create the option parser for.</param>
         /// <returns>The option parser of the specified type and for the specified target property.</returns>
-        internal virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
+        public virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
             where TOptionParser : OptionParser
         {
             var optionParser = this.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using ParseTheArgs.Parsers.Commands;
+using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Setup.Options;
 
 namespace ParseTheArgs.Setup.Commands
@@ -16,29 +17,24 @@ namespace ParseTheArgs.Setup.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
-        /// <param name="commandParserFactory">A function that instantiates the command parser for the command.</param>
+        /// <param name="commandParser">The command parser for the command.</param>
         /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="commandParserFactory"/> is null.</exception>
-        protected CommandSetup(Parser parser, Func<CommandParser<TCommandOptions>> commandParserFactory)
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        protected CommandSetup(Parser parser, CommandParser<TCommandOptions> commandParser)
         {
             if (parser == null)
             {
                 throw new ArgumentNullException(nameof(parser));
             }
 
-            if (commandParserFactory == null)
+            if (commandParser == null)
             {
-                throw new ArgumentNullException(nameof(commandParserFactory));
+                throw new ArgumentNullException(nameof(commandParser));
             }
 
             this.Parser = parser;
-            this.CommandParser = commandParserFactory();
+            this.commandParser = commandParser;
         }
-
-        /// <summary>
-        /// The parser for the command.
-        /// </summary>
-        public CommandParser<TCommandOptions> CommandParser { get; }
 
         /// <summary>
         /// Sets up a boolean option (a.k.a switch option).
@@ -47,7 +43,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="BooleanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public BooleanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Boolean>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<BooleanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<BooleanOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<BooleanOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -57,7 +56,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public StringOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, String>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<StringOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<StringOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -67,7 +69,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public StringListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<String>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<StringListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<StringListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<StringListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -77,7 +82,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, DateTime>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -87,7 +95,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<DateTime>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DateTimeListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DateTimeListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DateTimeListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -97,7 +108,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DateTimeOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, DateTime?>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DateTimeOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -107,7 +121,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, TimeSpan>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<TimeSpanOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -117,7 +134,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<TimeSpan>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<TimeSpanListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<TimeSpanListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -127,7 +147,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="TimeSpanOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public TimeSpanOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, TimeSpan?>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<TimeSpanOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<TimeSpanOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -137,7 +160,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64OptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64OptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Int64>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<Int64OptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -147,7 +173,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64ListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64ListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Int64>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<Int64ListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<Int64ListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<Int64ListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -157,7 +186,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="Int64OptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public Int64OptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Int64?>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<Int64OptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<Int64OptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -167,7 +199,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Guid>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<GuidOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -177,7 +212,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Guid>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<GuidListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<GuidListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<GuidListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -187,7 +225,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="GuidOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public GuidOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Guid?>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<GuidOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<GuidOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -197,7 +238,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Decimal>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DecimalOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -207,7 +251,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Decimal>>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DecimalListOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DecimalListOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DecimalListOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -217,7 +264,10 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>An instance of <see cref="DecimalOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
         public DecimalOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, Decimal?>> propertyExpression)
         {
-            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<DecimalOptionParser>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<DecimalOptionSetup<TCommandOptions>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -229,7 +279,10 @@ namespace ParseTheArgs.Setup.Commands
         public EnumOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, TEnum>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<EnumOptionParser<TEnum>>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -241,7 +294,10 @@ namespace ParseTheArgs.Setup.Commands
         public EnumOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, TEnum?>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<EnumOptionParser<TEnum>>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<EnumOptionSetup<TCommandOptions, TEnum>>(this.commandParser, optionParser);
         }
 
         /// <summary>
@@ -253,12 +309,20 @@ namespace ParseTheArgs.Setup.Commands
         public EnumListOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, List<TEnum>>> propertyExpression)
             where TEnum : struct, Enum
         {
-            return Dependencies.Resolver.Resolve<EnumListOptionSetup<TCommandOptions, TEnum>>(this.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = this.commandParser.GetOrCreateOptionParser<EnumListOptionParser<TEnum>>(targetProperty);
+
+            return Dependencies.Resolver.Resolve<EnumListOptionSetup<TCommandOptions, TEnum>>(this.commandParser, optionParser);
         }
 
         /// <summary>
         /// Defines the parser the command belongs to.
         /// </summary>
         protected readonly Parser Parser;
+
+        /// <summary>
+        /// The parser for the command.
+        /// </summary>
+        protected readonly CommandParser<TCommandOptions> commandParser;
     }
 }

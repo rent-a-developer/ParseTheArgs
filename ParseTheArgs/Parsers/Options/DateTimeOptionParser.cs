@@ -20,16 +20,6 @@ namespace ParseTheArgs.Parsers.Options
         /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         public DateTimeOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
-            if (targetProperty == null)
-            {
-                throw new ArgumentNullException(nameof(targetProperty));
-            }
-
-            if (String.IsNullOrEmpty(optionName))
-            {
-                throw new ArgumentException("Value cannot be null or an empty string.", nameof(optionName));
-            }
-
             if (targetProperty.PropertyType != typeof(DateTime) && targetProperty.PropertyType != typeof(Nullable<DateTime>))
             {
                 throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.DateTime or System.Nullable<System.DateTime>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));

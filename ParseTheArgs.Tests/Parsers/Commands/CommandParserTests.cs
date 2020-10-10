@@ -8,12 +8,21 @@ using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tests.TestData;
 using ParseTheArgs.Tokens;
 using ParseTheArgs.Validation;
+using static FluentAssertions.FluentActions;
 
 namespace ParseTheArgs.Tests.Parsers.Commands
 {
     [TestFixture]
     public class CommandParserTests : BaseTestFixture
     {
+        [Test(Description = "Constructor should throw an exception when the given parser is null.")]
+        public void Constructor_ParserIsNull_ShouldThrowException()
+        {
+            Invoking(() => new CommandParser<Command1Options>(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
         [Test(Description = "OptionParsers should be an empty list initially.")]
         public void OptionParsers_Initially_ShouldBeEmpty()
         {

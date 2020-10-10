@@ -16,7 +16,8 @@ namespace ParseTheArgs.Tests.Setup.Options
         [Test(Description = "Constructor should throw an exception when the given command parser is null.")]
         public void Constructor_CommandParserIsNull_ShouldThrowException()
         {
-            var optionParser = A.Fake<BooleanOptionParser>();
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Boolean");
+            var optionParser = A.Fake<BooleanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new BooleanOptionParser(targetProperty, "boolean")));
 
             Invoking(() => new BooleanOptionSetup<DataTypesCommandOptions>(null, optionParser))
                 .Should()

@@ -17,14 +17,18 @@ namespace ParseTheArgs.Parsers.Commands
     public class CommandParser<TCommandOptions> : ICommandParser
         where TCommandOptions : class
     {
-        // TODO: Add parameter-less constructor so when can unit test this class without having to call the constructor.
-
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command parser belongs to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
         public CommandParser(Parser parser)
         {
+            if (parser == null)
+            {
+                throw new ArgumentNullException(nameof(parser));
+            }
+
             this.parser = parser;
             this.OptionParsers = new List<OptionParser>();
 
@@ -159,8 +163,6 @@ namespace ParseTheArgs.Parsers.Commands
             }
         }
 
-        internal List<OptionParser> OptionParsers { get; }
-
         /// <summary>
         /// Gets an existing option parser of type <typeparamref name="TOptionParser"/> for the specified target property <paramref name="targetProperty"/>.
         /// In case no such option parser exists yet a new one will be created.
@@ -182,6 +184,8 @@ namespace ParseTheArgs.Parsers.Commands
 
             return optionParser;
         }
+
+        internal List<OptionParser> OptionParsers { get; }
 
         /// <summary>
         /// Gets the name of the option that is associated with the given target property.

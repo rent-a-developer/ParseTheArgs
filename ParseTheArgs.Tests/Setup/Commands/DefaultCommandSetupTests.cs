@@ -20,8 +20,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         [Test(Description = "Constructor should throw an exception when the given parser is null.")]
         public void Constructor_ParserIsNull_ShouldThrowException()
         {
-            var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             Invoking(() => new DefaultCommandSetup<Command1Options>(null, commandParser))
                 .Should()
@@ -42,7 +41,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         public void ExampleUsage_ShouldAssignExampleUsageToCommandParser()
         {
             var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             var setup = new DefaultCommandSetup<Command1Options>(parser, commandParser);
 
@@ -55,7 +54,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         public void ExampleUsage_ShouldReturnCommandSetup()
         {
             var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             var setup = new DefaultCommandSetup<Command1Options>(parser, commandParser);
 
@@ -66,7 +65,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         public void Help_ShouldAssignHelpTextToCommandParser()
         {
             var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             var setup = new DefaultCommandSetup<Command1Options>(parser, commandParser);
 
@@ -79,7 +78,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         public void Help_ShouldReturnCommandSetup()
         {
             var parser = A.Fake<Parser>();
-            var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
 
             var setup = new DefaultCommandSetup<Command1Options>(parser, commandParser);
 

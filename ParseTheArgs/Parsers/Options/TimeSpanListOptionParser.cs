@@ -21,16 +21,6 @@ namespace ParseTheArgs.Parsers.Options
         /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
         public TimeSpanListOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
-            if (targetProperty == null)
-            {
-                throw new ArgumentNullException(nameof(targetProperty));
-            }
-
-            if (String.IsNullOrEmpty(optionName))
-            {
-                throw new ArgumentException("Value cannot be null or an empty string.", nameof(optionName));
-            }
-
             if (targetProperty.PropertyType != typeof(List<TimeSpan>))
             {
                 throw new ArgumentException($"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.TimeSpan>, actual type was {targetProperty.PropertyType.FullName}.", nameof(targetProperty));

@@ -17,6 +17,8 @@ namespace ParseTheArgs.Parsers.Commands
     public class CommandParser<TCommandOptions> : ICommandParser
         where TCommandOptions : class
     {
+        // TODO: Add parameter-less constructor so when can unit test this class without having to call the constructor.
+
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
@@ -34,29 +36,29 @@ namespace ParseTheArgs.Parsers.Commands
         /// <summary>
         /// Defines a text that describes an example usage of the command.
         /// </summary>
-        public String CommandExampleUsage { get; set; }
+        public virtual String CommandExampleUsage { get; set; }
 
         /// <summary>
         /// Defines the help text of the command.
         /// </summary>
-        public String CommandHelp { get; set; }
+        public virtual String CommandHelp { get; set; }
 
         /// <summary>
         /// Defines the name of the command.
         /// Will be <see cref="String.Empty"/> if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
         /// </summary>
-        public String CommandName { get; set; }
+        public virtual String CommandName { get; set; }
 
         /// <summary>
         /// Determines if the command is the default (non-named) command.
         /// If the command is the default command <see cref="ICommandParser.CommandName" /> will be null.
         /// </summary>
-        public Boolean IsCommandDefault { get; set; }
+        public virtual Boolean IsCommandDefault { get; set; }
 
         /// <summary>
         /// Defines the validator to use to validate the command and its options.
         /// </summary>
-        public Action<CommandValidatorContext<TCommandOptions>>? Validator { get; set; }
+        public virtual Action<CommandValidatorContext<TCommandOptions>>? Validator { get; set; }
 
         /// <summary>
         /// Gets the help text of the command.

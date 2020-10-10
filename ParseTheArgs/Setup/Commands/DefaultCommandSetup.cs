@@ -28,7 +28,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> ExampleUsage(String exampleUsageText)
         {
-            this.commandParser.CommandExampleUsage = exampleUsageText;
+            this.CommandParser.CommandExampleUsage = exampleUsageText;
             return this;
         }
 
@@ -39,7 +39,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> Help(String help)
         {
-            this.commandParser.CommandHelp = help;
+            this.CommandParser.CommandHelp = help;
             return this;
         }
 
@@ -51,7 +51,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public DefaultCommandSetup<TCommandOptions> Validate(Action<CommandValidatorContext<TCommandOptions>> validator)
         {
-            this.commandParser.Validator = validator;
+            this.CommandParser.Validator = validator;
             return this;
         }
     }

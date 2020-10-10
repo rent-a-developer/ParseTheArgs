@@ -31,12 +31,12 @@ namespace ParseTheArgs.Setup.Commands
         /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
         public NamedCommandSetup<TCommandOptions> Name(String name)
         {
-            if (!this.Parser.CanCommandParserUseCommandName(this.commandParser, name))
+            if (!this.Parser.CanCommandParserUseCommandName(this.CommandParser, name))
             {
                 throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
             }
 
-            this.commandParser.CommandName = name;
+            this.CommandParser.CommandName = name;
             return this;
         }
 
@@ -47,7 +47,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> ExampleUsage(String exampleUsageText)
         {
-            this.commandParser.CommandExampleUsage = exampleUsageText;
+            this.CommandParser.CommandExampleUsage = exampleUsageText;
             return this;
         }
 
@@ -58,7 +58,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> Help(String help)
         {
-            this.commandParser.CommandHelp = help;
+            this.CommandParser.CommandHelp = help;
             return this;
         }
 
@@ -70,7 +70,7 @@ namespace ParseTheArgs.Setup.Commands
         /// <returns>A reference to this instance for further configuration of the command.</returns>
         public NamedCommandSetup<TCommandOptions> Validate(Action<CommandValidatorContext<TCommandOptions>> validator)
         {
-            this.commandParser.Validator = validator;
+            this.CommandParser.Validator = validator;
             return this;
         }
     }

@@ -9,9 +9,9 @@ namespace ParseTheArgs.Tests.CustomOption
         public static CustomValueOptionSetup<TCommandOptions> Option<TCommandOptions>(this CommandSetup<TCommandOptions> commandSetup, Expression<Func<TCommandOptions, CustomValue>> propertyExpression) where TCommandOptions : class, new()
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
-            var optionParser = commandSetup.commandParser.GetOrCreateOptionParser<CustomValueOptionParser>(targetProperty);
+            var optionParser = commandSetup.CommandParser.GetOrCreateOptionParser<CustomValueOptionParser>(targetProperty);
 
-            return new CustomValueOptionSetup<TCommandOptions>(commandSetup.commandParser, optionParser);
+            return new CustomValueOptionSetup<TCommandOptions>(commandSetup.CommandParser, optionParser);
         }
     }
 }

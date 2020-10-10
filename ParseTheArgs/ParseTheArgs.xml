@@ -2176,6 +2176,13 @@
             Can be used to configure a parser (e.g. setup commands and options).
             </summary>
         </member>
+        <member name="M:ParseTheArgs.Setup.ParserSetup.#ctor(ParseTheArgs.Parser)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="parser">The parser this instance should set up.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="parser"/> is null.</exception>
+        </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.ProgramName(System.String)">
             <summary>
             Sets the name of the program to display in help texts.
@@ -2329,6 +2336,8 @@
             </summary>
             <param name="commandParser">The parser of the command.</param>
             <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="parseResult"/> is null.</exception>
         </member>
         <member name="P:ParseTheArgs.Validation.CommandValidatorContext`1.CommandOptions">
             <summary>

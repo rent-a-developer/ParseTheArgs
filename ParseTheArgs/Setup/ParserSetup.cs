@@ -11,8 +11,18 @@ namespace ParseTheArgs.Setup
     /// </summary>
     public class ParserSetup
     {
+        /// <summary>
+        /// Initializes a new instance of this class.
+        /// </summary>
+        /// <param name="parser">The parser this instance should set up.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
         internal ParserSetup(Parser parser)
         {
+            if (parser == null)
+            {
+                throw new ArgumentNullException(nameof(parser));
+            }
+
             this.parser = parser;
         }
 

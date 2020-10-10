@@ -25,33 +25,33 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines the Object that holds the options of the parsed command.
         /// </summary>
-        public Object? CommandOptions { get; internal set; }
+        public virtual Object? CommandOptions { get; internal set; }
 
         /// <summary>
         /// Defines the name of the command that was found in the parsed command line arguments.
         /// </summary>
-        public String CommandName { get; internal set; }
+        public virtual String CommandName { get; internal set; }
 
         /// <summary>
         /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
         /// </summary>
-        public Boolean IsHelpCalled { get; internal set; }
+        public virtual Boolean IsHelpCalled { get; internal set; }
 
         /// <summary>
         /// A list of errors found during parsing.
         /// </summary>
-        public ReadOnlyCollection<IParseError> Errors => this.errors.AsReadOnly();
+        public virtual ReadOnlyCollection<IParseError> Errors => this.errors.AsReadOnly();
 
         /// <summary>
         /// Determines if errors where found during parsing.
         /// </summary>
-        public Boolean HasErrors => this.errors.Count > 0;
+        public virtual Boolean HasErrors => this.errors.Count > 0;
 
         /// <summary>
         /// Adds a parse error to this instance.
         /// </summary>
         /// <param name="error">The error to add.</param>
-        public void AddError(IParseError error)
+        public virtual void AddError(IParseError error)
         {
             this.errors.Add(error);
         }
@@ -63,7 +63,7 @@ namespace ParseTheArgs
         /// </summary>
         /// <typeparam name="TCommandOptions">The type of the command options the handler handles.</typeparam>
         /// <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions"/>.</param>
-        public void CommandHandler<TCommandOptions>(Func<TCommandOptions, Int32> commandHandler)
+        public virtual void CommandHandler<TCommandOptions>(Func<TCommandOptions, Int32> commandHandler)
         {
             this.commandHandlers[typeof(TCommandOptions)] = commandHandler;
         }
@@ -74,7 +74,7 @@ namespace ParseTheArgs
         /// The return value of the specified handler is returned by the <see cref="Handle"/> method when the handler is invoked.
         /// </summary>
         /// <param name="errorHandler">The handler that handles the errors.</param>
-        public void ErrorHandler(Func<ParseResult, Int32> errorHandler)
+        public virtual void ErrorHandler(Func<ParseResult, Int32> errorHandler)
         {
             this.errorHandler = errorHandler;
         }
@@ -91,7 +91,7 @@ namespace ParseTheArgs
         /// If <see cref="HasErrors"/> is true and an error handler was set up the return value of the error handler will be returned.
         /// If <see cref="HasErrors"/> is true and no error handler was set up 0 will be returned.
         /// </returns>
-        public Int32 Handle()
+        public virtual Int32 Handle()
         {
             if (this.HasErrors)
             {

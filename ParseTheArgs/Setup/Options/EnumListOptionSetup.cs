@@ -30,7 +30,7 @@ namespace ParseTheArgs.Setup.Options
         /// <param name="value">The enum member to set the help text for.</param>
         /// <param name="help">The help text for the enum member.</param>
         /// <returns>A reference to this instance for further configuration.</returns>
-        public EnumListOptionSetup<TCommandOptions, TEnum> OptionHelp(TEnum value, String help)
+        public EnumListOptionSetup<TCommandOptions, TEnum> EnumValueHelp(TEnum value, String help)
         {
             this.optionParser.EnumValuesHelps.Add(value, help);
             return this;

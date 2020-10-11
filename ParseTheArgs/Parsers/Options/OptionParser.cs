@@ -58,7 +58,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <summary>
         /// Defines the help text of the option.
         /// </summary>
-        public String OptionHelp { get; set; }
+        public virtual String OptionHelp { get; set; }
 
         /// <summary>
         /// Gets the help text of the option.

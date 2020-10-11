@@ -374,9 +374,9 @@ Prints this help screen.
             defaultCommand
                 .Option(a => a.OptionE)
                 .Help("OptionE help.")
-                .OptionHelp(Encoding.ASCII, "ASCII help.")
-                .OptionHelp(Encoding.UTF8, "UTF8 help.")
-                .OptionHelp(Encoding.UTF16, "UTF16 help.");
+                .EnumValueHelp(Encoding.ASCII, "ASCII help.")
+                .EnumValueHelp(Encoding.UTF8, "UTF8 help.")
+                .EnumValueHelp(Encoding.UTF16, "UTF16 help.");
 
             defaultCommand
                 .Option(a => a.OptionF)
@@ -385,9 +385,9 @@ Prints this help screen.
             defaultCommand
                 .Option(a => a.OptionG)
                 .Help("OptionG help.")
-                .OptionHelp(Encoding.ASCII, "ASCII help.")
-                .OptionHelp(Encoding.UTF8, "UTF8 help.")
-                .OptionHelp(Encoding.UTF16, "UTF16 help.");
+                .EnumValueHelp(Encoding.ASCII, "ASCII help.")
+                .EnumValueHelp(Encoding.UTF8, "UTF8 help.")
+                .EnumValueHelp(Encoding.UTF16, "UTF16 help.");
 
             parser
                 .GetHelpText()

@@ -1813,7 +1813,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.OptionHelp(`1,System.String)">
+        <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.EnumValueHelp(`1,System.String)">
             <summary>
             Sets the help text for the given enum member of the enum type <typeparamref name="TEnum" />.
             </summary>
@@ -1837,7 +1837,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
         </member>
-        <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.OptionHelp(`1,System.String)">
+        <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.EnumValueHelp(`1,System.String)">
             <summary>
             Sets the help text for the given enum member of the enum type <typeparamref name="TEnum" />.
             </summary>

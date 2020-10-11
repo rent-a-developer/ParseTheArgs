@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Parsers.Options;
 
@@ -31,7 +30,7 @@ namespace ParseTheArgs.Setup.Options
         /// <param name="value">The enum member to set the help text for.</param>
         /// <param name="help">The help text for the enum member.</param>
         /// <returns>A reference to this instance for further configuration.</returns>
-        public EnumOptionSetup<TCommandOptions, TEnum> OptionHelp(TEnum value, String help)
+        public EnumOptionSetup<TCommandOptions, TEnum> EnumValueHelp(TEnum value, String help)
         {
             this.optionParser.EnumValuesHelps.Add(value, help);
             return this;

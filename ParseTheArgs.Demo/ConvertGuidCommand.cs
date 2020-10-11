@@ -63,8 +63,8 @@ namespace ParseTheArgs.Demo
                 .Option(a => a.Mode)
                 .Name("to")
                 .Help("Defines to which the Guid should converted.")
-                .OptionHelp(ConvertGuidMode.Bytes, "Converts the Guid to a sequence of bytes.")
-                .OptionHelp(ConvertGuidMode.BigInteger, "Converts the Guid to a big integer.");
+                .EnumValueHelp(ConvertGuidMode.Bytes, "Converts the Guid to a sequence of bytes.")
+                .EnumValueHelp(ConvertGuidMode.BigInteger, "Converts the Guid to a big integer.");
         }
     }
 }

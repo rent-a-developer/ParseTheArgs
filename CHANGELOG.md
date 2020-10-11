@@ -27,6 +27,12 @@ All corresponding API parts are renamed accordingly (e.g. the ParseTheArgs.Setup
 In previous versions each option could have a short name.
 To considerably simplify the code and the API this feature has been removed.
 
+### EnumListOptionSetup.OptionHelp renamed to EnumValueHelp
+The method ParseTheArgs.Setup.Options.EnumListOptionSetup.OptionHelp was renamed to EnumValueHelp.
+
+### EnumOptionSetup.OptionHelp renamed to EnumValueHelp
+The method ParseTheArgs.Setup.Options.EnumOptionSetup.OptionHelp was renamed to EnumValueHelp.
+
 ### Command and error handler API has been revised
 The API which allows to define handlers for commands and errors has been revised.
 

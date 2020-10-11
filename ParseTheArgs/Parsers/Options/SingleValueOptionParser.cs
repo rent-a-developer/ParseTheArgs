@@ -26,7 +26,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <summary>
         /// Defines the default value to use for the option when the option is not given.
         /// </summary>
-        public TOptionValue OptionDefaultValue
+        public virtual TOptionValue OptionDefaultValue
         {
             get => this.optionDefaultValue;
             set

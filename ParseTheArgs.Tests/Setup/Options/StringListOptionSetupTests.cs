@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using FakeItEasy;
 using FluentAssertions;
@@ -12,15 +13,15 @@ using static FluentAssertions.FluentActions;
 namespace ParseTheArgs.Tests.Setup.Options
 {
     [TestFixture]
-    public class StringOptionSetupTests
+    public class StringListOptionSetupTests
     {
         [Test(Description = "Constructor should throw an exception when the given command parser is null.")]
         public void Constructor_CommandParserIsNull_ShouldThrowException()
         {
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            Invoking(() => new StringOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new StringListOptionSetup<DataTypesCommandOptions>(null, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -30,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new StringOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new StringListOptionSetup<DataTypesCommandOptions>(commandParser, null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -40,10 +41,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Help("newHelpText");
 
@@ -55,10 +56,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Help("newHelpText").Should().Be(setup);
         }
@@ -68,10 +69,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
 
@@ -85,10 +86,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(false);
 
@@ -102,10 +103,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
 
@@ -117,12 +118,12 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
-            var defaultValue = "newDefaultValue";
+            var defaultValue = new List<String>();
             setup.DefaultValue(defaultValue);
 
             A.CallToSet(() => optionParser.OptionDefaultValue).To(defaultValue).MustHaveHappened();
@@ -133,12 +134,12 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
-            setup.DefaultValue("newDefaultValue").Should().Be(setup);
+            setup.DefaultValue(new List<String>()).Should().Be(setup);
         }
 
         [Test(Description = "IsRequired should tell the option parser that the option is required.")]
@@ -146,10 +147,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.IsRequired();
 
@@ -161,10 +162,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("String");
-            var optionParser = A.Fake<StringOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringOptionParser(targetProperty, "string")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
 
-            var setup = new StringOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.IsRequired().Should().Be(setup);
         }

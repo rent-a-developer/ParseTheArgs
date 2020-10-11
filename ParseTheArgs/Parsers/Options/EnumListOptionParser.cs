@@ -35,7 +35,7 @@ namespace ParseTheArgs.Parsers.Options
         /// <summary>
         /// Defines the help texts for individual enum member of the type <typeparamref name="TEnum" />.
         /// </summary>
-        public Dictionary<TEnum, String> EnumValuesHelps { get; }
+        public virtual IDictionary<TEnum, String> EnumValuesHelps { get; }
 
         /// <summary>
         /// Gets the help text of the option.

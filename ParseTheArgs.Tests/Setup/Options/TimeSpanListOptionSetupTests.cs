@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using FakeItEasy;
 using FluentAssertions;
@@ -12,15 +13,15 @@ using static FluentAssertions.FluentActions;
 namespace ParseTheArgs.Tests.Setup.Options
 {
     [TestFixture]
-    public class TimeSpanOptionSetupTests
+    public class TimeSpanListOptionSetupTests
     {
         [Test(Description = "Constructor should throw an exception when the given command parser is null.")]
         public void Constructor_CommandParserIsNull_ShouldThrowException()
         {
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            Invoking(() => new TimeSpanOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(null, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -30,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -40,10 +41,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Help("newHelpText");
 
@@ -55,10 +56,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Help("newHelpText").Should().Be(setup);
         }
@@ -68,10 +69,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
 
@@ -85,10 +86,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(false);
 
@@ -102,10 +103,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
 
@@ -117,12 +118,12 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
-            var defaultValue = new TimeSpan(1, 2, 3, 4);
+            var defaultValue = new List<TimeSpan>();
             setup.DefaultValue(defaultValue);
 
             A.CallToSet(() => optionParser.OptionDefaultValue).To(defaultValue).MustHaveHappened();
@@ -133,12 +134,12 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
-            setup.DefaultValue(new TimeSpan(1, 2, 3, 4)).Should().Be(setup);
+            setup.DefaultValue(new List<TimeSpan>()).Should().Be(setup);
         }
 
         [Test(Description = "IsRequired should tell the option parser that the option is required.")]
@@ -146,10 +147,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.IsRequired();
 
@@ -161,10 +162,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.IsRequired().Should().Be(setup);
         }
@@ -174,10 +175,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Format(@"hh\:mm");
 
@@ -189,10 +190,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Format(@"hh\:mm").Should().Be(setup);
         }
@@ -202,10 +203,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             var formatProvider = new CultureInfo("de-DE");
             setup.FormatProvider(formatProvider);
@@ -218,10 +219,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.FormatProvider(new CultureInfo("de-DE")).Should().Be(setup);
         }
@@ -231,10 +232,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Styles(TimeSpanStyles.AssumeNegative);
 
@@ -246,10 +247,10 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpan");
-            var optionParser = A.Fake<TimeSpanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanOptionParser(targetProperty, "timeSpan")));
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
+            var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            var setup = new TimeSpanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+            var setup = new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
             setup.Styles(TimeSpanStyles.AssumeNegative).Should().Be(setup);
         }

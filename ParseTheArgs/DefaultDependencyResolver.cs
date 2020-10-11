@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace ParseTheArgs
 {
@@ -15,7 +17,8 @@ namespace ParseTheArgs
         /// <returns>An instance of <typeparamref name="TDependency"/>.</returns>
         public virtual TDependency Resolve<TDependency>(params Object[] constructorArguments)
         {
-            return (TDependency) Activator.CreateInstance(typeof(TDependency), constructorArguments);
+            var constructor = typeof(TDependency).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments.Select(a => a.GetType()).ToArray(), null);
+            return (TDependency) constructor.Invoke(constructorArguments);
         }
     }
 }

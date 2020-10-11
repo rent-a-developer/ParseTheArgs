@@ -237,11 +237,25 @@
             </summary>
         </member>
         <member name="M:ParseTheArgs.ExpressionHelper.GetPropertyFromPropertyExpression(System.Linq.Expressions.LambdaExpression)">
-            <summary>
+             <summary>
+             Extracts the property from a linq expression that accesses a property.
+             </summary>
+             <param name="propertyExpression">The expression to extract the property from.</param>
+             <returns>The property that was extracted from the given expression.</returns>
+             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is null.</exception>
+             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is not a access call to a property.</exception>
+             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is accessing a property that does not have a public setter.</exception>
+             <example>
+             <code>
+             class Item
+             {
+                 public Int32 PropertyA { get; set; }
+             }
             
-            </summary>
-            <param name="propertyExpression"></param>
-            <returns></returns>
+             Expression{Func{Item, Object}} expression = ((item) => item.PropertyA)
+             ExpressionHelper.GetPropertyFromPropertyExpression(expression);  // returns same as typeof(Item).GetProperty("PropertyA") would.
+             </code>
+             </example>
         </member>
         <member name="T:ParseTheArgs.Extensions.PropertyInfoExtensions">
             <summary>

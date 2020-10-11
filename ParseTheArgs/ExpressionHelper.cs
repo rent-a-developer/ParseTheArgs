@@ -10,14 +10,32 @@ namespace ParseTheArgs
     /// </summary>
     public static class ExpressionHelper
     {
-        // TODO: Document
         /// <summary>
-        /// 
+        /// Extracts the property from a linq expression that accesses a property.
         /// </summary>
-        /// <param name="propertyExpression"></param>
-        /// <returns></returns>
+        /// <param name="propertyExpression">The expression to extract the property from.</param>
+        /// <returns>The property that was extracted from the given expression.</returns>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is not a access call to a property.</exception>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is accessing a property that does not have a public setter.</exception>
+        /// <example>
+        /// <code>
+        /// class Item
+        /// {
+        ///     public Int32 PropertyA { get; set; }
+        /// }
+        ///
+        /// Expression{Func{Item, Object}} expression = ((item) => item.PropertyA)
+        /// ExpressionHelper.GetPropertyFromPropertyExpression(expression);  // returns same as typeof(Item).GetProperty("PropertyA") would.
+        /// </code>
+        /// </example>
         public static PropertyInfo GetPropertyFromPropertyExpression(LambdaExpression propertyExpression)
         {
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException(nameof(propertyExpression));
+            }
+
             MemberExpression? memberExpression = null;
 
             if (propertyExpression.Body is MemberExpression expressionBody)

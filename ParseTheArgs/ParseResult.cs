@@ -53,6 +53,11 @@ namespace ParseTheArgs
         /// <param name="error">The error to add.</param>
         public virtual void AddError(IParseError error)
         {
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
+
             this.errors.Add(error);
         }
 
@@ -65,6 +70,11 @@ namespace ParseTheArgs
         /// <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions"/>.</param>
         public virtual void CommandHandler<TCommandOptions>(Func<TCommandOptions, Int32> commandHandler)
         {
+            if (commandHandler == null)
+            {
+                throw new ArgumentNullException(nameof(commandHandler));
+            }
+
             this.commandHandlers[typeof(TCommandOptions)] = commandHandler;
         }
 
@@ -76,6 +86,11 @@ namespace ParseTheArgs
         /// <param name="errorHandler">The handler that handles the errors.</param>
         public virtual void ErrorHandler(Func<ParseResult, Int32> errorHandler)
         {
+            if (errorHandler == null)
+            {
+                throw new ArgumentNullException(nameof(errorHandler));
+            }
+
             this.errorHandler = errorHandler;
         }
 

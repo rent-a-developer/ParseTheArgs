@@ -1,5 +1,4 @@
-﻿using System;
-using FakeItEasy;
+﻿using FakeItEasy;
 using NUnit.Framework;
 
 namespace ParseTheArgs.Tests

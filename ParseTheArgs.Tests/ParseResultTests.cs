@@ -86,6 +86,27 @@ namespace ParseTheArgs.Tests
             result.Errors.Should().BeEquivalentTo(optionMissingError, unknownOptionError);
         }
 
+        [Test(Description = "AddError should add the given error to the parse result.")]
+        public void AddError_ShouldAddError()
+        {
+            var result = new ParseResult();
+
+            var optionMissingError = new OptionMissingError("optionA");
+            result.AddError(optionMissingError);
+            
+            result.Errors.Should().BeEquivalentTo(optionMissingError);
+        }
+
+        [Test(Description = "AddError should throw an exception when the given error is null.")]
+        public void AddError_ErrorIsNull_ShouldThrowException()
+        {
+            var result = new ParseResult();
+
+            result.Invoking(a => a.AddError(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
         [Test(Description = "Handle should return 0 when there are no command options.")]
         public void Handle_NoCommandOptions_ShouldReturn0()
         {
@@ -273,6 +294,26 @@ namespace ParseTheArgs.Tests
                 .Should()
                 .Throw<Exception>()
                 .WithMessage("Error Handler Exception");
+        }
+
+        [Test(Description = "CommandHandler should throw an exception when the given handler is null.")]
+        public void CommandHandler_HandlerIsNull_ShouldThrowException()
+        {
+            var result = new ParseResult();
+
+            result.Invoking(a => a.CommandHandler<Command1Options>(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test(Description = "ErrorHandler should throw an exception when the given handler is null.")]
+        public void ErrorHandler_HandlerIsNull_ShouldThrowException()
+        {
+            var result = new ParseResult();
+
+            result.Invoking(a => a.ErrorHandler(null))
+                .Should()
+                .Throw<ArgumentNullException>();
         }
     }
 

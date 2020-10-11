@@ -28,6 +28,17 @@ namespace ParseTheArgs.Tests
                 .BeSameAs(typeof(Item).GetProperty("PropertyC"));
         }
 
+        [Test(Description = "GetPropertyFromPropertyExpression should throw an exception when the given expression is null.")]
+        public void GetPropertyFromPropertyExpression_PropertyExpressionIsNull_ShouldThrowException()
+        {
+            Invoking(() => 
+                ExpressionHelper
+                    .GetPropertyFromPropertyExpression(null)
+            )
+            .Should()
+            .Throw<ArgumentNullException>();
+        }
+
         [Test(Description = "GetPropertyFromPropertyExpression should throw an exception when the given expression points to a property that does not have a public setter.")]
         public void GetPropertyFromPropertyExpression_PropertyWithoutPublicSetter_ShouldThrowException()
         {

@@ -4,19 +4,6 @@
         <name>ParseTheArgs</name>
     </assembly>
     <members>
-        <member name="T:ParseTheArgs.IDependencyResolver">
-            <summary>
-            Resolves dependencies.
-            </summary>
-        </member>
-        <member name="M:ParseTheArgs.IDependencyResolver.Resolve``1(System.Object[])">
-            <summary>
-            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
-            </summary>
-            <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
-            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
-            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
-        </member>
         <member name="T:ParseTheArgs.DefaultDependencyResolver">
             <summary>
             The default dependency resolver.
@@ -328,6 +315,19 @@
             <param name="text">The text to wrap the words in.</param>
             <param name="lineLength">The length of the line available for the text.</param>
             <returns>The wrapped lines of the given text.</returns>
+        </member>
+        <member name="T:ParseTheArgs.IDependencyResolver">
+            <summary>
+            Resolves dependencies.
+            </summary>
+        </member>
+        <member name="M:ParseTheArgs.IDependencyResolver.Resolve``1(System.Object[])">
+            <summary>
+            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
+            </summary>
+            <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
+            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
+            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
         </member>
         <member name="T:ParseTheArgs.Parser">
             <summary>

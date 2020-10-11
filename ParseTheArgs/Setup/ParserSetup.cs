@@ -76,7 +76,7 @@ namespace ParseTheArgs.Setup
             var commandName = typeof(TCommandOptions).Name.ToCamelCase().Replace("Options", "");
             var commandParser = this.parser.GetOrCreateCommandParser<TCommandOptions>(commandName);
 
-            return new NamedCommandSetup<TCommandOptions>(this.parser, commandParser);
+            return Dependencies.Resolver.Resolve<NamedCommandSetup<TCommandOptions>>(this.parser, commandParser);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace ParseTheArgs.Setup
         {
             var commandParser = parser.GetOrCreateCommandParser<TCommandOptions>();
 
-            return new DefaultCommandSetup<TCommandOptions>(this.parser, commandParser);
+            return Dependencies.Resolver.Resolve<DefaultCommandSetup<TCommandOptions>>(this.parser, commandParser);
         }
 
         /// <summary>

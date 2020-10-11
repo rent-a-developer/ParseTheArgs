@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ParseTheArgs.Errors;
-using ParseTheArgs.Extensions;
 using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Setup;
 using ParseTheArgs.Tokens;
@@ -44,6 +43,39 @@ namespace ParseTheArgs
         /// Gets the setup for the parser that allows to configure the parser.
         /// </summary>
         public ParserSetup Setup { get; }
+
+        /// <summary>
+        /// Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
+        /// </summary>
+        public virtual String Banner { get; set; }
+
+        /// <summary>
+        /// Defines the text writer to write error messages to.
+        /// </summary>
+        /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
+        public virtual TextWriter? ErrorTextWriter { get; set; }
+
+        /// <summary>
+        /// Defines the text writer to write help messages to.
+        /// </summary>
+        /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
+        public virtual TextWriter? HelpTextWriter { get; set; }
+
+        /// <summary>
+        /// Defines the maximum length a line of a help text can have.
+        /// If not explicitly set via <see cref="ParserSetup.HelpTextMaxLineLength" /> the current width of the console width is used or, if no console is available, <see cref="Int32.MaxValue" /> is used.
+        /// </summary>
+        public virtual Int32 HelpTextMaxLineLength { get; set; }
+
+        /// <summary>
+        /// Determines whether to ignore options that are unknown when options are parsed.
+        /// </summary>
+        public virtual Boolean IgnoreUnknownOptions { get; set; }
+
+        /// <summary>
+        /// Defines the name of the program to display in help texts.
+        /// </summary>
+        public virtual String ProgramName { get; set; }
 
         /// <summary>
         /// Gets the help text of the command with the given name.
@@ -249,39 +281,6 @@ namespace ParseTheArgs
 
             return result;
         }
-
-        /// <summary>
-        /// Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
-        /// </summary>
-        internal virtual String Banner { get; set; }
-
-        /// <summary>
-        /// Defines the text writer to write error messages to.
-        /// </summary>
-        /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
-        internal virtual TextWriter? ErrorTextWriter { get; set; }
-
-        /// <summary>
-        /// Defines the text writer to write help messages to.
-        /// </summary>
-        /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
-        internal virtual TextWriter? HelpTextWriter { get; set; }
-
-        /// <summary>
-        /// Defines the maximum length a line of a help text can have.
-        /// If not explicitly set via <see cref="ParserSetup.HelpTextMaxLineLength" /> the current width of the console width is used or, if no console is available, <see cref="Int32.MaxValue" /> is used.
-        /// </summary>
-        internal virtual Int32 HelpTextMaxLineLength { get; set; }
-
-        /// <summary>
-        /// Determines whether to ignore options that are unknown when options are parsed.
-        /// </summary>
-        internal virtual Boolean IgnoreUnknownOptions { get; set; }
-
-        /// <summary>
-        /// Defines the name of the program to display in help texts.
-        /// </summary>
-        internal virtual String ProgramName { get; set; }
 
         /// <summary>
         /// Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions"/>) and the specified command name.

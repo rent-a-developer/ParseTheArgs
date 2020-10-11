@@ -142,8 +142,8 @@ namespace ParseTheArgs.Tests.Setup.Options
             setup.DefaultValue(new List<Guid>()).Should().Be(setup);
         }
 
-        [Test(Description = "IsRequired should tell the option parser that the option is required.")]
-        public void IsRequired_ShouldAssignDefaultValueToOptionParser()
+        [Test(Description = "IsRequired should set the is required flag on the option parser.")]
+        public void IsRequired_ShouldSetIsRequiredFlagOnOptionParser()
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 

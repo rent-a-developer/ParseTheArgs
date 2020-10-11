@@ -344,37 +344,6 @@
             Gets the setup for the parser that allows to configure the parser.
             </summary>
         </member>
-        <member name="M:ParseTheArgs.Parser.GetCommandHelpText(System.String,System.Boolean)">
-            <summary>
-            Gets the help text of the command with the given name.
-            </summary>
-            <param name="commandName">The name of the command to get the help text for.</param>
-            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
-            <returns>The help text of the command with the given name.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)">
-            <summary>
-            Gets the error messages for the errors of the given parse result.
-            If the given parse result does not have errors an empty string is returned.
-            </summary>
-            <param name="parseResult">The parse result to get the error messages for.</param>
-            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
-            <returns>The error messages for the errors of the given parse result.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)">
-            <summary>
-            Gets the general help text for commands and options.
-            </summary>
-            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
-            <returns>The general help text for commands and options.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Parser.Parse(System.String[])">
-            <summary>
-            Parses the given command line arguments according to the configuration of this instance (see <see cref="P:ParseTheArgs.Parser.Setup" />).
-            </summary>
-            <param name="args">The command line arguments to parse.</param>
-            <returns>The result of the parsing.</returns>
-        </member>
         <member name="P:ParseTheArgs.Parser.Banner">
             <summary>
             Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)" /> or <see cref="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)" />).
@@ -407,6 +376,37 @@
             <summary>
             Defines the name of the program to display in help texts.
             </summary>
+        </member>
+        <member name="M:ParseTheArgs.Parser.GetCommandHelpText(System.String,System.Boolean)">
+            <summary>
+            Gets the help text of the command with the given name.
+            </summary>
+            <param name="commandName">The name of the command to get the help text for.</param>
+            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
+            <returns>The help text of the command with the given name.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)">
+            <summary>
+            Gets the error messages for the errors of the given parse result.
+            If the given parse result does not have errors an empty string is returned.
+            </summary>
+            <param name="parseResult">The parse result to get the error messages for.</param>
+            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
+            <returns>The error messages for the errors of the given parse result.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)">
+            <summary>
+            Gets the general help text for commands and options.
+            </summary>
+            <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)" />) at the beginning.</param>
+            <returns>The general help text for commands and options.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Parser.Parse(System.String[])">
+            <summary>
+            Parses the given command line arguments according to the configuration of this instance (see <see cref="P:ParseTheArgs.Parser.Setup" />).
+            </summary>
+            <param name="args">The command line arguments to parse.</param>
+            <returns>The result of the parsing.</returns>
         </member>
         <member name="M:ParseTheArgs.Parser.GetOrCreateCommandParser``1(System.String)">
             <summary>

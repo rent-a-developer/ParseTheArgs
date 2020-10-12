@@ -233,7 +233,7 @@ namespace ParseTheArgs
 
             if (args.Length == 2 && args[0] == "help")
             {
-                // There are only two command line argument and the first one is 'help', so the second must be a command name, so print the help for that command.
+                // There are only two command line arguments and the first one is 'help', so the second must be a command name, so print the help for that command.
                 this.PrintCommandHelp(args[1]);
                 return new ParseResult {IsHelpCalled = true};
             }

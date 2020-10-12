@@ -7,7 +7,7 @@ namespace ParseTheArgs.Tokens
     /// <summary>
     /// A tokenizer for command line arguments.
     /// </summary>
-    public static class CommandLineArgumentsTokenizer
+    public class CommandLineArgumentsTokenizer
     {
         /// <summary>
         /// Converts the given command line arguments to a sequence of tokens.
@@ -15,19 +15,16 @@ namespace ParseTheArgs.Tokens
         /// <param name="args">The command line arguments to tokenize.</param>
         /// <returns>The tokens that represent the given command line arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="args" /> is null.</exception>
-        public static IEnumerable<Token> Tokenize(String[] args)
+        public virtual List<Token> Tokenize(params String[] args)
         {
             if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
 
-            return TokenizeIterator(args);
-        }
-
-        private static IEnumerable<Token> TokenizeIterator(String[] args)
-        {
             var argumentsToTokenize = new List<String>(args);
+
+            var result = new List<Token>();
 
             while (argumentsToTokenize.Any())
             {
@@ -40,11 +37,11 @@ namespace ParseTheArgs.Tokens
 
                     if (optionValues.Count == 0)
                     {
-                        yield return new OptionToken(optionName);
+                        result.Add(new OptionToken(optionName));
                     }
                     else
                     {
-                        yield return new OptionToken(optionName, optionValues);
+                        result.Add(new OptionToken(optionName, optionValues));
                     }
 
                     argumentsToTokenize.RemoveAt(0);
@@ -53,11 +50,13 @@ namespace ParseTheArgs.Tokens
                 else
                 {
                     var commandName = argument;
-                    yield return new CommandToken(commandName);
+                    result.Add(new CommandToken(commandName));
 
                     argumentsToTokenize.RemoveAt(0);
                 }
             }
+
+            return result;
         }
     }
 }

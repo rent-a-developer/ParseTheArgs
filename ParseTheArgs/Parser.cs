@@ -85,7 +85,7 @@ namespace ParseTheArgs
         /// <param name="commandName">The name of the command to get the help text for.</param>
         /// <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="ParserSetup.Banner" />) at the beginning.</param>
         /// <returns>The help text of the command with the given name.</returns>
-        public String GetCommandHelpText(String commandName, Boolean includeBanner = true)
+        public virtual String GetCommandHelpText(String commandName, Boolean includeBanner = true)
         {
             var stringBuilder = new StringBuilder();
 
@@ -118,7 +118,7 @@ namespace ParseTheArgs
         /// <param name="parseResult">The parse result to get the error messages for.</param>
         /// <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="ParserSetup.Banner" />) at the beginning.</param>
         /// <returns>The error messages for the errors of the given parse result.</returns>
-        public String GetErrorsText(ParseResult parseResult, Boolean includeBanner = true)
+        public virtual String GetErrorsText(ParseResult parseResult, Boolean includeBanner = true)
         {
             if (!parseResult.HasErrors)
             {
@@ -159,7 +159,7 @@ namespace ParseTheArgs
         /// </summary>
         /// <param name="includeBanner">Determines if the returned text should contain the banner (which can be set up via (<see cref="ParserSetup.Banner" />) at the beginning.</param>
         /// <returns>The general help text for commands and options.</returns>
-        public String GetHelpText(Boolean includeBanner = true)
+        public virtual String GetHelpText(Boolean includeBanner = true)
         {
             var stringBuilder = new StringBuilder();
 
@@ -239,7 +239,9 @@ namespace ParseTheArgs
 
             var result = new ParseResult();
 
-            var tokens = CommandLineArgumentsTokenizer.Tokenize(args).ToList();
+            var tokenizer = Dependencies.Resolver.Resolve<CommandLineArgumentsTokenizer>();
+
+            var tokens = tokenizer.Tokenize(args);
 
             var commandTokens = tokens.OfType<CommandToken>().ToList();
 

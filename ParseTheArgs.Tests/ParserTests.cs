@@ -149,6 +149,7 @@ Command1 help text");
             A.CallTo(() => error2.GetErrorMessage()).Returns("Error2 message");
 
             var errors = new List<IParseError> {error1, error2};
+            A.CallTo(() => parseResult.CommandName).Returns("command1");
             A.CallTo(() => parseResult.HasErrors).Returns(true);
             A.CallTo(() => parseResult.Errors).Returns(errors.AsReadOnly());
 
@@ -157,7 +158,7 @@ Command1 help text");
 - Error2 message
 
 Try the following command to get help:
-Test help
+Test help command1
 ");
         }
 

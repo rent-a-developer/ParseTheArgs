@@ -73,6 +73,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "ToCamelCase should return the given string converted according to the camel case convention.")]
         public void ToCamelCase_String_ShouldReturnConvertedToCamelCase()
         {
+            "command".ToCamelCase().Should().Be("command");
             "commandLineArgument".ToCamelCase().Should().Be("commandLineArgument");
             "CommandLineArgument".ToCamelCase().Should().Be("commandLineArgument");
             "command_line_argument".ToCamelCase().Should().Be("commandLineArgument");

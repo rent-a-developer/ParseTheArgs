@@ -15,9 +15,9 @@ namespace ParseTheArgs.Parsers.Options
         /// </summary>
         /// <param name="targetProperty">The property where the value of the option will be stored.</param>
         /// <param name="optionName">The name of the option the parser parses.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="List{Guid}"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="List{T}" />.</exception>
+        /// <exception cref="ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         public GuidListOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
             if (targetProperty.PropertyType != typeof(List<Guid>))
@@ -43,8 +43,8 @@ namespace ParseTheArgs.Parsers.Options
         {
             if (!this.ValueParser.TryParseGuid(optionValue, this.GuidFormat, out resultValue))
             {
-                    parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
-                    return false;
+                parseResult.AddError(new OptionValueInvalidFormatError(this.OptionName, optionValue, "A valid Guid"));
+                return false;
             }
 
             return true;

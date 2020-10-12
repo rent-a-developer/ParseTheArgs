@@ -11,11 +11,11 @@
         </member>
         <member name="M:ParseTheArgs.DefaultDependencyResolver.Resolve``1(System.Object[])">
             <summary>
-            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
+            Resolves the dependency of the given type <typeparamref name="TDependency" /> passing along the given constructor arguments.
             </summary>
             <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
-            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
-            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
+            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency" />.</param>
+            <returns>An instance of <typeparamref name="TDependency" />.</returns>
         </member>
         <member name="T:ParseTheArgs.Errors.DuplicateOptionError">
             <summary>
@@ -237,25 +237,25 @@
             </summary>
         </member>
         <member name="M:ParseTheArgs.ExpressionHelper.GetPropertyFromPropertyExpression(System.Linq.Expressions.LambdaExpression)">
-             <summary>
-             Extracts the property from a linq expression that accesses a property.
-             </summary>
-             <param name="propertyExpression">The expression to extract the property from.</param>
-             <returns>The property that was extracted from the given expression.</returns>
-             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is null.</exception>
-             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is not a access call to a property.</exception>
-             <exception cref="T:System.ArgumentException"><paramref name="propertyExpression"/> is accessing a property that does not have a public setter.</exception>
-             <example>
-             <code>
-             class Item
-             {
-                 public Int32 PropertyA { get; set; }
-             }
+            <summary>
+            Extracts the property from a linq expression that accesses a property.
+            </summary>
+            <param name="propertyExpression">The expression to extract the property from.</param>
+            <returns>The property that was extracted from the given expression.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="propertyExpression" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="propertyExpression" /> is not a access call to a property.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="propertyExpression" /> is accessing a property that does not have a public setter.</exception>
+            <example>
+            <code>
+            class Item
+            {
+                public Int32 PropertyA { get; set; }
+            }
             
-             Expression{Func{Item, Object}} expression = ((item) => item.PropertyA)
-             ExpressionHelper.GetPropertyFromPropertyExpression(expression);  // returns same as typeof(Item).GetProperty("PropertyA") would.
-             </code>
-             </example>
+            Expression{Func{Item, Object}} expression = ((item) => item.PropertyA)
+            ExpressionHelper.GetPropertyFromPropertyExpression(expression);  // returns same as typeof(Item).GetProperty("PropertyA") would.
+            </code>
+            </example>
         </member>
         <member name="T:ParseTheArgs.Extensions.PropertyInfoExtensions">
             <summary>
@@ -337,11 +337,11 @@
         </member>
         <member name="M:ParseTheArgs.IDependencyResolver.Resolve``1(System.Object[])">
             <summary>
-            Resolves the dependency of the given type <typeparamref name="TDependency"/> passing along the given constructor arguments.
+            Resolves the dependency of the given type <typeparamref name="TDependency" /> passing along the given constructor arguments.
             </summary>
             <typeparam name="TDependency">The type of dependency to resolve.</typeparam>
-            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency"/>.</param>
-            <returns>An instance of <typeparamref name="TDependency"/>.</returns>
+            <param name="constructorArguments">The arguments to pass to the constructor of <typeparamref name="TDependency" />.</param>
+            <returns>An instance of <typeparamref name="TDependency" />.</returns>
         </member>
         <member name="T:ParseTheArgs.Parser">
             <summary>
@@ -451,19 +451,14 @@
             Initializes a new instance of this class.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.ParseResult.CommandOptions">
-            <summary>
-            Defines the Object that holds the options of the parsed command.
-            </summary>
-        </member>
         <member name="P:ParseTheArgs.ParseResult.CommandName">
             <summary>
             Defines the name of the command that was found in the parsed command line arguments.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.ParseResult.IsHelpCalled">
+        <member name="P:ParseTheArgs.ParseResult.CommandOptions">
             <summary>
-            Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
+            Defines the Object that holds the options of the parsed command.
             </summary>
         </member>
         <member name="P:ParseTheArgs.ParseResult.Errors">
@@ -476,6 +471,11 @@
             Determines if errors where found during parsing.
             </summary>
         </member>
+        <member name="P:ParseTheArgs.ParseResult.IsHelpCalled">
+            <summary>
+            Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
+            </summary>
+        </member>
         <member name="M:ParseTheArgs.ParseResult.AddError(ParseTheArgs.Errors.IParseError)">
             <summary>
             Adds a parse error to this instance.
@@ -485,32 +485,32 @@
         <member name="M:ParseTheArgs.ParseResult.CommandHandler``1(System.Func{``0,System.Int32})">
             <summary>
             Sets up a command handler for a specific command.
-            The handler will be invoked when the <see cref="M:ParseTheArgs.ParseResult.Handle"/> method is called and <see cref="P:ParseTheArgs.ParseResult.CommandOptions"/> is of type <typeparamref name="TCommandOptions"/>.
-            The return value of the specified handler is returned by the <see cref="M:ParseTheArgs.ParseResult.Handle"/> method when the handler is invoked.
+            The handler will be invoked when the <see cref="M:ParseTheArgs.ParseResult.Handle" /> method is called and <see cref="P:ParseTheArgs.ParseResult.CommandOptions" /> is of type <typeparamref name="TCommandOptions" />.
+            The return value of the specified handler is returned by the <see cref="M:ParseTheArgs.ParseResult.Handle" /> method when the handler is invoked.
             </summary>
             <typeparam name="TCommandOptions">The type of the command options the handler handles.</typeparam>
-            <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions"/>.</param>
+            <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions" />.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.ErrorHandler(System.Func{ParseTheArgs.ParseResult,System.Int32})">
             <summary>
             Sets up an error handler.
-            The handler will be invoked when <see cref="M:ParseTheArgs.ParseResult.Handle"/> is called and <see cref="P:ParseTheArgs.ParseResult.HasErrors"/> is true.
-            The return value of the specified handler is returned by the <see cref="M:ParseTheArgs.ParseResult.Handle"/> method when the handler is invoked.
+            The handler will be invoked when <see cref="M:ParseTheArgs.ParseResult.Handle" /> is called and <see cref="P:ParseTheArgs.ParseResult.HasErrors" /> is true.
+            The return value of the specified handler is returned by the <see cref="M:ParseTheArgs.ParseResult.Handle" /> method when the handler is invoked.
             </summary>
             <param name="errorHandler">The handler that handles the errors.</param>
         </member>
         <member name="M:ParseTheArgs.ParseResult.Handle">
             <summary>
             Handles the result of the command line parsing.
-            The command handler that was set up (via the <see cref="M:ParseTheArgs.ParseResult.CommandHandler``1(System.Func{``0,System.Int32})"/> method) for the current command will be invoked.
-            In case <see cref="P:ParseTheArgs.ParseResult.HasErrors"/> is true, the error handler that was set up (via the <see cref="M:ParseTheArgs.ParseResult.ErrorHandler(System.Func{ParseTheArgs.ParseResult,System.Int32})"/> method) will be invoked.
+            The command handler that was set up (via the <see cref="M:ParseTheArgs.ParseResult.CommandHandler``1(System.Func{``0,System.Int32})" /> method) for the current command will be invoked.
+            In case <see cref="P:ParseTheArgs.ParseResult.HasErrors" /> is true, the error handler that was set up (via the <see cref="M:ParseTheArgs.ParseResult.ErrorHandler(System.Func{ParseTheArgs.ParseResult,System.Int32})" /> method) will be invoked.
             </summary>
             <returns>
             The return value of the command handler that was set up for the current command.
             If no command handler was set up for the current command 0 will be returned.
             
-            If <see cref="P:ParseTheArgs.ParseResult.HasErrors"/> is true and an error handler was set up the return value of the error handler will be returned.
-            If <see cref="P:ParseTheArgs.ParseResult.HasErrors"/> is true and no error handler was set up 0 will be returned.
+            If <see cref="P:ParseTheArgs.ParseResult.HasErrors" /> is true and an error handler was set up the return value of the error handler will be returned.
+            If <see cref="P:ParseTheArgs.ParseResult.HasErrors" /> is true and no error handler was set up 0 will be returned.
             </returns>
         </member>
         <member name="T:ParseTheArgs.Parsers.Commands.CommandParser`1">
@@ -524,7 +524,7 @@
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser the command parser belongs to.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="parser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="parser" /> is null.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.CommandExampleUsage">
             <summary>
@@ -539,7 +539,7 @@
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.CommandName">
             <summary>
             Defines the name of the command.
-            Will be <see cref="F:System.String.Empty"/> if the command is the default command (see <see cref="P:ParseTheArgs.Parsers.Commands.ICommandParser.IsCommandDefault" />).
+            Will be <see cref="F:System.String.Empty" /> if the command is the default command (see <see cref="P:ParseTheArgs.Parsers.Commands.ICommandParser.IsCommandDefault" />).
             </summary>
         </member>
         <member name="P:ParseTheArgs.Parsers.Commands.CommandParser`1.IsCommandDefault">
@@ -559,6 +559,15 @@
             </summary>
             <returns>The help text of the command.</returns>
         </member>
+        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.GetOrCreateOptionParser``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Gets an existing option parser of type <typeparamref name="TOptionParser" /> for the specified target property <paramref name="targetProperty" />.
+            In case no such option parser exists yet a new one will be created.
+            </summary>
+            <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
+            <param name="targetProperty">The target property to get or create the option parser for.</param>
+            <returns>The option parser of the specified type and for the specified target property.</returns>
+        </member>
         <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
             <summary>
             Parses the given tokens and puts the result of the parsing into the given parse result object.
@@ -573,23 +582,6 @@
             <param name="tokens">The tokens to validate.</param>
             <param name="parseResult">The object where to put the result of the validation into.</param>
         </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.GetOrCreateOptionParser``1(System.Reflection.PropertyInfo)">
-            <summary>
-            Gets an existing option parser of type <typeparamref name="TOptionParser"/> for the specified target property <paramref name="targetProperty"/>.
-            In case no such option parser exists yet a new one will be created.
-            </summary>
-            <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
-            <param name="targetProperty">The target property to get or create the option parser for.</param>
-            <returns>The option parser of the specified type and for the specified target property.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.TryGetOptionName(System.Reflection.PropertyInfo,System.String@)">
-            <summary>
-            Gets the name of the option that is associated with the given target property.
-            </summary>
-            <param name="targetProperty">The target property to get the option name for.</param>
-            <param name="optionName">The name of the option that is associated with the given target property.</param>
-            <returns>True if an option exists that is associated with the given target property; otherwise, false.</returns>
-        </member>
         <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.CanOptionParserUseOptionName(ParseTheArgs.Parsers.Options.OptionParser,System.String)">
             <summary>
             Determines whether the specified option parser can use the specified option name.
@@ -599,6 +591,14 @@
             <param name="optionParser">The option parser that wants to use the specified option name.</param>
             <param name="optionName">The option name to check.</param>
             <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Parsers.Commands.CommandParser`1.TryGetOptionName(System.Reflection.PropertyInfo,System.String@)">
+            <summary>
+            Gets the name of the option that is associated with the given target property.
+            </summary>
+            <param name="targetProperty">The target property to get the option name for.</param>
+            <param name="optionName">The name of the option that is associated with the given target property.</param>
+            <returns>True if an option exists that is associated with the given target property; otherwise, false.</returns>
         </member>
         <member name="T:ParseTheArgs.Parsers.Commands.ICommandParser">
             <summary>
@@ -654,19 +654,19 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Boolean"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Options.BooleanOptionParser.OptionType">
-            <summary>
-            The type of the option the parser parses.
-            </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Boolean" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.BooleanOptionParser.IsOptionRequired">
             <summary>
             Determines if the option is required.
             Since this option type does not have a value (it is a switch option) it can never be required.
+            </summary>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Options.BooleanOptionParser.OptionType">
+            <summary>
+            The type of the option the parser parses.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.BooleanOptionParser.Parse(System.Collections.Generic.List{ParseTheArgs.Tokens.Token},ParseTheArgs.ParseResult)">
@@ -687,9 +687,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.DateTimeListOptionParser.DateTimeFormat">
             <summary>
@@ -729,9 +729,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.DateTime"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.DateTime" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.DateTimeOptionParser.DateTimeFormat">
             <summary>
@@ -771,9 +771,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.DecimalListOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
             <summary>
@@ -795,9 +795,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Decimal"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Decimal" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.DecimalOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Decimal@)">
             <summary>
@@ -820,9 +820,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.EnumListOptionParser`1.EnumValuesHelps">
             <summary>
@@ -856,9 +856,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <typeparamref name="TEnum"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <typeparamref name="TEnum" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.EnumOptionParser`1.EnumValuesHelps">
             <summary>
@@ -891,9 +891,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.GuidListOptionParser.GuidFormat">
             <summary>
@@ -921,9 +921,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Guid"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Guid" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.GuidOptionParser.GuidFormat">
             <summary>
@@ -951,9 +951,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.Int64ListOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>
@@ -975,9 +975,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Int64"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Int64" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.Int64OptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.Int64@)">
             <summary>
@@ -1088,12 +1088,17 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.TargetProperty">
+        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.IsOptionRequired">
             <summary>
-            Defines the property where the value of the option will be stored.
+            Determines if the option is required.
+            </summary>
+        </member>
+        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.OptionHelp">
+            <summary>
+            Defines the help text of the option.
             </summary>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.OptionParser.OptionName">
@@ -1106,14 +1111,9 @@
             The type of the option the parser parses.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.IsOptionRequired">
+        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.TargetProperty">
             <summary>
-            Determines if the option is required.
-            </summary>
-        </member>
-        <member name="P:ParseTheArgs.Parsers.Options.OptionParser.OptionHelp">
-            <summary>
-            Defines the help text of the option.
+            Defines the property where the value of the option will be stored.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.OptionParser.GetHelpText">
@@ -1199,9 +1199,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.StringListOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
             <summary>
@@ -1223,9 +1223,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.String"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.String" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="M:ParseTheArgs.Parsers.Options.StringOptionParser.TryParseValue(System.String,ParseTheArgs.ParseResult,System.String@)">
             <summary>
@@ -1247,9 +1247,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.Collections.Generic.List`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.Collections.Generic.List`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.TimeSpanListOptionParser.FormatProvider">
             <summary>
@@ -1289,9 +1289,9 @@
             </summary>
             <param name="targetProperty">The property where the value of the option will be stored.</param>
             <param name="optionName">The name of the option the parser parses.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="T:System.TimeSpan"/> or <see cref="T:System.Nullable`1"/>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="T:System.TimeSpan" /> or <see cref="T:System.Nullable`1" />.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         </member>
         <member name="P:ParseTheArgs.Parsers.Options.TimeSpanOptionParser.FormatProvider">
             <summary>
@@ -1409,8 +1409,8 @@
             </summary>
             <param name="parser">The parser the command belongs to.</param>
             <param name="commandParser">The command parser for the command.</param>
-            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="parser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
         </member>
         <member name="P:ParseTheArgs.Setup.Commands.CommandSetup`1.CommandParser">
             <summary>
@@ -1584,8 +1584,8 @@
             </summary>
             <param name="parser">The parser the command belongs to.</param>
             <param name="commandParser">The command parser for the command.</param>
-            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="parser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.DefaultCommandSetup`1.ExampleUsage(System.String)">
             <summary>
@@ -1621,17 +1621,8 @@
             </summary>
             <param name="parser">The parser the command belongs to.</param>
             <param name="commandParser">The command parser for the command.</param>
-            <exception cref="T:System.ArgumentException"><paramref name="parser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        </member>
-        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Name(System.String)">
-            <summary>
-            Sets the name of the command.
-            Initially (until this method is called) the name of the given <typeparamref name="TCommandOptions" /> type (converted to lower camel case, see <see cref="M:ParseTheArgs.Extensions.StringExtensions.ToCamelCase(System.String)" />) will be used as name for the command.
-            </summary>
-            <param name="name">The name of the command.</param>
-            <returns>A reference to this instance for further configuration of the command.</returns>
-            <exception cref="T:System.ArgumentException">Thrown if another command with the same name already exists.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="parser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.ExampleUsage(System.String)">
             <summary>
@@ -1646,6 +1637,15 @@
             </summary>
             <param name="help">The help text for the command.</param>
             <returns>A reference to this instance for further configuration of the command.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Name(System.String)">
+            <summary>
+            Sets the name of the command.
+            Initially (until this method is called) the name of the given <typeparamref name="TCommandOptions" /> type (converted to lower camel case, see <see cref="M:ParseTheArgs.Extensions.StringExtensions.ToCamelCase(System.String)" />) will be used as name for the command.
+            </summary>
+            <param name="name">The name of the command.</param>
+            <returns>A reference to this instance for further configuration of the command.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if another command with the same name already exists.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Commands.NamedCommandSetup`1.Validate(System.Action{ParseTheArgs.Validation.CommandValidatorContext{`0}})">
             <summary>
@@ -1668,8 +1668,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1">
             <summary>
@@ -1683,8 +1683,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DateTimeListOptionSetup`1.Format(System.String)">
             <summary>
@@ -1722,8 +1722,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DateTimeOptionSetup`1.Format(System.String)">
             <summary>
@@ -1761,8 +1761,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DecimalListOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1792,8 +1792,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.DecimalOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1824,8 +1824,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.EnumListOptionSetup`2.EnumValueHelp(`1,System.String)">
             <summary>
@@ -1848,8 +1848,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.EnumOptionSetup`2.EnumValueHelp(`1,System.String)">
             <summary>
@@ -1871,8 +1871,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.GuidListOptionSetup`1.Format(System.String)">
             <summary>
@@ -1894,8 +1894,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.GuidOptionSetup`1.Format(System.String)">
             <summary>
@@ -1917,8 +1917,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.Int64ListOptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1948,8 +1948,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.Int64OptionSetup`1.FormatProvider(System.IFormatProvider)">
             <summary>
@@ -1982,8 +1982,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.MultiValueOptionSetup`4.DefaultValue(System.Collections.Generic.List{`3})">
             <summary>
@@ -2014,8 +2014,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.OptionSetup`3.Help(System.String)">
             <summary>
@@ -2033,14 +2033,14 @@
             <returns>A reference to this instance for further configuration.</returns>
             <exception cref="T:System.ArgumentException">Throw if another option with the same name as the given one already exists for the command the option belongs to.</exception>
         </member>
-        <member name="F:ParseTheArgs.Setup.Options.OptionSetup`3.optionParser">
-            <summary>
-            Defines the parser for the option.
-            </summary>
-        </member>
         <member name="F:ParseTheArgs.Setup.Options.OptionSetup`3.commandParser">
             <summary>
             Defines the parser for the command the option belongs to.
+            </summary>
+        </member>
+        <member name="F:ParseTheArgs.Setup.Options.OptionSetup`3.optionParser">
+            <summary>
+            Defines the parser for the option.
             </summary>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.SingleValueOptionSetup`4">
@@ -2058,8 +2058,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.SingleValueOptionSetup`4.DefaultValue(`3)">
             <summary>
@@ -2088,8 +2088,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.StringOptionSetup`1">
             <summary>
@@ -2103,8 +2103,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="T:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1">
             <summary>
@@ -2118,8 +2118,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.TimeSpanListOptionSetup`1.Format(System.String)">
             <summary>
@@ -2157,8 +2157,8 @@
             </summary>
             <param name="commandParser">The parser for the command the option belongs to.</param>
             <param name="optionParser">The parser for the option.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.Options.TimeSpanOptionSetup`1.Format(System.String)">
             <summary>
@@ -2195,30 +2195,13 @@
             Initializes a new instance of this class.
             </summary>
             <param name="parser">The parser this instance should set up.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="parser"/> is null.</exception>
-        </member>
-        <member name="M:ParseTheArgs.Setup.ParserSetup.ProgramName(System.String)">
-            <summary>
-            Sets the name of the program to display in help texts.
-            
-            Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
-            </summary>
-            <param name="programName">The name of the program to display in help texts.</param>
-            <returns>A reference to this instance for further configuration.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="parser" /> is null.</exception>
         </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.Banner(System.String)">
             <summary>
             Sets a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)" /> or <see cref="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)" />).
             </summary>
             <param name="banner">The banner text to display in help texts.</param>
-            <returns>A reference to this instance for further configuration.</returns>
-        </member>
-        <member name="M:ParseTheArgs.Setup.ParserSetup.HelpTextMaxLineLength(System.Int32)">
-            <summary>
-            Sets the maximum length a line of a help text can have.
-            When this method is not called, the current width of the console window is used.
-            </summary>
-            <param name="maxLineLength">The maximum length a line of a help text can have.</param>
             <returns>A reference to this instance for further configuration.</returns>
         </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.Command``1">
@@ -2249,7 +2232,15 @@
             </summary>
             <param name="textWriter">The text writer to write error messages to.</param>
             <returns>A reference to this instance for further configuration.</returns>
-            <remarks>The default is <see cref="P:System.Console.Error"/>.</remarks>
+            <remarks>The default is <see cref="P:System.Console.Error" />.</remarks>
+        </member>
+        <member name="M:ParseTheArgs.Setup.ParserSetup.HelpTextMaxLineLength(System.Int32)">
+            <summary>
+            Sets the maximum length a line of a help text can have.
+            When this method is not called, the current width of the console window is used.
+            </summary>
+            <param name="maxLineLength">The maximum length a line of a help text can have.</param>
+            <returns>A reference to this instance for further configuration.</returns>
         </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.HelpTextWriter(System.IO.TextWriter)">
             <summary>
@@ -2260,7 +2251,7 @@
             </summary>
             <param name="textWriter">The text writer to write help messages to.</param>
             <returns>A reference to this instance for further configuration.</returns>
-            <remarks>The default is <see cref="P:System.Console.Out"/>.</remarks>
+            <remarks>The default is <see cref="P:System.Console.Out" />.</remarks>
         </member>
         <member name="M:ParseTheArgs.Setup.ParserSetup.IgnoreUnknownOptions">
             <summary>
@@ -2269,6 +2260,15 @@
             The default behavior is that unknown options will cause parse errors (see <see cref="P:ParseTheArgs.ParseResult.Errors" />) when they encountered during parsing.
             After this method has been called unknown options will be ignored, so they will not cause errors.
             </summary>
+            <returns>A reference to this instance for further configuration.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Setup.ParserSetup.ProgramName(System.String)">
+            <summary>
+            Sets the name of the program to display in help texts.
+            
+            Initially (until a program name is set by calling this method) the name of the current process will be used as the program name.
+            </summary>
+            <param name="programName">The name of the program to display in help texts.</param>
             <returns>A reference to this instance for further configuration.</returns>
         </member>
         <member name="T:ParseTheArgs.Tokens.CommandLineArgumentsTokenizer">
@@ -2350,8 +2350,8 @@
             </summary>
             <param name="commandParser">The parser of the command.</param>
             <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="parseResult"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="parseResult" /> is null.</exception>
         </member>
         <member name="P:ParseTheArgs.Validation.CommandValidatorContext`1.CommandOptions">
             <summary>

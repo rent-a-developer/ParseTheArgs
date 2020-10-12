@@ -29,7 +29,7 @@ namespace ParseTheArgs.Tokens
             while (argumentsToTokenize.Any())
             {
                 var argument = argumentsToTokenize[0];
-                
+
                 if (argument.StartsWith("--") || argument.StartsWith("-"))
                 {
                     var optionName = argument.StartsWith("--") ? argument.Substring(2) : argument.Substring(1);

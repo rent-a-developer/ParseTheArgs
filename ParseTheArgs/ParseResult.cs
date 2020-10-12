@@ -23,19 +23,14 @@ namespace ParseTheArgs
         }
 
         /// <summary>
-        /// Defines the Object that holds the options of the parsed command.
-        /// </summary>
-        public virtual Object? CommandOptions { get; internal set; }
-
-        /// <summary>
         /// Defines the name of the command that was found in the parsed command line arguments.
         /// </summary>
         public virtual String CommandName { get; internal set; }
 
         /// <summary>
-        /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
+        /// Defines the Object that holds the options of the parsed command.
         /// </summary>
-        public virtual Boolean IsHelpCalled { get; internal set; }
+        public virtual Object? CommandOptions { get; internal set; }
 
         /// <summary>
         /// A list of errors found during parsing.
@@ -46,6 +41,11 @@ namespace ParseTheArgs
         /// Determines if errors where found during parsing.
         /// </summary>
         public virtual Boolean HasErrors => this.errors.Count > 0;
+
+        /// <summary>
+        /// Determines whether the command line was just used to get the help of the program (e.g. no command and/or options where passed or the help command was specified).
+        /// </summary>
+        public virtual Boolean IsHelpCalled { get; internal set; }
 
         /// <summary>
         /// Adds a parse error to this instance.
@@ -63,11 +63,11 @@ namespace ParseTheArgs
 
         /// <summary>
         /// Sets up a command handler for a specific command.
-        /// The handler will be invoked when the <see cref="Handle"/> method is called and <see cref="CommandOptions"/> is of type <typeparamref name="TCommandOptions"/>.
-        /// The return value of the specified handler is returned by the <see cref="Handle"/> method when the handler is invoked.
+        /// The handler will be invoked when the <see cref="Handle" /> method is called and <see cref="CommandOptions" /> is of type <typeparamref name="TCommandOptions" />.
+        /// The return value of the specified handler is returned by the <see cref="Handle" /> method when the handler is invoked.
         /// </summary>
         /// <typeparam name="TCommandOptions">The type of the command options the handler handles.</typeparam>
-        /// <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions"/>.</param>
+        /// <param name="commandHandler">The handler that handles the command options of type <typeparamref name="TCommandOptions" />.</param>
         public virtual void CommandHandler<TCommandOptions>(Func<TCommandOptions, Int32> commandHandler)
         {
             if (commandHandler == null)
@@ -80,8 +80,8 @@ namespace ParseTheArgs
 
         /// <summary>
         /// Sets up an error handler.
-        /// The handler will be invoked when <see cref="Handle"/> is called and <see cref="HasErrors"/> is true.
-        /// The return value of the specified handler is returned by the <see cref="Handle"/> method when the handler is invoked.
+        /// The handler will be invoked when <see cref="Handle" /> is called and <see cref="HasErrors" /> is true.
+        /// The return value of the specified handler is returned by the <see cref="Handle" /> method when the handler is invoked.
         /// </summary>
         /// <param name="errorHandler">The handler that handles the errors.</param>
         public virtual void ErrorHandler(Func<ParseResult, Int32> errorHandler)
@@ -96,15 +96,15 @@ namespace ParseTheArgs
 
         /// <summary>
         /// Handles the result of the command line parsing.
-        /// The command handler that was set up (via the <see cref="CommandHandler{TCommandOptions}"/> method) for the current command will be invoked.
-        /// In case <see cref="HasErrors"/> is true, the error handler that was set up (via the <see cref="ErrorHandler"/> method) will be invoked.
+        /// The command handler that was set up (via the <see cref="CommandHandler{TCommandOptions}" /> method) for the current command will be invoked.
+        /// In case <see cref="HasErrors" /> is true, the error handler that was set up (via the <see cref="ErrorHandler" /> method) will be invoked.
         /// </summary>
         /// <returns>
         /// The return value of the command handler that was set up for the current command.
         /// If no command handler was set up for the current command 0 will be returned.
         /// 
-        /// If <see cref="HasErrors"/> is true and an error handler was set up the return value of the error handler will be returned.
-        /// If <see cref="HasErrors"/> is true and no error handler was set up 0 will be returned.
+        /// If <see cref="HasErrors" /> is true and an error handler was set up the return value of the error handler will be returned.
+        /// If <see cref="HasErrors" /> is true and no error handler was set up 0 will be returned.
         /// </returns>
         public virtual Int32 Handle()
         {
@@ -145,8 +145,9 @@ namespace ParseTheArgs
             return 0;
         }
 
-        private readonly List<IParseError> errors;
         private readonly Dictionary<Type, Delegate> commandHandlers;
+
+        private readonly List<IParseError> errors;
         private Delegate? errorHandler;
     }
 }

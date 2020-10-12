@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using ParseTheArgs.Errors;
 using ParseTheArgs.Parsers.Commands;
@@ -18,8 +17,8 @@ namespace ParseTheArgs.Validation
         /// </summary>
         /// <param name="commandParser">The parser of the command.</param>
         /// <param name="parseResult">The (preliminary) result of the command line arguments parsing.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="parseResult"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parseResult" /> is null.</exception>
         public CommandValidatorContext(CommandParser<TCommandOptions> commandParser, ParseResult parseResult)
         {
             if (commandParser == null)

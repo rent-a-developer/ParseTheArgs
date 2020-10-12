@@ -23,8 +23,8 @@ namespace ParseTheArgs.Setup.Options
         /// </summary>
         /// <param name="commandParser">The parser for the command the option belongs to.</param>
         /// <param name="optionParser">The parser for the option.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="optionParser"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="optionParser" /> is null.</exception>
         protected SingleValueOptionSetup(CommandParser<TCommandOptions> commandParser, TOptionParser optionParser) : base(commandParser, optionParser)
         {
         }

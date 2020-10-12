@@ -15,8 +15,8 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
         /// <param name="commandParser">The command parser for the command.</param>
-        /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="parser" /> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
         internal DefaultCommandSetup(Parser parser, CommandParser<TCommandOptions> commandParser) : base(parser, commandParser)
         {
         }

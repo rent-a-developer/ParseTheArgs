@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tokens;
 
 namespace ParseTheArgs.Parsers.Commands

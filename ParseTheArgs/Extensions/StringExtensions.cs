@@ -154,7 +154,7 @@ namespace ParseTheArgs.Extensions
 
             if (text == String.Empty)
             {
-                return new String[] { String.Empty };
+                return new String[] {String.Empty};
             }
 
             var pattern = @"(?<line>.{1," + lineLength + @"})(?<!\s)(\s+|$)|(?<line>.+?)(\s+|$)";

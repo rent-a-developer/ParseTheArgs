@@ -16,28 +16,10 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="parser">The parser the command belongs to.</param>
         /// <param name="commandParser">The command parser for the command.</param>
-        /// <exception cref="ArgumentException"><paramref name="parser"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="commandParser"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="parser" /> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="commandParser" /> is null.</exception>
         internal NamedCommandSetup(Parser parser, CommandParser<TCommandOptions> commandParser) : base(parser, commandParser)
         {
-        }
-
-        /// <summary>
-        /// Sets the name of the command.
-        /// Initially (until this method is called) the name of the given <typeparamref name="TCommandOptions" /> type (converted to lower camel case, see <see cref="StringExtensions.ToCamelCase" />) will be used as name for the command.
-        /// </summary>
-        /// <param name="name">The name of the command.</param>
-        /// <returns>A reference to this instance for further configuration of the command.</returns>
-        /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
-        public NamedCommandSetup<TCommandOptions> Name(String name)
-        {
-            if (!this.Parser.CanCommandParserUseCommandName(this.CommandParser, name))
-            {
-                throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
-            }
-
-            this.CommandParser.CommandName = name;
-            return this;
         }
 
         /// <summary>
@@ -59,6 +41,24 @@ namespace ParseTheArgs.Setup.Commands
         public NamedCommandSetup<TCommandOptions> Help(String help)
         {
             this.CommandParser.CommandHelp = help;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the command.
+        /// Initially (until this method is called) the name of the given <typeparamref name="TCommandOptions" /> type (converted to lower camel case, see <see cref="StringExtensions.ToCamelCase" />) will be used as name for the command.
+        /// </summary>
+        /// <param name="name">The name of the command.</param>
+        /// <returns>A reference to this instance for further configuration of the command.</returns>
+        /// <exception cref="ArgumentException">Thrown if another command with the same name already exists.</exception>
+        public NamedCommandSetup<TCommandOptions> Name(String name)
+        {
+            if (!this.Parser.CanCommandParserUseCommandName(this.CommandParser, name))
+            {
+                throw new ArgumentException($"The given command name '{name}' is already in use by another command. Please use a different name.", nameof(name));
+            }
+
+            this.CommandParser.CommandName = name;
             return this;
         }
 

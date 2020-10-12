@@ -21,7 +21,7 @@ namespace ParseTheArgs.Parsers.Commands
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command parser belongs to.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parser" /> is null.</exception>
         public CommandParser(Parser parser)
         {
             if (parser == null)
@@ -49,7 +49,7 @@ namespace ParseTheArgs.Parsers.Commands
 
         /// <summary>
         /// Defines the name of the command.
-        /// Will be <see cref="String.Empty"/> if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
+        /// Will be <see cref="String.Empty" /> if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
         /// </summary>
         public virtual String CommandName { get; set; }
 
@@ -99,7 +99,7 @@ namespace ParseTheArgs.Parsers.Commands
                 var optionHelpText = optionParser.GetHelpText();
                 var optionHelpTextWrappedLines = optionHelpText.WordWrap(this.parser.HelpTextMaxLineLength - optionHelpRightPadding);
 
-                for (int i = 0; i < optionHelpTextWrappedLines.Length; i++)
+                for (var i = 0; i < optionHelpTextWrappedLines.Length; i++)
                 {
                     if (i == 0)
                     {
@@ -123,6 +123,28 @@ namespace ParseTheArgs.Parsers.Commands
             }
 
             return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Gets an existing option parser of type <typeparamref name="TOptionParser" /> for the specified target property <paramref name="targetProperty" />.
+        /// In case no such option parser exists yet a new one will be created.
+        /// </summary>
+        /// <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
+        /// <param name="targetProperty">The target property to get or create the option parser for.</param>
+        /// <returns>The option parser of the specified type and for the specified target property.</returns>
+        public virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
+            where TOptionParser : OptionParser
+        {
+            var optionParser = this.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);
+
+            if (optionParser == null)
+            {
+                optionParser = Dependencies.Resolver.Resolve<TOptionParser>(targetProperty, targetProperty.Name.ToCamelCase());
+
+                this.OptionParsers.Add(optionParser);
+            }
+
+            return optionParser;
         }
 
         /// <summary>
@@ -163,29 +185,20 @@ namespace ParseTheArgs.Parsers.Commands
             }
         }
 
-        /// <summary>
-        /// Gets an existing option parser of type <typeparamref name="TOptionParser"/> for the specified target property <paramref name="targetProperty"/>.
-        /// In case no such option parser exists yet a new one will be created.
-        /// </summary>
-        /// <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
-        /// <param name="targetProperty">The target property to get or create the option parser for.</param>
-        /// <returns>The option parser of the specified type and for the specified target property.</returns>
-        public virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
-            where TOptionParser : OptionParser
-        {
-            var optionParser = this.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);
-
-            if (optionParser == null)
-            {
-                optionParser = Dependencies.Resolver.Resolve<TOptionParser>(targetProperty, targetProperty.Name.ToCamelCase());
-
-                this.OptionParsers.Add(optionParser);
-            }
-
-            return optionParser;
-        }
-
         internal List<OptionParser> OptionParsers { get; }
+
+        /// <summary>
+        /// Determines whether the specified option parser can use the specified option name.
+        /// If no other option parser than the specified one currently uses the specified option name this method returns true.
+        /// In another option parser than the specified one currently uses the specified option name this method returns false.
+        /// </summary>
+        /// <param name="optionParser">The option parser that wants to use the specified option name.</param>
+        /// <param name="optionName">The option name to check.</param>
+        /// <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
+        internal virtual Boolean CanOptionParserUseOptionName(OptionParser optionParser, String optionName)
+        {
+            return !this.OptionParsers.Any(a => a.OptionName == optionName && a != optionParser);
+        }
 
         /// <summary>
         /// Gets the name of the option that is associated with the given target property.
@@ -205,19 +218,6 @@ namespace ParseTheArgs.Parsers.Commands
 
             optionName = optionParser.OptionName;
             return true;
-        }
-
-        /// <summary>
-        /// Determines whether the specified option parser can use the specified option name.
-        /// If no other option parser than the specified one currently uses the specified option name this method returns true.
-        /// In another option parser than the specified one currently uses the specified option name this method returns false.
-        /// </summary>
-        /// <param name="optionParser">The option parser that wants to use the specified option name.</param>
-        /// <param name="optionName">The option name to check.</param>
-        /// <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
-        internal virtual Boolean CanOptionParserUseOptionName(OptionParser optionParser, String optionName)
-        {
-            return !this.OptionParsers.Any(a => a.OptionName == optionName && a != optionParser);
         }
 
         private static String GetOptionLongHelpPart(OptionParser optionParser)

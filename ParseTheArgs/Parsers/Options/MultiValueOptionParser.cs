@@ -91,7 +91,8 @@ namespace ParseTheArgs.Parsers.Options
         /// <returns>True if the given option value could be parsed; otherwise false.</returns>
         protected abstract Boolean TryParseValue(String optionValue, ParseResult parseResult, out TOptionValue resultValue);
 
-        private List<TOptionValue>? optionDefaultValue;
         private Boolean isOptionDefaultValueSet;
+
+        private List<TOptionValue>? optionDefaultValue;
     }
 }

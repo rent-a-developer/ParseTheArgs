@@ -18,9 +18,9 @@ namespace ParseTheArgs.Parsers.Options
         /// </summary>
         /// <param name="targetProperty">The property where the value of the option will be stored.</param>
         /// <param name="optionName">The name of the option the parser parses.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="targetProperty"/> does not have the property type <see cref="Boolean"/> or <see cref="Nullable{Boolean}"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="targetProperty" /> does not have the property type <see cref="Boolean" /> or <see cref="Nullable{Boolean}" />.</exception>
+        /// <exception cref="ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         public BooleanOptionParser(PropertyInfo targetProperty, String optionName) : base(targetProperty, optionName)
         {
             if (targetProperty.PropertyType != typeof(Boolean) && targetProperty.PropertyType != typeof(Nullable<Boolean>))
@@ -30,15 +30,15 @@ namespace ParseTheArgs.Parsers.Options
         }
 
         /// <summary>
-        /// The type of the option the parser parses.
-        /// </summary>
-        public override OptionType OptionType => OptionType.ValuelessOption;
-
-        /// <summary>
         /// Determines if the option is required.
         /// Since this option type does not have a value (it is a switch option) it can never be required.
         /// </summary>
         public override Boolean IsOptionRequired => false;
+
+        /// <summary>
+        /// The type of the option the parser parses.
+        /// </summary>
+        public override OptionType OptionType => OptionType.ValuelessOption;
 
         /// <summary>
         /// Parses the given tokens and puts the result of the parsing into the given parse result object.

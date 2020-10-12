@@ -1,14 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParseTheArgs
 {
     internal class ConsoleHelper
     {
+        public virtual TextWriter GetConsoleErrorWriter()
+        {
+            return Console.Error;
+        }
+
+        public virtual TextWriter GetConsoleOutWriter()
+        {
+            return Console.Out;
+        }
+
+        public virtual Int32 GetConsoleWindowWidth()
+        {
+            return Console.WindowWidth;
+        }
+
         public virtual Boolean IsConsolePresent()
         {
             try
@@ -22,21 +33,6 @@ namespace ParseTheArgs
             {
                 return false;
             }
-        }
-
-        public virtual TextWriter GetConsoleOutWriter()
-        {
-            return Console.Out;
-        }
-
-        public virtual TextWriter GetConsoleErrorWriter()
-        {
-            return Console.Error;
-        }
-
-        public virtual Int32 GetConsoleWindowWidth()
-        {
-            return Console.WindowWidth;
         }
     }
 }

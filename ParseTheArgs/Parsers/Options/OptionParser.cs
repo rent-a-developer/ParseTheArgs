@@ -15,8 +15,8 @@ namespace ParseTheArgs.Parsers.Options
         /// </summary>
         /// <param name="targetProperty">The property where the value of the option will be stored.</param>
         /// <param name="optionName">The name of the option the parser parses.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="targetProperty"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="optionName"/> is null or an empty string.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="targetProperty" /> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="optionName" /> is null or an empty string.</exception>
         protected OptionParser(PropertyInfo targetProperty, String optionName)
         {
             if (targetProperty == null)
@@ -36,9 +36,14 @@ namespace ParseTheArgs.Parsers.Options
         }
 
         /// <summary>
-        /// Defines the property where the value of the option will be stored.
+        /// Determines if the option is required.
         /// </summary>
-        public virtual PropertyInfo TargetProperty { get; }
+        public virtual Boolean IsOptionRequired { get; set; }
+
+        /// <summary>
+        /// Defines the help text of the option.
+        /// </summary>
+        public virtual String OptionHelp { get; set; }
 
         /// <summary>
         /// The name of the option the parser parses.
@@ -51,14 +56,9 @@ namespace ParseTheArgs.Parsers.Options
         public abstract OptionType OptionType { get; }
 
         /// <summary>
-        /// Determines if the option is required.
+        /// Defines the property where the value of the option will be stored.
         /// </summary>
-        public virtual Boolean IsOptionRequired { get; set; }
-
-        /// <summary>
-        /// Defines the help text of the option.
-        /// </summary>
-        public virtual String OptionHelp { get; set; }
+        public virtual PropertyInfo TargetProperty { get; }
 
         /// <summary>
         /// Gets the help text of the option.

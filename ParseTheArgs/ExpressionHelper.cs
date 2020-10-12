@@ -15,16 +15,16 @@ namespace ParseTheArgs
         /// </summary>
         /// <param name="propertyExpression">The expression to extract the property from.</param>
         /// <returns>The property that was extracted from the given expression.</returns>
-        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is not a access call to a property.</exception>
-        /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is accessing a property that does not have a public setter.</exception>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression" /> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression" /> is not a access call to a property.</exception>
+        /// <exception cref="ArgumentException"><paramref name="propertyExpression" /> is accessing a property that does not have a public setter.</exception>
         /// <example>
         /// <code>
         /// class Item
         /// {
         ///     public Int32 PropertyA { get; set; }
         /// }
-        ///
+        /// 
         /// Expression{Func{Item, Object}} expression = ((item) => item.PropertyA)
         /// ExpressionHelper.GetPropertyFromPropertyExpression(expression);  // returns same as typeof(Item).GetProperty("PropertyA") would.
         /// </code>

@@ -353,11 +353,6 @@
             Initializes a new instance of this class.
             </summary>
         </member>
-        <member name="P:ParseTheArgs.Parser.Setup">
-            <summary>
-            Gets the setup for the parser that allows to configure the parser.
-            </summary>
-        </member>
         <member name="P:ParseTheArgs.Parser.Banner">
             <summary>
             Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="M:ParseTheArgs.Parser.GetHelpText(System.Boolean)" /> or <see cref="M:ParseTheArgs.Parser.GetErrorsText(ParseTheArgs.ParseResult,System.Boolean)" />).
@@ -367,19 +362,19 @@
             <summary>
             Defines the text writer to write error messages to.
             </summary>
-            <remarks>The default is <see cref="P:System.Console.Error"/>.</remarks>
-        </member>
-        <member name="P:ParseTheArgs.Parser.HelpTextWriter">
-            <summary>
-            Defines the text writer to write help messages to.
-            </summary>
-            <remarks>The default is <see cref="P:System.Console.Out"/>.</remarks>
+            <remarks>The default is <see cref="P:System.Console.Error" />.</remarks>
         </member>
         <member name="P:ParseTheArgs.Parser.HelpTextMaxLineLength">
             <summary>
             Defines the maximum length a line of a help text can have.
             If not explicitly set via <see cref="M:ParseTheArgs.Setup.ParserSetup.HelpTextMaxLineLength(System.Int32)" /> the current width of the console width is used or, if no console is available, <see cref="F:System.Int32.MaxValue" /> is used.
             </summary>
+        </member>
+        <member name="P:ParseTheArgs.Parser.HelpTextWriter">
+            <summary>
+            Defines the text writer to write help messages to.
+            </summary>
+            <remarks>The default is <see cref="P:System.Console.Out" />.</remarks>
         </member>
         <member name="P:ParseTheArgs.Parser.IgnoreUnknownOptions">
             <summary>
@@ -389,6 +384,11 @@
         <member name="P:ParseTheArgs.Parser.ProgramName">
             <summary>
             Defines the name of the program to display in help texts.
+            </summary>
+        </member>
+        <member name="P:ParseTheArgs.Parser.Setup">
+            <summary>
+            Gets the setup for the parser that allows to configure the parser.
             </summary>
         </member>
         <member name="M:ParseTheArgs.Parser.GetCommandHelpText(System.String,System.Boolean)">
@@ -422,15 +422,6 @@
             <param name="args">The command line arguments to parse.</param>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:ParseTheArgs.Parser.GetOrCreateCommandParser``1(System.String)">
-            <summary>
-            Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions"/>) and the specified command name.
-            In case no such command parser exists yet a new one will be created.
-            </summary>
-            <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
-            <param name="commandName">The name of the command. If not specified (null) the command parser for the default command will be returned.</param>
-            <returns>The command parser for the specified command.</returns>
-        </member>
         <member name="M:ParseTheArgs.Parser.CanCommandParserUseCommandName(ParseTheArgs.Parsers.Commands.ICommandParser,System.String)">
             <summary>
             Determines whether the specified command parser can use the specified command name.
@@ -440,6 +431,15 @@
             <param name="commandParser">The command parser that wants to use the specified command name.</param>
             <param name="commandName">The command name to check.</param>
             <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
+        </member>
+        <member name="M:ParseTheArgs.Parser.GetOrCreateCommandParser``1(System.String)">
+            <summary>
+            Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions" />) and the specified command name.
+            In case no such command parser exists yet a new one will be created.
+            </summary>
+            <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
+            <param name="commandName">The name of the command. If not specified (null) the command parser for the default command will be returned.</param>
+            <returns>The command parser for the specified command.</returns>
         </member>
         <member name="T:ParseTheArgs.ParseResult">
             <summary>

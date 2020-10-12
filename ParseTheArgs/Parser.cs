@@ -42,11 +42,6 @@ namespace ParseTheArgs
         }
 
         /// <summary>
-        /// Gets the setup for the parser that allows to configure the parser.
-        /// </summary>
-        public ParserSetup Setup { get; }
-
-        /// <summary>
         /// Defines a banner text to display at the beginning of help texts and error texts (e.g. in the return value of <see cref="Parser.GetHelpText" /> or <see cref="Parser.GetErrorsText" />).
         /// </summary>
         public virtual String Banner { get; set; }
@@ -54,20 +49,20 @@ namespace ParseTheArgs
         /// <summary>
         /// Defines the text writer to write error messages to.
         /// </summary>
-        /// <remarks>The default is <see cref="Console.Error"/>.</remarks>
+        /// <remarks>The default is <see cref="Console.Error" />.</remarks>
         public virtual TextWriter? ErrorTextWriter { get; set; }
-
-        /// <summary>
-        /// Defines the text writer to write help messages to.
-        /// </summary>
-        /// <remarks>The default is <see cref="Console.Out"/>.</remarks>
-        public virtual TextWriter? HelpTextWriter { get; set; }
 
         /// <summary>
         /// Defines the maximum length a line of a help text can have.
         /// If not explicitly set via <see cref="ParserSetup.HelpTextMaxLineLength" /> the current width of the console width is used or, if no console is available, <see cref="Int32.MaxValue" /> is used.
         /// </summary>
         public virtual Int32 HelpTextMaxLineLength { get; set; }
+
+        /// <summary>
+        /// Defines the text writer to write help messages to.
+        /// </summary>
+        /// <remarks>The default is <see cref="Console.Out" />.</remarks>
+        public virtual TextWriter? HelpTextWriter { get; set; }
 
         /// <summary>
         /// Determines whether to ignore options that are unknown when options are parsed.
@@ -78,6 +73,11 @@ namespace ParseTheArgs
         /// Defines the name of the program to display in help texts.
         /// </summary>
         public virtual String ProgramName { get; set; }
+
+        /// <summary>
+        /// Gets the setup for the parser that allows to configure the parser.
+        /// </summary>
+        public ParserSetup Setup { get; }
 
         /// <summary>
         /// Gets the help text of the command with the given name.
@@ -149,6 +149,7 @@ namespace ParseTheArgs
                 stringBuilder.Append(" ");
                 stringBuilder.Append(parseResult.CommandName);
             }
+
             stringBuilder.AppendLine("");
 
             return stringBuilder.ToString();
@@ -220,21 +221,21 @@ namespace ParseTheArgs
             {
                 // There are no command line arguments specified, so print the help.
                 this.PrintHelp();
-                return new ParseResult { IsHelpCalled = true };
+                return new ParseResult {IsHelpCalled = true};
             }
 
             if (args.Length == 1 && args[0] == "help")
             {
                 // There is only one command line argument and it is 'help', so print the help.
                 this.PrintHelp();
-                return new ParseResult { IsHelpCalled = true };
+                return new ParseResult {IsHelpCalled = true};
             }
 
             if (args.Length == 2 && args[0] == "help")
             {
                 // There are only two command line argument and the first one is 'help', so the second must be a command name, so print the help for that command.
                 this.PrintCommandHelp(args[1]);
-                return new ParseResult { IsHelpCalled = true };
+                return new ParseResult {IsHelpCalled = true};
             }
 
             var result = new ParseResult();
@@ -286,8 +287,23 @@ namespace ParseTheArgs
             return result;
         }
 
+        internal List<ICommandParser> CommandParsers { get; }
+
         /// <summary>
-        /// Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions"/>) and the specified command name.
+        /// Determines whether the specified command parser can use the specified command name.
+        /// If no other command parser than the specified one currently uses the specified command name this method returns true.
+        /// In another command parser than the specified one currently uses the specified command name this method returns false.
+        /// </summary>
+        /// <param name="commandParser">The command parser that wants to use the specified command name.</param>
+        /// <param name="commandName">The command name to check.</param>
+        /// <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
+        internal virtual Boolean CanCommandParserUseCommandName(ICommandParser commandParser, String commandName)
+        {
+            return !this.CommandParsers.Any(a => a.CommandName == commandName && a != commandParser);
+        }
+
+        /// <summary>
+        /// Gets an existing command parser for the specified command options (<typeparamref name="TCommandOptions" />) and the specified command name.
         /// In case no such command parser exists yet a new one will be created.
         /// </summary>
         /// <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
@@ -317,19 +333,6 @@ namespace ParseTheArgs
             return commandParser;
         }
 
-        /// <summary>
-        /// Determines whether the specified command parser can use the specified command name.
-        /// If no other command parser than the specified one currently uses the specified command name this method returns true.
-        /// In another command parser than the specified one currently uses the specified command name this method returns false.
-        /// </summary>
-        /// <param name="commandParser">The command parser that wants to use the specified command name.</param>
-        /// <param name="commandName">The command name to check.</param>
-        /// <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
-        internal virtual Boolean CanCommandParserUseCommandName(ICommandParser commandParser, String commandName)
-        {
-            return !this.CommandParsers.Any(a => a.CommandName == commandName && a != commandParser);
-        }
-
         private void PrintCommandHelp(String command)
         {
             this.HelpTextWriter?.Write(this.GetCommandHelpText(command));
@@ -344,7 +347,5 @@ namespace ParseTheArgs
         {
             this.HelpTextWriter?.Write(this.GetHelpText());
         }
-
-        internal List<ICommandParser> CommandParsers { get; }
     }
 }

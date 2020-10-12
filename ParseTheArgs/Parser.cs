@@ -21,17 +21,19 @@ namespace ParseTheArgs
         /// </summary>
         public Parser()
         {
-            this.commandParsers = new List<ICommandParser>();
+            this.CommandParsers = new List<ICommandParser>();
             this.Setup = new ParserSetup(this);
 
             this.Banner = String.Empty;
             this.ProgramName = Process.GetCurrentProcess().ProcessName;
 
-            if (IsConsolePresent())
+            var consoleHelper = Dependencies.Resolver.Resolve<ConsoleHelper>();
+
+            if (consoleHelper.IsConsolePresent())
             {
-                this.HelpTextWriter = Console.Out;
-                this.ErrorTextWriter = Console.Error;
-                this.HelpTextMaxLineLength = Console.WindowWidth;
+                this.HelpTextWriter = consoleHelper.GetConsoleOutWriter();
+                this.ErrorTextWriter = consoleHelper.GetConsoleErrorWriter();
+                this.HelpTextMaxLineLength = consoleHelper.GetConsoleWindowWidth();
             }
             else
             {
@@ -93,7 +95,7 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine();
             }
 
-            var commandParser = this.commandParsers.FirstOrDefault(a => a.CommandName == commandName);
+            var commandParser = this.CommandParsers.FirstOrDefault(a => a.CommandName == commandName);
 
             if (commandParser == null)
             {
@@ -167,14 +169,14 @@ namespace ParseTheArgs
                 stringBuilder.AppendLine();
             }
 
-            var defaultCommandParser = this.commandParsers.FirstOrDefault(a => a.IsCommandDefault);
+            var defaultCommandParser = this.CommandParsers.FirstOrDefault(a => a.IsCommandDefault);
 
             if (defaultCommandParser != null)
             {
                 stringBuilder.AppendLine(defaultCommandParser.GetHelpText());
             }
 
-            var nonDefaultCommandParsers = this.commandParsers.Where(a => !a.IsCommandDefault).ToList();
+            var nonDefaultCommandParsers = this.CommandParsers.Where(a => !a.IsCommandDefault).ToList();
 
             if (nonDefaultCommandParsers.Any())
             {
@@ -241,7 +243,7 @@ namespace ParseTheArgs
 
             var commandTokens = tokens.OfType<CommandToken>().ToList();
 
-            if (commandTokens.Count == 0 && !this.commandParsers.Any(a => a.IsCommandDefault))
+            if (commandTokens.Count == 0 && !this.CommandParsers.Any(a => a.IsCommandDefault))
             {
                 result.AddError(new MissingCommandError());
                 this.PrintErrors(result);
@@ -262,8 +264,8 @@ namespace ParseTheArgs
                 }
                 else
                 {
-                    this.commandParsers.ForEach(a => a.Parse(tokens, result));
-                    this.commandParsers.ForEach(a => a.Validate(tokens, result));
+                    this.CommandParsers.ForEach(a => a.Parse(tokens, result));
+                    this.CommandParsers.ForEach(a => a.Validate(tokens, result));
 
                     tokens.OfType<CommandToken>().Where(a => !a.IsParsed).ToList().ForEach(a => result.AddError(new UnknownCommandError(a.CommandName)));
 
@@ -292,7 +294,7 @@ namespace ParseTheArgs
         internal virtual CommandParser<TCommandOptions> GetOrCreateCommandParser<TCommandOptions>(String? commandName = null)
             where TCommandOptions : class
         {
-            var commandParser = this.commandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault(a => String.IsNullOrEmpty(commandName) ? a.IsCommandDefault : a.CommandName == commandName);
+            var commandParser = this.CommandParsers.OfType<CommandParser<TCommandOptions>>().FirstOrDefault(a => String.IsNullOrEmpty(commandName) ? a.IsCommandDefault : a.CommandName == commandName);
 
             if (commandParser == null)
             {
@@ -307,7 +309,7 @@ namespace ParseTheArgs
                     commandParser.CommandName = commandName!;
                 }
 
-                this.commandParsers.Add(commandParser);
+                this.CommandParsers.Add(commandParser);
             }
 
             return commandParser;
@@ -323,7 +325,7 @@ namespace ParseTheArgs
         /// <returns>True if no command parser other than the specified one currently uses the specified command name; otherwise, false.</returns>
         internal virtual Boolean CanCommandParserUseCommandName(ICommandParser commandParser, String commandName)
         {
-            return !this.commandParsers.Any(a => a.CommandName == commandName && a != commandParser);
+            return !this.CommandParsers.Any(a => a.CommandName == commandName && a != commandParser);
         }
 
         private void PrintCommandHelp(String command)
@@ -341,21 +343,6 @@ namespace ParseTheArgs
             this.HelpTextWriter?.Write(this.GetHelpText());
         }
 
-        private readonly List<ICommandParser> commandParsers;
-
-        private static Boolean IsConsolePresent()
-        {
-            try
-            {
-#pragma warning disable S1481 // Unused local variables should be removed
-                var windowHeight = Console.WindowHeight;
-#pragma warning restore S1481 // Unused local variables should be removed
-                return true;
-            }
-            catch (IOException)
-            {
-                return false;
-            }
-        }
+        internal List<ICommandParser> CommandParsers { get; }
     }
 }

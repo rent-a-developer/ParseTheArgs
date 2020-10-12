@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -20,6 +21,294 @@ namespace ParseTheArgs.Tests
         {
             // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
+
+        [Test(Description = "Setup should return the parser setup.")]
+        public void Setup_ShouldReturnParserSetup()
+        {
+            var parser = new Parser();
+
+            parser.Setup.Should().NotBeNull();
+        }
+
+        [Test(Description = "Banner should return an empty string initially.")]
+        public void Banner_Initially_ShouldReturnEmptyString()
+        {
+            var parser = new Parser();
+
+            parser.Banner.Should().BeEmpty();
+        }
+
+        [Test(Description = "ErrorTextWriter should initially return an null when no console is present.")]
+        public void ErrorTextWriter_Initially_ConsoleNotPresent_ShouldReturnNull()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.ErrorTextWriter.Should().BeNull();
+        }
+
+        [Test(Description = "ErrorTextWriter should initially return Console.Error when a console is present.")]
+        public void ErrorTextWriter_Initially_ConsolePresent_ShouldReturnConsoleError()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+            var consoleErrorWriter = A.Fake<TextWriter>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleErrorWriter()).Returns(consoleErrorWriter);
+
+            var parser = new Parser();
+
+            parser.ErrorTextWriter.Should().Be(consoleErrorWriter);
+        }
+
+        [Test(Description = "HelpTextWriter should initially return an null when no console is present.")]
+        public void HelpTextWriter_Initially_ConsoleNotPresent_ShouldReturnNull()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.HelpTextWriter.Should().BeNull();
+        }
+
+        [Test(Description = "HelpTextWriter should initially return Console.Out when a console is present.")]
+        public void HelpTextWriter_Initially_ConsolePresent_ShouldReturnConsoleOut()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+            var consoleOutWriter = A.Fake<TextWriter>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleOutWriter()).Returns(consoleOutWriter);
+
+            var parser = new Parser();
+
+            parser.HelpTextWriter.Should().Be(consoleOutWriter);
+        }
+
+        [Test(Description = "HelpTextMaxLineLength should initially return Console.WindowWidth when a console is present.")]
+        public void HelpTextMaxLineLength_Initially_ConsolePresent_ShouldReturnConsoleWindowWidth()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleWindowWidth()).Returns(123);
+
+            var parser = new Parser();
+
+            parser.HelpTextMaxLineLength.Should().Be(123);
+        }
+
+        [Test(Description = "HelpTextMaxLineLength should initially return Int32.MaxValue when no console is present.")]
+        public void HelpTextMaxLineLength_Initially_ConsoleNotPresent_ShouldReturnInt32MaxValue()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.HelpTextMaxLineLength.Should().Be(Int32.MaxValue);
+        }
+
+        [Test(Description = "IgnoreUnknownOptions should initially return false.")]
+        public void IgnoreUnknownOptions_Initially_ShouldReturnFalse()
+        {
+            var parser = new Parser();
+
+            parser.IgnoreUnknownOptions.Should().BeFalse();
+        }
+
+        [Test(Description = "ProgramName should initially return the name of the current process.")]
+        public void ProgramName_Initially_ShouldReturnNameOfProcess()
+        {
+            var parser = new Parser();
+
+            parser.ProgramName.Should().Be(Process.GetCurrentProcess().ProcessName);
+        }
+
+        [Test(Description = "GetCommandHelpText should return the help text of the command parser that handles the given command.")]
+        public void GetCommandHelpText_CommandParserDoesExist_ShouldReturnHelpTextFromCommandParser()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var commandParser = A.Fake<ICommandParser>();
+            parser.CommandParsers.Add(commandParser);
+
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
+            A.CallTo(() => commandParser.GetHelpText()).Returns("Command1 help text");
+
+            parser.GetCommandHelpText("command1", false).Should().Be("Command1 help text");
+        }
+
+        [Test(Description = "GetCommandHelpText should include the banner text when includeBanner is true.")]
+        public void GetCommandHelpText_IncludeBannerText_ShouldReturnHelpTextFromCommandParser()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var commandParser = A.Fake<ICommandParser>();
+            parser.CommandParsers.Add(commandParser);
+
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
+            A.CallTo(() => commandParser.GetHelpText()).Returns("Command1 help text");
+
+            parser.GetCommandHelpText("command1", true).Should().Be(@"Banner text
+
+Command1 help text");
+        }
+
+        [Test(Description = "GetCommandHelpText should return an error message when no command parser for the given command exist.")]
+        public void GetCommandHelpText_CommandParserDoesNotExist_ShouldReturnErrorMessage()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            parser.GetCommandHelpText("command1", false).Should().Be(@"The command 'command1' is unknown.
+Try the following command to get a list of valid commands:
+Test help
+");
+        }
+
+        [Test(Description = "GetErrorsText should return an empty string when no errors are present.")]
+        public void GetErrorsText_NoErrorsPresent_ShouldReturnEmptyString()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var parseResult = A.Fake<ParseResult>();
+
+            A.CallTo(() => parseResult.HasErrors).Returns(false);
+
+            parser.GetErrorsText(parseResult).Should().BeEmpty();
+        }
+
+        [Test(Description = "GetErrorsText should return the error messages of the errors when errors are present.")]
+        public void GetErrorsText_ErrorsPresent_ShouldReturnMessagesOfErrors()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var parseResult = A.Fake<ParseResult>();
+            var error1 = A.Fake<IParseError>();
+            var error2 = A.Fake<IParseError>();
+
+            A.CallTo(() => error1.GetErrorMessage()).Returns("Error1 message");
+            A.CallTo(() => error2.GetErrorMessage()).Returns("Error2 message");
+
+            var errors = new List<IParseError> { error1, error2 };
+            A.CallTo(() => parseResult.HasErrors).Returns(true);
+            A.CallTo(() => parseResult.Errors).Returns(errors.AsReadOnly());
+
+            parser.GetErrorsText(parseResult, false).Should().Be(@"Invalid or missing option(s):
+- Error1 message
+- Error2 message
+
+Try the following command to get help:
+Test help
+");
+        }
+
+        [Test(Description = "GetErrorsText should include the banner text when includeBanner is true.")]
+        public void GetErrorsText_IncludeBanner_ShouldIncludeBannerText()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var parseResult = A.Fake<ParseResult>();
+            var error1 = A.Fake<IParseError>();
+            var error2 = A.Fake<IParseError>();
+
+            A.CallTo(() => error1.GetErrorMessage()).Returns("Error1 message");
+            A.CallTo(() => error2.GetErrorMessage()).Returns("Error2 message");
+
+            var errors = new List<IParseError> { error1, error2 };
+            A.CallTo(() => parseResult.HasErrors).Returns(true);
+            A.CallTo(() => parseResult.Errors).Returns(errors.AsReadOnly());
+
+            parser.GetErrorsText(parseResult, true).Should().Be(@"Banner text
+
+Invalid or missing option(s):
+- Error1 message
+- Error2 message
+
+Try the following command to get help:
+Test help
+");
+        }
+
+        [Test(Description = "GetHelpText should return the help texts from the command parsers.")]
+        public void GetHelpText_ShouldReturnHelpTextsFromCommandParsers()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var defaultCommandParser = A.Fake<ICommandParser>();
+            A.CallTo(() => defaultCommandParser.IsCommandDefault).Returns(true);
+            A.CallTo(() => defaultCommandParser.CommandName).Returns(String.Empty);
+            A.CallTo(() => defaultCommandParser.GetHelpText()).Returns("Default command help text");
+            parser.CommandParsers.Add(defaultCommandParser);
+
+            var namedCommandParser1 = A.Fake<ICommandParser>();
+            A.CallTo(() => namedCommandParser1.IsCommandDefault).Returns(false);
+            A.CallTo(() => namedCommandParser1.CommandName).Returns("command1");
+            A.CallTo(() => namedCommandParser1.CommandHelp).Returns("Command1 help text");
+            parser.CommandParsers.Add(namedCommandParser1);
+
+            var namedCommandParser2 = A.Fake<ICommandParser>();
+            A.CallTo(() => namedCommandParser2.IsCommandDefault).Returns(false);
+            A.CallTo(() => namedCommandParser2.CommandName).Returns("command2");
+            A.CallTo(() => namedCommandParser2.CommandHelp).Returns("Command2 help text");
+            parser.CommandParsers.Add(namedCommandParser2);
+
+            parser.GetHelpText(false).Should().Be(@"Default command help text
+Test <command> [options]
+
+Commands:
+command1	Command1 help text
+command2	Command2 help text
+
+Test help
+Prints this help screen.
+
+Test help <command>
+Prints the help screen for the specified command.
+");
+        }
+
+        [Test(Description = "GetHelpText should include the banner text when includeBanner is true.")]
+        public void GetHelpText_IncludeBanner_ShouldIncludeBannerText()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var defaultCommandParser = A.Fake<ICommandParser>();
+            A.CallTo(() => defaultCommandParser.IsCommandDefault).Returns(true);
+            A.CallTo(() => defaultCommandParser.CommandName).Returns(String.Empty);
+            A.CallTo(() => defaultCommandParser.GetHelpText()).Returns("Default command help text");
+            parser.CommandParsers.Add(defaultCommandParser);
+
+            parser.GetHelpText(true).Should().Be(@"Banner text
+
+Default command help text
+Test help
+Prints this help screen.
+");
         }
 
         [Test(Description = "GetOrCreateCommandParser should create a new command parser when no matching command parser already exists.")]
@@ -67,6 +356,32 @@ namespace ParseTheArgs.Tests
 
             A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappenedOnceExactly();
             A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test(Description = "CanCommandParserUseCommandName should return true when there is no other command parser that already uses the given command name.")]
+        public void CanCommandParserUseCommandName_CommandNameIsAvailable_ShouldReturnTrue()
+        {
+            var parser = new Parser();
+            var commandParser1 = A.Fake<ICommandParser>();
+
+            parser.CommandParsers.Add(commandParser1);
+
+            parser.CanCommandParserUseCommandName(commandParser1, "command1").Should().BeTrue();
+        }
+
+        [Test(Description = "CanCommandParserUseCommandName should return false when there is another command parser that already uses the given command name.")]
+        public void CanCommandParserUseCommandName_CommandNameIsNotAvailable_ShouldReturnFalse()
+        {
+            var parser = new Parser();
+            var commandParser1 = A.Fake<ICommandParser>();
+            var commandParser2 = A.Fake<ICommandParser>();
+
+            parser.CommandParsers.Add(commandParser1);
+            parser.CommandParsers.Add(commandParser2);
+
+            A.CallTo(() => commandParser1.CommandName).Returns("command1");
+
+            parser.CanCommandParserUseCommandName(commandParser2, "command1").Should().BeFalse();
         }
 
         [Test(Description = "Parse should set ParseResult.IsHelpCalled to true when the help was called.")]
@@ -183,43 +498,6 @@ tool help command1
 ")).MustHaveHappened();
         }
 
-        [Test(Description = "GetCommandHelpText should return the help of the specified command.")]
-        public void GetCommandHelpText_Called_ShouldReturnTheCorrectCommandHelp()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup
-                .ProgramName("tool")
-                .Banner("Banner Text");
-
-            var command1 = setup.Command<Command1Options>();
-            command1.Name("command1");
-            command1.Help("Command1 help.");
-            command1.ExampleUsage("Command1 Example Usage.");
-            command1.Option(a => a.OptionA).Help("OptionA help.").IsRequired();
-            command1.Option(a => a.OptionB).Help("OptionB help.");
-            command1.Option(a => a.OptionC).Help("OptionC help.").IsRequired();
-
-            parser
-                .GetCommandHelpText("command1")
-                .Should()
-                .Be(@"Banner Text
-
-tool command1 [--optionA value] [--optionB value] [--optionC value value ...]
-
-Command1 help.
-
-Options:
---optionA [value]           (Required) OptionA help.
---optionB [value]           (Optional) OptionB help.
---optionC [value value ...] (Required) OptionC help.
-
-Example usage:
-Command1 Example Usage.
-");
-        }
-
         [Test(Description = "GetCommandHelpText should not include the banner if specified.")]
         public void GetCommandHelpText_NoBanner_ShouldReturnCommandHelpWithoutBanner()
         {
@@ -271,17 +549,6 @@ Command1 Example Usage.
 Try the following command to get a list of valid commands:
 tool help
 ");
-        }
-
-        [Test(Description = "GetErrorsText should return an empty string when there are no errors.")]
-        public void GetErrorsText_NoErrorsPresent_ShouldReturnEmptyString()
-        {
-            var parser = new Parser();
-
-            parser
-                .GetErrorsText(new ParseResult())
-                .Should()
-                .BeEmpty();
         }
 
         [Test(Description = "GetErrorsText should return the error messages of the errors when there are errors.")]

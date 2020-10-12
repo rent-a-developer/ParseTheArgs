@@ -17,22 +17,22 @@ namespace ParseTheArgs.Tests.Setup.Commands
     [TestFixture]
     public class DefaultCommandSetupTests : BaseTestFixture
     {
-        [Test(Description = "Constructor should throw an exception when the given parser is null.")]
-        public void Constructor_ParserIsNull_ShouldThrowException()
-        {
-            var commandParser = A.Fake<CommandParser<Command1Options>>();
-
-            Invoking(() => new DefaultCommandSetup<Command1Options>(null, commandParser))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-
         [Test(Description = "Constructor should throw an exception when the given command parser is null.")]
         public void Constructor_CommandParserIsNull_ShouldThrowException()
         {
             var parser = A.Fake<Parser>();
 
             Invoking(() => new DefaultCommandSetup<Command1Options>(parser, null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Test(Description = "Constructor should throw an exception when the given parser is null.")]
+        public void Constructor_ParserIsNull_ShouldThrowException()
+        {
+            var commandParser = A.Fake<CommandParser<Command1Options>>();
+
+            Invoking(() => new DefaultCommandSetup<Command1Options>(null, commandParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
@@ -36,83 +35,6 @@ namespace ParseTheArgs.Tests.Setup.Options
                 .Throw<ArgumentNullException>();
         }
 
-        [Test(Description = "Help should assign the given help text to the option parser.")]
-        public void Help_ShouldAssignHelpToOptionParser()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
-            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
-
-            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            setup.Help("newHelpText");
-
-            A.CallToSet(() => optionParser.OptionHelp).To("newHelpText").MustHaveHappened();
-        }
-
-        [Test(Description = "Help should return the same instance of the option setup.")]
-        public void Help_ShouldReturnOptionSetup()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
-            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
-
-            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            setup.Help("newHelpText").Should().Be(setup);
-        }
-
-        [Test(Description = "Name should assign the given name to the option parser.")]
-        public void Name_ShouldAssignNameToOptionParser()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
-            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
-
-            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
-
-            setup.Name("newName");
-
-            A.CallToSet(() => optionParser.OptionName).To("newName").MustHaveHappened();
-        }
-
-        [Test(Description = "Name should throw an exception when another option already has the same name.")]
-        public void Name_DuplicateName_ShouldThrowException()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
-            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
-
-            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(false);
-
-            setup.Invoking(a => a.Name("newName"))
-                .Should()
-                .Throw<ArgumentException>();
-        }
-
-        [Test(Description = "Name should return the same instance of the option setup.")]
-        public void Name_ShouldReturnOptionSetup()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
-            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
-
-            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
-
-            setup.Name("newName").Should().Be(setup);
-        }
-
         [Test(Description = "DefaultValue should assign the given default value to the option parser.")]
         public void DefaultValue_ShouldAssignDefaultValueToOptionParser()
         {
@@ -142,6 +64,47 @@ namespace ParseTheArgs.Tests.Setup.Options
             setup.DefaultValue(new List<String>()).Should().Be(setup);
         }
 
+        [Test(Description = "Help should assign the given help text to the option parser.")]
+        public void Help_ShouldAssignHelpToOptionParser()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
+
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            setup.Help("newHelpText");
+
+            A.CallToSet(() => optionParser.OptionHelp).To("newHelpText").MustHaveHappened();
+        }
+
+        [Test(Description = "Help should return the same instance of the option setup.")]
+        public void Help_ShouldReturnOptionSetup()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
+
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            setup.Help("newHelpText").Should().Be(setup);
+        }
+
+        [Test(Description = "IsRequired should return the same instance of the option setup.")]
+        public void IsRequired_ShouldReturnOptionSetup()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
+
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            setup.IsRequired().Should().Be(setup);
+        }
+
         [Test(Description = "IsRequired should set the is required flag on the option parser.")]
         public void IsRequired_ShouldSetIsRequiredFlagOnOptionParser()
         {
@@ -157,8 +120,8 @@ namespace ParseTheArgs.Tests.Setup.Options
             A.CallToSet(() => optionParser.IsOptionRequired).To(true).MustHaveHappened();
         }
 
-        [Test(Description = "IsRequired should return the same instance of the option setup.")]
-        public void IsRequired_ShouldReturnOptionSetup()
+        [Test(Description = "Name should throw an exception when another option already has the same name.")]
+        public void Name_DuplicateName_ShouldThrowException()
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
@@ -167,7 +130,43 @@ namespace ParseTheArgs.Tests.Setup.Options
 
             var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
 
-            setup.IsRequired().Should().Be(setup);
+            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(false);
+
+            setup.Invoking(a => a.Name("newName"))
+                .Should()
+                .Throw<ArgumentException>();
+        }
+
+        [Test(Description = "Name should assign the given name to the option parser.")]
+        public void Name_ShouldAssignNameToOptionParser()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
+
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
+
+            setup.Name("newName");
+
+            A.CallToSet(() => optionParser.OptionName).To("newName").MustHaveHappened();
+        }
+
+        [Test(Description = "Name should return the same instance of the option setup.")]
+        public void Name_ShouldReturnOptionSetup()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Strings");
+            var optionParser = A.Fake<StringListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new StringListOptionParser(targetProperty, "strings")));
+
+            var setup = new StringListOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
+
+            setup.Name("newName").Should().Be(setup);
         }
     }
 }

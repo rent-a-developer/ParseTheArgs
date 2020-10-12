@@ -15,17 +15,17 @@ namespace ParseTheArgs.Tests.CustomOption
             var commandSetup = parser.Setup
                 .Command<CustomOptions>()
                 .Name("custom");
-            
+
             commandSetup
                 .Option(a => a.CustomValue)
                 .Name("customValue");
 
-            var result = parser.Parse(new String[] { "custom", "--customValue", "test value" });
+            var result = parser.Parse(new String[] {"custom", "--customValue", "test value"});
 
             result.CommandOptions.Should().BeOfType<CustomOptions>();
 
-            var commandOptions = (CustomOptions)result.CommandOptions;
-            
+            var commandOptions = (CustomOptions) result.CommandOptions;
+
             commandOptions.CustomValue.Should().BeEquivalentTo(new CustomValue("test value"));
         }
     }

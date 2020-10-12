@@ -9,10 +9,10 @@ namespace ParseTheArgs.Tests.Extensions
     [TestFixture]
     public class PropertyInfoExtensionsTests
     {
-        [Test(Description = "HasPublicSetter should return true when a public setter is present.")]
-        public void HasPublicSetter_PublicSetterPresent_ShouldReturnTrue()
+        [Test(Description = "HasPublicSetter should throw an exception when the given property info is null.")]
+        public void HasPublicSetter_PropertyInfoIsNull_ShouldThrowException()
         {
-            typeof(Item).GetProperty("PropertyWithPublicSetter").HasPublicSetter().Should().BeTrue();
+            ((PropertyInfo) null).Invoking(a => a.HasPublicSetter()).Should().Throw<ArgumentNullException>();
         }
 
         [Test(Description = "HasPublicSetter should return false when a public setter is not present.")]
@@ -24,19 +24,19 @@ namespace ParseTheArgs.Tests.Extensions
             typeof(Item).GetProperty("PropertyWithoutSetter").HasPublicSetter().Should().BeFalse();
         }
 
-        [Test(Description = "HasPublicSetter should throw an exception when the given property info is null.")]
-        public void HasPublicSetter_PropertyInfoIsNull_ShouldThrowException()
+        [Test(Description = "HasPublicSetter should return true when a public setter is present.")]
+        public void HasPublicSetter_PublicSetterPresent_ShouldReturnTrue()
         {
-            ((PropertyInfo) null).Invoking(a => a.HasPublicSetter()).Should().Throw<ArgumentNullException>();
+            typeof(Item).GetProperty("PropertyWithPublicSetter").HasPublicSetter().Should().BeTrue();
         }
 
         class Item
         {
-            public String PropertyWithPublicSetter { get; set; }
-            public String PropertyWithPrivateSetter { get; private set; }
             public String PropertyWithInternalSetter { get; internal set; }
+            public String PropertyWithoutSetter { get; }
+            public String PropertyWithPrivateSetter { get; private set; }
             public String PropertyWithProtectedSetter { get; protected set; }
-            public String PropertyWithoutSetter { get;  }
+            public String PropertyWithPublicSetter { get; set; }
         }
     }
 }

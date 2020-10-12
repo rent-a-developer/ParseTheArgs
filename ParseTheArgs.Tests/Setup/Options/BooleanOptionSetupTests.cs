@@ -62,23 +62,6 @@ namespace ParseTheArgs.Tests.Setup.Options
             setup.Help("newHelpText").Should().Be(setup);
         }
 
-        [Test(Description = "Name should assign the given name to the option parser.")]
-        public void Name_ShouldAssignNameToOptionParser()
-        {
-            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
-
-            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Boolean");
-            var optionParser = A.Fake<BooleanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new BooleanOptionParser(targetProperty, "boolean")));
-
-            var setup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
-
-            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
-
-            setup.Name("newName");
-
-            A.CallToSet(() => optionParser.OptionName).To("newName").MustHaveHappened();
-        }
-
         [Test(Description = "Name should throw an exception when another option already has the same name.")]
         public void Name_DuplicateName_ShouldThrowException()
         {
@@ -94,6 +77,23 @@ namespace ParseTheArgs.Tests.Setup.Options
             setup.Invoking(a => a.Name("newName"))
                 .Should()
                 .Throw<ArgumentException>();
+        }
+
+        [Test(Description = "Name should assign the given name to the option parser.")]
+        public void Name_ShouldAssignNameToOptionParser()
+        {
+            var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
+
+            var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Boolean");
+            var optionParser = A.Fake<BooleanOptionParser>(ob => ob.WithArgumentsForConstructor(() => new BooleanOptionParser(targetProperty, "boolean")));
+
+            var setup = new BooleanOptionSetup<DataTypesCommandOptions>(commandParser, optionParser);
+
+            A.CallTo(() => commandParser.CanOptionParserUseOptionName(optionParser, "newName")).Returns(true);
+
+            setup.Name("newName");
+
+            A.CallToSet(() => optionParser.OptionName).To("newName").MustHaveHappened();
         }
 
         [Test(Description = "Name should return the same instance of the option setup.")]

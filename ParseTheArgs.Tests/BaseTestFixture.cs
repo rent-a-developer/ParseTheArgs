@@ -6,7 +6,7 @@ namespace ParseTheArgs.Tests
     [TestFixture]
     public class BaseTestFixture
     {
-        protected IDependencyResolver DependencyResolver { get; private set; }
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -20,5 +20,9 @@ namespace ParseTheArgs.Tests
         {
             Dependencies.Resolver = new DefaultDependencyResolver();
         }
+
+        #endregion
+
+        protected IDependencyResolver DependencyResolver { get; private set; }
     }
 }

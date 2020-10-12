@@ -16,6 +16,8 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class DateTimeOptionParserTests
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -23,13 +25,15 @@ namespace ParseTheArgs.Tests.Parsers.Options
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
-        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
-        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
+        #endregion
+
+        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
+        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new DateTimeOptionParser(null, "dateTime"))
+            Invoking(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "dateTime"))
                 .Should()
-                .Throw<ArgumentNullException>()
-                .WithMessage(@"Value cannot be null.
+                .Throw<ArgumentException>()
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.DateTime or System.Nullable<System.DateTime>, actual type was System.String.
 Parameter name: targetProperty");
         }
 
@@ -49,54 +53,14 @@ Parameter name: optionName");
 Parameter name: optionName");
         }
 
-        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
-        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
+        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "dateTime"))
+            Invoking(() => new DateTimeOptionParser(null, "dateTime"))
                 .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.DateTime or System.Nullable<System.DateTime>, actual type was System.String.
+                .Throw<ArgumentNullException>()
+                .WithMessage(@"Value cannot be null.
 Parameter name: targetProperty");
-        }
-
-        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
-        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("DateTime"));
-        }
-
-        [Test(Description = "OptionDefaultValue should return default(DateTime) initially.")]
-        public void OptionDefaultValue_Initially_ShouldReturnDefaultOfDateTime()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.OptionDefaultValue.Should().Be(default);
-        }
-
-        [Test(Description = "OptionName should return the name that was specified via the constructor.")]
-        public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.OptionName.Should().Be("dateTime");
-        }
-
-        [Test(Description = "OptionType should return SingleValueOption.")]
-        public void OptionType_ShouldReturnSingleValueOption()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.OptionType.Should().Be(OptionType.SingleValueOption);
-        }
-
-        [Test(Description = "IsOptionRequired should return false initially.")]
-        public void IsOptionRequired_Initially_ShouldReturnFalse()
-        {
-            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-
-            parser.IsOptionRequired.Should().BeFalse();
         }
 
         [Test(Description = "DateTimeFormat should return null initially.")]
@@ -132,50 +96,36 @@ Parameter name: targetProperty");
             parser.GetHelpText().Should().Be("Help text for option dateTime.");
         }
 
-        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
-        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        [Test(Description = "IsOptionRequired should return false initially.")]
+        public void IsOptionRequired_Initially_ShouldReturnFalse()
         {
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-            parser.OptionDefaultValue = new DateTime(2020, 12, 31, 23, 59, 59);
 
-            var tokens = new List<Token>();
-            var parseResult = new ParseResult();
-            var dataTypesCommandOptions = new DataTypesCommandOptions();
-            parseResult.CommandOptions = dataTypesCommandOptions;
-
-            parser.Parse(tokens, parseResult);
-
-            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
+            parser.IsOptionRequired.Should().BeFalse();
         }
 
-        [Test(Description = "Parse should parse a valid option value using the value parser and assign it to the target property.")]
-        public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
+        [Test(Description = "OptionDefaultValue should return default(DateTime) initially.")]
+        public void OptionDefaultValue_Initially_ShouldReturnDefaultOfDateTime()
         {
-            var valueParser = A.Fake<ValueParser>();
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-            parser.ValueParser = valueParser;
 
-            var tokens = new List<Token>
-            {
-                new OptionToken("dateTime")
-                {
-                    OptionValues = { "2020-12-31 23:59:59" }
-                }
-            };
-            var parseResult = new ParseResult();
-            var dataTypesCommandOptions = new DataTypesCommandOptions();
-            parseResult.CommandOptions = dataTypesCommandOptions;
+            parser.OptionDefaultValue.Should().Be(default);
+        }
 
-            DateTime dateTime;
-            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime))
-                .Returns(true)
-                .AssignsOutAndRefParameters(new DateTime(2020, 12, 31, 23, 59, 59));
+        [Test(Description = "OptionName should return the name that was specified via the constructor.")]
+        public void OptionName_ShouldReturnNameSpecifiedViaConstructor()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
 
-            parser.Parse(tokens, parseResult);
+            parser.OptionName.Should().Be("dateTime");
+        }
 
-            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
+        [Test(Description = "OptionType should return SingleValueOption.")]
+        public void OptionType_ShouldReturnSingleValueOption()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
 
-            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime)).MustHaveHappened();
+            parser.OptionType.Should().Be(OptionType.SingleValueOption);
         }
 
         [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
@@ -192,7 +142,7 @@ Parameter name: targetProperty");
             {
                 new OptionToken("dateTime")
                 {
-                    OptionValues = { "Sun 15 Jun 2008 8:30 AM" }
+                    OptionValues = {"Sun 15 Jun 2008 8:30 AM"}
                 }
             };
             var parseResult = new ParseResult();
@@ -216,7 +166,7 @@ Parameter name: targetProperty");
             {
                 new OptionToken("dateTime")
                 {
-                    OptionValues = { "NotADateTime" }
+                    OptionValues = {"NotADateTime"}
                 }
             };
             var parseResult = new ParseResult();
@@ -232,20 +182,26 @@ Parameter name: targetProperty");
             parseResult.Errors.Should().HaveCount(1);
             parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
 
-            var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
+            var error = (OptionValueInvalidFormatError) parseResult.Errors[0];
             error.OptionName.Should().Be("dateTime");
             error.InvalidOptionValue.Should().Be("NotADateTime");
             error.ExpectedValueFormat.Should().Be("A valid date (and optionally time of day)");
             error.GetErrorMessage().Should().Be("The value 'NotADateTime' of the option --dateTime has an invalid format. The expected format is: A valid date (and optionally time of day).");
         }
 
-        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
-        public void Parse_RequiredOptionMissing_ShouldAddError()
+        [Test(Description = "Parse should add an OptionMultipleValuesError error to the parse result when more than one value was supplied for the option.")]
+        public void Parse_MoreThanOneOptionValue_ShouldAddError()
         {
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
-            parser.IsOptionRequired = true;
 
-            var tokens = new List<Token>();
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTime")
+                {
+                    OptionValues = {"2020-12-31 23:59:59", "2020-01-01 10:30:59"}
+                }
+            };
+
             var parseResult = new ParseResult();
             parseResult.CommandOptions = new DataTypesCommandOptions();
 
@@ -253,11 +209,27 @@ Parameter name: targetProperty");
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+            parseResult.Errors[0].Should().BeOfType<OptionMultipleValuesError>();
 
-            var error = (OptionMissingError)parseResult.Errors[0];
+            var error = (OptionMultipleValuesError) parseResult.Errors[0];
             error.OptionName.Should().Be("dateTime");
-            error.GetErrorMessage().Should().Be("The option --dateTime is required.");
+            error.GetErrorMessage().Should().Be("Multiple values are given for the option --dateTime, but the option expects a single value.");
+        }
+
+        [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
+        public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.OptionDefaultValue = new DateTime(2020, 12, 31, 23, 59, 59);
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
         }
 
         [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
@@ -279,24 +251,18 @@ Parameter name: targetProperty");
             parseResult.Errors.Should().HaveCount(1);
             parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
 
-            var error = (OptionValueMissingError)parseResult.Errors[0];
+            var error = (OptionValueMissingError) parseResult.Errors[0];
             error.OptionName.Should().Be("dateTime");
             error.GetErrorMessage().Should().Be("The option --dateTime requires a value, but no value was specified.");
         }
 
-        [Test(Description = "Parse should add an OptionMultipleValuesError error to the parse result when more than one value was supplied for the option.")]
-        public void Parse_MoreThanOneOptionValue_ShouldAddError()
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
         {
             var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.IsOptionRequired = true;
 
-            var tokens = new List<Token>
-            {
-                new OptionToken("dateTime")
-                {
-                    OptionValues = { "2020-12-31 23:59:59", "2020-01-01 10:30:59" }
-                }
-            };
-
+            var tokens = new List<Token>();
             var parseResult = new ParseResult();
             parseResult.CommandOptions = new DataTypesCommandOptions();
 
@@ -304,11 +270,49 @@ Parameter name: targetProperty");
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionMultipleValuesError>();
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
 
-            var error = (OptionMultipleValuesError)parseResult.Errors[0];
+            var error = (OptionMissingError) parseResult.Errors[0];
             error.OptionName.Should().Be("dateTime");
-            error.GetErrorMessage().Should().Be("Multiple values are given for the option --dateTime, but the option expects a single value.");
+            error.GetErrorMessage().Should().Be("The option --dateTime is required.");
+        }
+
+        [Test(Description = "Parse should parse a valid option value using the value parser and assign it to the target property.")]
+        public void Parse_ValidValue_ShouldParseAndAssignValueToTargetProperty()
+        {
+            var valueParser = A.Fake<ValueParser>();
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+            parser.ValueParser = valueParser;
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("dateTime")
+                {
+                    OptionValues = {"2020-12-31 23:59:59"}
+                }
+            };
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            DateTime dateTime;
+            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime))
+                .Returns(true)
+                .AssignsOutAndRefParameters(new DateTime(2020, 12, 31, 23, 59, 59));
+
+            parser.Parse(tokens, parseResult);
+
+            dataTypesCommandOptions.DateTime.Should().Be(new DateTime(2020, 12, 31, 23, 59, 59));
+
+            A.CallTo(() => valueParser.TryParseDateTime("2020-12-31 23:59:59", null, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime)).MustHaveHappened();
+        }
+
+        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
+        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
+        {
+            var parser = new DateTimeOptionParser(typeof(DataTypesCommandOptions).GetProperty("DateTime"), "dateTime");
+
+            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("DateTime"));
         }
     }
 }

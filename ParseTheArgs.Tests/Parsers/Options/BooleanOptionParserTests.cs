@@ -13,13 +13,13 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class BooleanOptionParserTests
     {
-        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
-        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
+        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new BooleanOptionParser(null, "boolean"))
+            Invoking(() => new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "boolean"))
                 .Should()
-                .Throw<ArgumentNullException>()
-                .WithMessage(@"Value cannot be null.
+                .Throw<ArgumentException>()
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Boolean or System.Nullable<System.Boolean>, actual type was System.String.
 Parameter name: targetProperty");
         }
 
@@ -39,22 +39,31 @@ Parameter name: optionName");
 Parameter name: optionName");
         }
 
-        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
-        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
+        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), "boolean"))
+            Invoking(() => new BooleanOptionParser(null, "boolean"))
                 .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Boolean or System.Nullable<System.Boolean>, actual type was System.String.
+                .Throw<ArgumentNullException>()
+                .WithMessage(@"Value cannot be null.
 Parameter name: targetProperty");
         }
 
-        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
-        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
+        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
+        public void GetHelpText_ShouldReturnSpecifiedHelpText()
+        {
+            var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
+            parser.OptionHelp = "Help text for option boolean.";
+
+            parser.GetHelpText().Should().Be("Help text for option boolean.");
+        }
+
+        [Test(Description = "IsOptionRequired should return false, since Boolean (switch) options can never be required.")]
+        public void IsOptionRequired_ShouldReturnFalse()
         {
             var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
 
-            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Boolean"));
+            parser.IsOptionRequired.Should().BeFalse();
         }
 
         [Test(Description = "OptionName should return the name that was specified via the constructor.")]
@@ -71,23 +80,6 @@ Parameter name: targetProperty");
             var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
 
             parser.OptionType.Should().Be(OptionType.ValuelessOption);
-        }
-
-        [Test(Description = "IsOptionRequired should return false, since Boolean (switch) options can never be required.")]
-        public void IsOptionRequired_ShouldReturnFalse()
-        {
-            var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
-
-            parser.IsOptionRequired.Should().BeFalse();
-        }
-
-        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
-        public void GetHelpText_ShouldReturnSpecifiedHelpText()
-        {
-            var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
-            parser.OptionHelp = "Help text for option boolean.";
-
-            parser.GetHelpText().Should().Be("Help text for option boolean.");
         }
 
         [Test(Description = "Parse should not assign the value true to the target property when the option is not present.")]
@@ -132,7 +124,7 @@ Parameter name: targetProperty");
             {
                 new OptionToken("boolean")
                 {
-                    OptionValues = { "value" }
+                    OptionValues = {"value"}
                 }
             };
             var parseResult = new ParseResult();
@@ -147,6 +139,14 @@ Parameter name: targetProperty");
             var error = (InvalidOptionError) parseResult.Errors[0];
             error.OptionName.Should().Be("boolean");
             error.GetErrorMessage().Should().Be("The option --boolean is invalid: This option does not support any values.");
+        }
+
+        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
+        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
+        {
+            var parser = new BooleanOptionParser(typeof(DataTypesCommandOptions).GetProperty("Boolean"), "boolean");
+
+            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Boolean"));
         }
     }
 }

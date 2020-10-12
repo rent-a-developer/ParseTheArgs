@@ -14,6 +14,14 @@ namespace ParseTheArgs.Tests.Extensions
             "commandLineArgument".SplitWords().Should().BeEquivalentTo("command", "line", "argument");
         }
 
+        [Test(Description = "SplitWords should consider the change of the casing from lower to upper case as word boundary.")]
+        public void SplitWords_CasingChangeFromLowerToUpperCase_ShouldTreatAsWordBoundary()
+        {
+            "commandOptions".SplitWords().Should().BeEquivalentTo("command", "options");
+            "command1Options".SplitWords().Should().BeEquivalentTo("command1", "options");
+            "int64sOption".SplitWords().Should().BeEquivalentTo("int64s", "option");
+        }
+
         [Test(Description = "SplitWords should return an empty string when an empty string is given.")]
         public void SplitWords_EmptyString_ShouldReturnEmptyString()
         {
@@ -42,14 +50,6 @@ namespace ParseTheArgs.Tests.Extensions
         public void SplitWords_Underscore_ShouldReturnWords()
         {
             "command_line_argument".SplitWords().Should().BeEquivalentTo("command", "line", "argument");
-        }
-
-        [Test(Description = "SplitWords should consider the change of the casing from lower to upper case as word boundary.")]
-        public void SplitWords_CasingChangeFromLowerToUpperCase_ShouldTreatAsWordBoundary()
-        {
-            "commandOptions".SplitWords().Should().BeEquivalentTo("command", "options");
-            "command1Options".SplitWords().Should().BeEquivalentTo("command1", "options");
-            "int64sOption".SplitWords().Should().BeEquivalentTo("int64s", "option");
         }
 
         [Test(Description = "ToCamelCase should return an empty string when an empty string is given.")]

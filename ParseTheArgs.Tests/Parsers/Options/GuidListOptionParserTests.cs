@@ -14,13 +14,13 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class GuidListOptionParserTests
     {
-        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
-        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
+        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new GuidListOptionParser(null, "guids"))
+            Invoking(() => new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Strings"), "guids"))
                 .Should()
-                .Throw<ArgumentNullException>()
-                .WithMessage(@"Value cannot be null.
+                .Throw<ArgumentException>()
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.Guid>, actual type was System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]].
 Parameter name: targetProperty");
         }
 
@@ -40,22 +40,39 @@ Parameter name: optionName");
 Parameter name: optionName");
         }
 
-        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
-        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
+        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Strings"), "guids"))
+            Invoking(() => new GuidListOptionParser(null, "guids"))
                 .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<System.Guid>, actual type was System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]].
+                .Throw<ArgumentNullException>()
+                .WithMessage(@"Value cannot be null.
 Parameter name: targetProperty");
         }
 
-        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
-        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
+        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
+        public void GetHelpText_ShouldReturnSpecifiedHelpText()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+            parser.OptionHelp = "Help text for option guids.";
+
+            parser.GetHelpText().Should().Be("Help text for option guids.");
+        }
+
+        [Test(Description = "GuidFormat should return null initially.")]
+        public void GuidFormat_Initially_ShouldReturnNull()
         {
             var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
 
-            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Guids"));
+            parser.GuidFormat.Should().BeNull();
+        }
+
+        [Test(Description = "IsOptionRequired should return false initially.")]
+        public void IsOptionRequired_Initially_ShouldReturnFalse()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+
+            parser.IsOptionRequired.Should().BeFalse();
         }
 
         [Test(Description = "OptionDefaultValue should return null initially.")]
@@ -82,36 +99,70 @@ Parameter name: targetProperty");
             parser.OptionType.Should().Be(OptionType.MultiValueOption);
         }
 
-        [Test(Description = "IsOptionRequired should return false initially.")]
-        public void IsOptionRequired_Initially_ShouldReturnFalse()
+        [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
+        public void Parse_CustomFormatSettings_ShouldPassCustomFormatToValueParser()
         {
+            var valueParser = A.Fake<ValueParser>(ob => ob.CallsBaseMethods());
             var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+            parser.ValueParser = valueParser;
+            parser.GuidFormat = "X";
 
-            parser.IsOptionRequired.Should().BeFalse();
+            var tokens = new List<Token>
+            {
+                new OptionToken("guids")
+                {
+                    OptionValues = {"{0x13d02a84,0x84f7,0x4a2d,{0x8f,0x09,0x2f,0x96,0xde,0xfb,0x8c,0x79}}"}
+                }
+            };
+            var parseResult = new ParseResult();
+            var dataTypesCommandOptions = new DataTypesCommandOptions();
+            parseResult.CommandOptions = dataTypesCommandOptions;
+
+            parser.Parse(tokens, parseResult);
+
+            Guid guid;
+            A.CallTo(() => valueParser.TryParseGuid("{0x13d02a84,0x84f7,0x4a2d,{0x8f,0x09,0x2f,0x96,0xde,0xfb,0x8c,0x79}}", "X", out guid)).MustHaveHappened();
         }
 
-        [Test(Description = "GuidFormat should return null initially.")]
-        public void GuidFormat_Initially_ShouldReturnNull()
+        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when one of the specified values is not a valid date time.")]
+        public void Parse_InvalidValue_ShouldAddError()
         {
+            var valueParser = A.Fake<ValueParser>();
             var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+            parser.ValueParser = valueParser;
 
-            parser.GuidFormat.Should().BeNull();
-        }
+            var tokens = new List<Token>
+            {
+                new OptionToken("guids")
+                {
+                    OptionValues = {"NotAGuid"}
+                }
+            };
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
 
-        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
-        public void GetHelpText_ShouldReturnSpecifiedHelpText()
-        {
-            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
-            parser.OptionHelp = "Help text for option guids.";
+            Guid guid;
+            A.CallTo(() => valueParser.TryParseGuid("NotAGuid", null, out guid))
+                .Returns(false);
 
-            parser.GetHelpText().Should().Be("Help text for option guids.");
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
+
+            var error = (OptionValueInvalidFormatError) parseResult.Errors[0];
+            error.OptionName.Should().Be("guids");
+            error.InvalidOptionValue.Should().Be("NotAGuid");
+            error.ExpectedValueFormat.Should().Be("A valid Guid");
+            error.GetErrorMessage().Should().Be("The value 'NotAGuid' of the option --guids has an invalid format. The expected format is: A valid Guid.");
         }
 
         [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
         public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
         {
             var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
-            parser.OptionDefaultValue = new List<Guid> { new Guid("13d02a84-84f7-4a2d-8f09-2f96defb8c79"), new Guid("9e6a5202-102f-4eb9-a217-0a58f4db40b6") };
+            parser.OptionDefaultValue = new List<Guid> {new Guid("13d02a84-84f7-4a2d-8f09-2f96defb8c79"), new Guid("9e6a5202-102f-4eb9-a217-0a58f4db40b6")};
 
             var tokens = new List<Token>();
             var parseResult = new ParseResult();
@@ -121,6 +172,51 @@ Parameter name: targetProperty");
             parser.Parse(tokens, parseResult);
 
             dataTypesCommandOptions.Guids.Should().BeEquivalentTo(new Guid("13d02a84-84f7-4a2d-8f09-2f96defb8c79"), new Guid("9e6a5202-102f-4eb9-a217-0a58f4db40b6"));
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("guids")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError) parseResult.Errors[0];
+            error.OptionName.Should().Be("guids");
+            error.GetErrorMessage().Should().Be("The option --guids requires a value, but no value was specified.");
+        }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError) parseResult.Errors[0];
+            error.OptionName.Should().Be("guids");
+            error.GetErrorMessage().Should().Be("The option --guids is required.");
         }
 
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]
@@ -134,7 +230,7 @@ Parameter name: targetProperty");
             {
                 new OptionToken("guids")
                 {
-                    OptionValues = { "13d02a84-84f7-4a2d-8f09-2f96defb8c79", "9e6a5202-102f-4eb9-a217-0a58f4db40b6" }
+                    OptionValues = {"13d02a84-84f7-4a2d-8f09-2f96defb8c79", "9e6a5202-102f-4eb9-a217-0a58f4db40b6"}
                 }
             };
             var parseResult = new ParseResult();
@@ -159,108 +255,12 @@ Parameter name: targetProperty");
             A.CallTo(() => valueParser.TryParseGuid("9e6a5202-102f-4eb9-a217-0a58f4db40b6", null, out guid)).MustHaveHappened();
         }
 
-        [Test(Description = "Parse should pass the specified custom format settings to the value parser.")]
-        public void Parse_CustomFormatSettings_ShouldPassCustomFormatToValueParser()
-        {
-            var valueParser = A.Fake<ValueParser>(ob => ob.CallsBaseMethods());
-            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
-            parser.ValueParser = valueParser;
-            parser.GuidFormat = "X";
-
-            var tokens = new List<Token>
-            {
-                new OptionToken("guids")
-                {
-                    OptionValues = { "{0x13d02a84,0x84f7,0x4a2d,{0x8f,0x09,0x2f,0x96,0xde,0xfb,0x8c,0x79}}" }
-                }
-            };
-            var parseResult = new ParseResult();
-            var dataTypesCommandOptions = new DataTypesCommandOptions();
-            parseResult.CommandOptions = dataTypesCommandOptions;
-
-            parser.Parse(tokens, parseResult);
-
-            Guid guid;
-            A.CallTo(() => valueParser.TryParseGuid("{0x13d02a84,0x84f7,0x4a2d,{0x8f,0x09,0x2f,0x96,0xde,0xfb,0x8c,0x79}}", "X", out guid)).MustHaveHappened();
-        }
-
-        [Test(Description = "Parse should add an OptionValueInvalidFormatError error to the parse result when one of the specified values is not a valid date time.")]
-        public void Parse_InvalidValue_ShouldAddError()
-        {
-            var valueParser = A.Fake<ValueParser>();
-            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
-            parser.ValueParser = valueParser;
-
-            var tokens = new List<Token>
-            {
-                new OptionToken("guids")
-                {
-                    OptionValues = { "NotAGuid" }
-                }
-            };
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            Guid guid;
-            A.CallTo(() => valueParser.TryParseGuid("NotAGuid", null, out guid))
-                .Returns(false);
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
-
-            var error = (OptionValueInvalidFormatError)parseResult.Errors[0];
-            error.OptionName.Should().Be("guids");
-            error.InvalidOptionValue.Should().Be("NotAGuid");
-            error.ExpectedValueFormat.Should().Be("A valid Guid");
-            error.GetErrorMessage().Should().Be("The value 'NotAGuid' of the option --guids has an invalid format. The expected format is: A valid Guid.");
-        }
-
-        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
-        public void Parse_RequiredOptionMissing_ShouldAddError()
-        {
-            var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
-            parser.IsOptionRequired = true;
-
-            var tokens = new List<Token>();
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
-
-            var error = (OptionMissingError)parseResult.Errors[0];
-            error.OptionName.Should().Be("guids");
-            error.GetErrorMessage().Should().Be("The option --guids is required.");
-        }
-
-        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
-        public void Parse_OptionValueMissing_ShouldAddError()
+        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
+        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
         {
             var parser = new GuidListOptionParser(typeof(DataTypesCommandOptions).GetProperty("Guids"), "guids");
 
-            var tokens = new List<Token>
-            {
-                new OptionToken("guids")
-            };
-
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
-
-            var error = (OptionValueMissingError)parseResult.Errors[0];
-            error.OptionName.Should().Be("guids");
-            error.GetErrorMessage().Should().Be("The option --guids requires a value, but no value was specified.");
+            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Guids"));
         }
     }
 }

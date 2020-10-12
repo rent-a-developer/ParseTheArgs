@@ -14,13 +14,13 @@ namespace ParseTheArgs.Tests.Parsers.Options
     [TestFixture]
     public class EnumListOptionParserTests
     {
-        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
-        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
+        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
         {
-            Invoking(() => new EnumListOptionParser<LogLevel>(null, "enums"))
+            Invoking(() => new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("String"), "enums"))
                 .Should()
-                .Throw<ArgumentNullException>()
-                .WithMessage(@"Value cannot be null.
+                .Throw<ArgumentException>()
+                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<ParseTheArgs.Tests.TestData.LogLevel>, actual type was System.String.
 Parameter name: targetProperty");
         }
 
@@ -40,22 +40,49 @@ Parameter name: optionName");
 Parameter name: optionName");
         }
 
-        [Test(Description = "Constructor should throw an exception when the given target property has a incompatible data type.")]
-        public void Constructor_IncompatibleTargetProperty_ShouldThrowException()
+        [Test(Description = "Constructor should throw an exception when the given target property is null.")]
+        public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("String"), "enums"))
+            Invoking(() => new EnumListOptionParser<LogLevel>(null, "enums"))
                 .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(@"The given target property has an incompatible property type. Expected type is System.Collections.Generic.List<ParseTheArgs.Tests.TestData.LogLevel>, actual type was System.String.
+                .Throw<ArgumentNullException>()
+                .WithMessage(@"Value cannot be null.
 Parameter name: targetProperty");
         }
 
-        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
-        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
+        [Test(Description = "GetHelpText should include the specified help texts for the enum values in the returned help text.")]
+        public void GetHelpText_EnumValuesHelpPresent_ShouldReturnSpecifiedHelpText()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+            parser.OptionHelp = "Help text for option enums.";
+            parser.EnumValuesHelps.Add(LogLevel.Trace, "Trace help.");
+            parser.EnumValuesHelps.Add(LogLevel.Debug, "Debug help.");
+            parser.EnumValuesHelps.Add(LogLevel.Info, "Info help.");
+            parser.EnumValuesHelps.Add(LogLevel.Error, "Error help.");
+
+            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.
+Trace: Trace help.
+Debug: Debug help.
+Info: Info help.
+Error: Error help.
+");
+        }
+
+        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
+        public void GetHelpText_ShouldReturnSpecifiedHelpText()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+            parser.OptionHelp = "Help text for option enums.";
+
+            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.");
+        }
+
+        [Test(Description = "IsOptionRequired should return false initially.")]
+        public void IsOptionRequired_Initially_ShouldReturnFalse()
         {
             var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
 
-            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Enums"));
+            parser.IsOptionRequired.Should().BeFalse();
         }
 
         [Test(Description = "OptionDefaultValue should return null initially.")]
@@ -82,46 +109,46 @@ Parameter name: targetProperty");
             parser.OptionType.Should().Be(OptionType.MultiValueOption);
         }
 
-        [Test(Description = "IsOptionRequired should return false initially.")]
-        public void IsOptionRequired_Initially_ShouldReturnFalse()
+        [Test(Description = "Parse should add an OptionValueInvalidFormatError to the parse result when one of the specified values is not a invalid enum value.")]
+        public void Parse_InvalidValue_ShouldAddError()
         {
-            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+            var valueParser = A.Fake<ValueParser>();
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "logLevels");
+            parser.ValueParser = valueParser;
 
-            parser.IsOptionRequired.Should().BeFalse();
-        }
+            var tokens = new List<Token>
+            {
+                new OptionToken("logLevels")
+                {
+                    OptionValues = {"NonExistentLogLevel"}
+                }
+            };
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
 
-        [Test(Description = "GetHelpText should return the text that was set via the OptionHelp property.")]
-        public void GetHelpText_ShouldReturnSpecifiedHelpText()
-        {
-            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
-            parser.OptionHelp = "Help text for option enums.";
+            LogLevel logLevel;
 
-            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.");
-        }
+            A.CallTo(() => valueParser.TryParseEnum("NonExistentLogLevel", out logLevel))
+                .Returns(false);
 
-        [Test(Description = "GetHelpText should include the specified help texts for the enum values in the returned help text.")]
-        public void GetHelpText_EnumValuesHelpPresent_ShouldReturnSpecifiedHelpText()
-        {
-            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
-            parser.OptionHelp = "Help text for option enums.";
-            parser.EnumValuesHelps.Add(LogLevel.Trace, "Trace help.");
-            parser.EnumValuesHelps.Add(LogLevel.Debug, "Debug help.");
-            parser.EnumValuesHelps.Add(LogLevel.Info, "Info help.");
-            parser.EnumValuesHelps.Add(LogLevel.Error, "Error help.");
+            parser.Parse(tokens, parseResult);
 
-            parser.GetHelpText().Should().Be(@"Help text for option enums. Possible values: Trace, Debug, Info, Error.
-Trace: Trace help.
-Debug: Debug help.
-Info: Info help.
-Error: Error help.
-");
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
+
+            var error = (OptionValueInvalidFormatError) parseResult.Errors[0];
+            error.OptionName.Should().Be("logLevels");
+            error.InvalidOptionValue.Should().Be("NonExistentLogLevel");
+            error.ExpectedValueFormat.Should().Be("One of the valid values (see help)");
+            error.GetErrorMessage().Should().Be("The value 'NonExistentLogLevel' of the option --logLevels has an invalid format. The expected format is: One of the valid values (see help).");
         }
 
         [Test(Description = "Parse should assign the specified default value to the target property when the option is not present in the command line.")]
         public void Parse_OptionNotPresent_ShouldAssignDefaultValueToTargetProperty()
         {
             var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "logLevels");
-            parser.OptionDefaultValue = new List<LogLevel> { LogLevel.Info, LogLevel.Error };
+            parser.OptionDefaultValue = new List<LogLevel> {LogLevel.Info, LogLevel.Error};
 
             var tokens = new List<Token>();
             var parseResult = new ParseResult();
@@ -131,6 +158,51 @@ Error: Error help.
             parser.Parse(tokens, parseResult);
 
             dataTypesCommandOptions.Enums.Should().BeEquivalentTo(LogLevel.Info, LogLevel.Error);
+        }
+
+        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
+        public void Parse_OptionValueMissing_ShouldAddError()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+
+            var tokens = new List<Token>
+            {
+                new OptionToken("enums")
+            };
+
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
+
+            var error = (OptionValueMissingError) parseResult.Errors[0];
+            error.OptionName.Should().Be("enums");
+            error.GetErrorMessage().Should().Be("The option --enums requires a value, but no value was specified.");
+        }
+
+        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
+        public void Parse_RequiredOptionMissing_ShouldAddError()
+        {
+            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
+            parser.IsOptionRequired = true;
+
+            var tokens = new List<Token>();
+            var parseResult = new ParseResult();
+            parseResult.CommandOptions = new DataTypesCommandOptions();
+
+            parser.Parse(tokens, parseResult);
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Should().HaveCount(1);
+            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
+
+            var error = (OptionMissingError) parseResult.Errors[0];
+            error.OptionName.Should().Be("enums");
+            error.GetErrorMessage().Should().Be("The option --enums is required.");
         }
 
         [Test(Description = "Parse should parse valid option values using the value parser and assign them to the target property.")]
@@ -144,7 +216,7 @@ Error: Error help.
             {
                 new OptionToken("logLevels")
                 {
-                    OptionValues = { "Debug", "Trace" }
+                    OptionValues = {"Debug", "Trace"}
                 }
             };
             var parseResult = new ParseResult();
@@ -172,84 +244,12 @@ Error: Error help.
             A.CallTo(() => valueParser.TryParseEnum("Trace", out logLevel)).MustHaveHappened();
         }
 
-        [Test(Description = "Parse should add an OptionValueInvalidFormatError to the parse result when one of the specified values is not a invalid enum value.")]
-        public void Parse_InvalidValue_ShouldAddError()
-        {
-            var valueParser = A.Fake<ValueParser>();
-            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "logLevels");
-            parser.ValueParser = valueParser;
-
-            var tokens = new List<Token>
-            {
-                new OptionToken("logLevels")
-                {
-                    OptionValues = { "NonExistentLogLevel" }
-                }
-            };
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            LogLevel logLevel;
-
-            A.CallTo(() => valueParser.TryParseEnum("NonExistentLogLevel", out logLevel))
-                .Returns(false);
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueInvalidFormatError>();
-
-            var error = (OptionValueInvalidFormatError) parseResult.Errors[0];
-            error.OptionName.Should().Be("logLevels");
-            error.InvalidOptionValue.Should().Be("NonExistentLogLevel");
-            error.ExpectedValueFormat.Should().Be("One of the valid values (see help)");
-            error.GetErrorMessage().Should().Be("The value 'NonExistentLogLevel' of the option --logLevels has an invalid format. The expected format is: One of the valid values (see help).");
-        }
-
-        [Test(Description = "Parse should add an OptionMissingError error to the parse result when the option is required, but it was not supplied.")]
-        public void Parse_RequiredOptionMissing_ShouldAddError()
-        {
-            var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
-            parser.IsOptionRequired = true;
-
-            var tokens = new List<Token>();
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionMissingError>();
-
-            var error = (OptionMissingError)parseResult.Errors[0];
-            error.OptionName.Should().Be("enums");
-            error.GetErrorMessage().Should().Be("The option --enums is required.");
-        }
-
-        [Test(Description = "Parse should add an OptionValueMissingError error to the parse result when no value was supplied for the option.")]
-        public void Parse_OptionValueMissing_ShouldAddError()
+        [Test(Description = "TargetProperty should return the property that was specified via the constructor.")]
+        public void TargetProperty_ShouldReturnPropertySpecifiedViaConstructor()
         {
             var parser = new EnumListOptionParser<LogLevel>(typeof(DataTypesCommandOptions).GetProperty("Enums"), "enums");
 
-            var tokens = new List<Token>
-            {
-                new OptionToken("enums")
-            };
-
-            var parseResult = new ParseResult();
-            parseResult.CommandOptions = new DataTypesCommandOptions();
-
-            parser.Parse(tokens, parseResult);
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<OptionValueMissingError>();
-
-            var error = (OptionValueMissingError)parseResult.Errors[0];
-            error.OptionName.Should().Be("enums");
-            error.GetErrorMessage().Should().Be("The option --enums requires a value, but no value was specified.");
+            parser.TargetProperty.Should().BeSameAs(typeof(DataTypesCommandOptions).GetProperty("Enums"));
         }
     }
 }

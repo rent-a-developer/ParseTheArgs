@@ -84,9 +84,9 @@ A detailed documentation and a getting started guide can be found in the [wiki](
 - Automatic [help screens](https://github.com/rent-a-developer/ParseTheArgs/wiki/Help-screens) and error messages.
 - Supports [commands](https://github.com/rent-a-developer/ParseTheArgs/wiki/Commands) (verbs).
 - Supports custom [validators](https://github.com/rent-a-developer/ParseTheArgs/wiki/Validation).
-- Supports [all important .NET primitives](https://github.com/rent-a-developer/ParseTheArgs/wiki/Arguments) for option values: Boolean (switch), DateTime, Decimal, Enums, Guid, Int64, String, TimeSpan.
-- Supports [enums](https://github.com/rent-a-developer/ParseTheArgs/wiki/Enum-arguments) for options.
-- Supports [multi value options](https://github.com/rent-a-developer/ParseTheArgs/wiki/Multi-value-arguments).
+- Supports [all important .NET primitives](https://github.com/rent-a-developer/ParseTheArgs/wiki/Options) for option values: Boolean (switch), DateTime, Decimal, Enums, Guid, Int64, String, TimeSpan.
+- Supports [enums](https://github.com/rent-a-developer/ParseTheArgs/wiki/Enum-optionss) for options.
+- Supports [multi value options](https://github.com/rent-a-developer/ParseTheArgs/wiki/Multi-value-options).
 - Supports .NET Framework 4.5+, .NET Standard and .NET Core.
 - No dependencies (beyond standard .NET base libraries).
 

@@ -106,7 +106,7 @@ public class PingOptions
 
 public class Program
 {
-    public static void Main(String[] args)
+    public static Int32 Main(String[] args)
     {
         var parser = new Parser();
         var setup = parser.Setup;
@@ -117,7 +117,7 @@ public class Program
         var defaultCommand = setup
             .DefaultCommand<PingOptions>()
             .ExampleUsage(@"Ping --host www.google.de --noend --forceV6");
-    
+
         defaultCommand
             .Option(a => a.Host)
             .Name("host")
@@ -146,12 +146,14 @@ public class Program
 
         var parseResult = parser.Parse(args);
 
-        parseResult.Handle(
-            (PingOptions options) =>
+        parseResult.CommandHandler((PingOptions options) =>
             {
                 // Your code
+                return 0;
             }
         );
+
+        return parseResult.Handle();
     }
 }
 ```
@@ -221,7 +223,7 @@ public enum Operation
 
 public class Program
 {
-    public static void Main(String[] args)
+    public static Int32 Main(String[] args)
     {
         var parser = new Parser();
         var setup = parser.Setup;
@@ -229,7 +231,7 @@ public class Program
         var defaultCommand = setup
             .DefaultCommand<CalculatorOptions>()
             .ExampleUsage("Calculator --num1 5 --num2 10 --op add");
-        
+
         defaultCommand
             .Option(a => a.Number1)
             .Name("num1")
@@ -250,8 +252,7 @@ public class Program
 
         var parseResult = parser.Parse(args);
 
-        parseResult.Handle(
-            (CalculatorOptions options) =>
+        parseResult.CommandHandler((CalculatorOptions options) =>
             {
                 var result = 0M;
                 switch (options.Operation)
@@ -271,8 +272,12 @@ public class Program
                 }
 
                 Console.WriteLine($"Result is {result}.");
+
+                return 0;
             }
         );
+
+        return parseResult.Handle();
     }
 }
 ```
@@ -302,7 +307,7 @@ public class DeleteFileOptions
 
 public class Program
 {
-    public static void Main(String[] args)
+    public static Int32 Main(String[] args)
     {
         var parser = new Parser();
         var setup = parser.Setup;
@@ -310,19 +315,19 @@ public class Program
         var copyFileCommand = setup
             .DefaultCommand<CopyFileOptions>()
             .ExampleUsage(@"FileHelper copy --from C:\temp\test.txt --to C:\temp\test2.txt");
-        
+
         copyFileCommand
             .Option(a => a.SourceFileName)
             .Name("from")
             .Help("The source file to copy.")
             .IsRequired();
-        
+
         copyFileCommand
             .Option(a => a.TargetFileName)
             .Name("to")
             .Help("The target file to copy the source file to.")
             .IsRequired();
-        
+
         copyFileCommand
             .Option(a => a.Override)
             .Name("override")
@@ -339,16 +344,20 @@ public class Program
 
         var parseResult = parser.Parse(args);
 
-        parseResult.Handle(
-            (CopyFileOptions options) =>
-            {
-                File.Copy(options.SourceFileName, options.TargetFileName, options.Override);
-            },
-            (DeleteFileOptions options) =>
+        parseResult.CommandHandler((CopyFileOptions options) =>
+        {
+            File.Copy(options.SourceFileName, options.TargetFileName, options.Override);
+            return 0;
+        });
+
+        parseResult.CommandHandler((DeleteFileOptions options) =>
             {
                 File.Delete(options.File);
+                return 0;
             }
         );
+
+        return parseResult.Handle();
     }
 }
 ```

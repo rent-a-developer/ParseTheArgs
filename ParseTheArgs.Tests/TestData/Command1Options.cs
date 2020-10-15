@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace ParseTheArgs.Tests.TestData
 {
@@ -7,6 +6,5 @@ namespace ParseTheArgs.Tests.TestData
     {
         public String OptionA { get; set; }
         public String OptionB { get; set; }
-        public List<Int64> OptionC { get; set; }
     }
 }

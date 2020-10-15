@@ -124,6 +124,15 @@ namespace ParseTheArgs.Tests
                 .Should()
                 .Throw<Exception>()
                 .WithMessage("Command Handler Exception");
+
+            try
+            {
+                result.Handle();
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine(ex.ToString());
+            }
         }
 
         [Test(Description = "Handle should forward any exception thrown by the error handler.")]

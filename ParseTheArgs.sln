@@ -7,10 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseTheArgs", "ParseTheArg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseTheArgs.Tests", "ParseTheArgs.Tests\ParseTheArgs.Tests.csproj", "{4B464AC1-3693-4D66-86D5-F0D8A1236104}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseTheArgs.Demo", "ParseTheArgs.Demo\ParseTheArgs.Demo.csproj", "{4D5C0332-B3C2-4D42-9ACB-BD4A9980AE35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseTheArgs.Demo", "ParseTheArgs.Demo\ParseTheArgs.Demo.csproj", "{4D5C0332-B3C2-4D42-9ACB-BD4A9980AE35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{410E7211-2BFD-4A8C-9067-64BAE4662E76}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		CHANGELOG.md = CHANGELOG.md
 		LICENSE = LICENSE
 		README.md = README.md

@@ -504,11 +504,15 @@ Prints the help screen for the specified command.
             var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
             var errorTextWriter = A.Fake<TextWriter>();
             var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
-
+            var commandParser = A.Fake<ICommandParser>();
+            
             parser.ErrorTextWriter = errorTextWriter;
+            parser.CommandParsers.Add(commandParser);
 
             A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
             A.CallTo(() => tokenizer.Tokenize("--optionA")).Returns(new List<Token> {new OptionToken("optionA")});
+            A.CallTo(() => commandParser.IsCommandDefault).Returns(false);
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
             A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
 
             var parseResult = parser.Parse(new String[] {"--optionA"});

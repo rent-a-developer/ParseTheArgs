@@ -17,8 +17,8 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>1.0.2</Version>
-		<PackageReleaseNotes>Fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1.</PackageReleaseNotes>
+		<Version>1.1.0</Version>
+		<PackageReleaseNotes></PackageReleaseNotes>
 		<CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
 		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>

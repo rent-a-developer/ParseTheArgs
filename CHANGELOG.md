@@ -65,10 +65,12 @@ parseResult.CommandHandler((Command1Options options) => {
     // Handle command 1.
     return 0;
 });
+
 parseResult.CommandHandler((Command2Options options) => {
     // Handle command 2.
     return 0;
 });
+
 parseResult.ErrorHandler((ParseResult result) => {
     // Handle errors.
     return 1;

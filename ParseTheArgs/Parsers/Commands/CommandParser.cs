@@ -1,60 +1,68 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ParseTheArgs.Extensions;
-using ParseTheArgs.Parsers.Arguments;
+using ParseTheArgs.Parsers.Options;
 using ParseTheArgs.Tokens;
+using ParseTheArgs.Validation;
 
 namespace ParseTheArgs.Parsers.Commands
 {
     /// <summary>
     /// Parses a command line command.
     /// </summary>
-    /// <typeparam name="TCommandArguments">The type in which the values of the arguments of the command will be stored.</typeparam>
-    public class CommandParser<TCommandArguments> : ICommandParser
+    /// <typeparam name="TCommandOptions">The type in which the values of the options of the command will be stored.</typeparam>
+    public class CommandParser<TCommandOptions> : ICommandParser
+        where TCommandOptions : class
     {
         /// <summary>
         /// Initializes a new instance of this class.
         /// </summary>
         /// <param name="parser">The parser the command parser belongs to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parser" /> is null.</exception>
         public CommandParser(Parser parser)
         {
-            this.ArgumentParsers = new List<IArgumentParser>();
-            this.parser = parser;
-        }
+            if (parser == null)
+            {
+                throw new ArgumentNullException(nameof(parser));
+            }
 
-        /// <summary>
-        /// Defines the list of argument parsers for the command.
-        /// </summary>
-        public List<IArgumentParser> ArgumentParsers { get; }
+            this.parser = parser;
+            this.OptionParsers = new List<OptionParser>();
+
+            this.CommandName = String.Empty;
+            this.CommandHelp = String.Empty;
+            this.CommandExampleUsage = String.Empty;
+        }
 
         /// <summary>
         /// Defines a text that describes an example usage of the command.
         /// </summary>
-        public String CommandExampleUsage { get; set; }
+        public virtual String CommandExampleUsage { get; set; }
 
         /// <summary>
         /// Defines the help text of the command.
         /// </summary>
-        public String CommandHelp { get; set; }
+        public virtual String CommandHelp { get; set; }
 
         /// <summary>
         /// Defines the name of the command.
-        /// Will be null, if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
+        /// Will be <see cref="String.Empty" /> if the command is the default command (see <see cref="ICommandParser.IsCommandDefault" />).
         /// </summary>
-        public String CommandName { get; set; }
+        public virtual String CommandName { get; set; }
 
         /// <summary>
         /// Determines if the command is the default (non-named) command.
         /// If the command is the default command <see cref="ICommandParser.CommandName" /> will be null.
         /// </summary>
-        public Boolean IsCommandDefault { get; set; }
+        public virtual Boolean IsCommandDefault { get; set; }
 
         /// <summary>
-        /// Defines the validator to use to validate the command and its arguments.
+        /// Defines the validator to use to validate the command and its options.
         /// </summary>
-        public Action<CommandValidatorContext<TCommandArguments>> Validator { get; set; }
+        public virtual Action<CommandValidatorContext<TCommandOptions>>? Validator { get; set; }
 
         /// <summary>
         /// Gets the help text of the command.
@@ -71,7 +79,7 @@ namespace ParseTheArgs.Parsers.Commands
                 stringBuilder.Append($"{this.CommandName} ");
             }
 
-            stringBuilder.AppendLine(String.Join(" ", this.ArgumentParsers.Select(a => GetArgumentShortHelpPart(a))));
+            stringBuilder.AppendLine(String.Join(" ", this.OptionParsers.Select(a => GetOptionShortHelpPart(a))));
 
             stringBuilder.AppendLine();
 
@@ -81,29 +89,29 @@ namespace ParseTheArgs.Parsers.Commands
                 stringBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine("Arguments:");
+            stringBuilder.AppendLine("Options:");
 
-            var maxArgumentNameLength = this.ArgumentParsers.Count == 0 ? 0 : this.ArgumentParsers.Max(a => GetArgumentLongHelpPart(a).Length);
-            var argumentHelpRightPadding = maxArgumentNameLength + 1 + 11;
+            var maxOptionNameLength = this.OptionParsers.Count == 0 ? 0 : this.OptionParsers.Max(a => GetOptionLongHelpPart(a).Length);
+            var optionHelpRightPadding = maxOptionNameLength + 1 + 11;
 
-            foreach (var argumentParser in this.ArgumentParsers)
+            foreach (var optionParser in this.OptionParsers)
             {
-                var argumentHelpText = argumentParser.GetHelpText();
-                var argumentHelpTextWrappedLines = argumentHelpText.WordWrap(this.parser.HelpTextMaxLineLength - argumentHelpRightPadding);
+                var optionHelpText = optionParser.GetHelpText();
+                var optionHelpTextWrappedLines = optionHelpText.WordWrap(this.parser.HelpTextMaxLineLength - optionHelpRightPadding);
 
-                for (int i = 0; i < argumentHelpTextWrappedLines.Length; i++)
+                for (var i = 0; i < optionHelpTextWrappedLines.Length; i++)
                 {
                     if (i == 0)
                     {
-                        stringBuilder.Append($"{GetArgumentLongHelpPart(argumentParser).PadRight(maxArgumentNameLength)} ");
-                        stringBuilder.Append(argumentParser.IsArgumentRequired ? "(Required) " : "(Optional) ");
+                        stringBuilder.Append($"{GetOptionLongHelpPart(optionParser).PadRight(maxOptionNameLength)} ");
+                        stringBuilder.Append(optionParser.IsOptionRequired ? "(Required) " : "(Optional) ");
                     }
                     else
                     {
-                        stringBuilder.Append(new String(' ', argumentHelpRightPadding));
+                        stringBuilder.Append(new String(' ', optionHelpRightPadding));
                     }
 
-                    stringBuilder.AppendLine(argumentHelpTextWrappedLines[i]);
+                    stringBuilder.AppendLine(optionHelpTextWrappedLines[i]);
                 }
             }
 
@@ -118,11 +126,33 @@ namespace ParseTheArgs.Parsers.Commands
         }
 
         /// <summary>
+        /// Gets an existing option parser of type <typeparamref name="TOptionParser" /> for the specified target property <paramref name="targetProperty" />.
+        /// In case no such option parser exists yet a new one will be created.
+        /// </summary>
+        /// <typeparam name="TOptionParser">The type of option parser to get or create.</typeparam>
+        /// <param name="targetProperty">The target property to get or create the option parser for.</param>
+        /// <returns>The option parser of the specified type and for the specified target property.</returns>
+        public virtual TOptionParser GetOrCreateOptionParser<TOptionParser>(PropertyInfo targetProperty)
+            where TOptionParser : OptionParser
+        {
+            var optionParser = this.OptionParsers.OfType<TOptionParser>().FirstOrDefault(a => a.TargetProperty == targetProperty);
+
+            if (optionParser == null)
+            {
+                optionParser = Dependencies.Resolver.Resolve<TOptionParser>(targetProperty, targetProperty.Name.ToCamelCase());
+
+                this.OptionParsers.Add(optionParser);
+            }
+
+            return optionParser;
+        }
+
+        /// <summary>
         /// Parses the given tokens and puts the result of the parsing into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to parse.</param>
-        /// <param name="parseResult">The parse result to put result of the parsing into.</param>
-        public void Parse(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
+        /// <param name="parseResult">The object where to put the result of the parsing into.</param>
+        public void Parse(List<Token> tokens, ParseResult parseResult)
         {
             var commandToken = tokens.OfType<CommandToken>().FirstOrDefault();
 
@@ -133,10 +163,10 @@ namespace ParseTheArgs.Parsers.Commands
                     commandToken.IsParsed = true;
                 }
 
-                parseResult.CommandArguments = Activator.CreateInstance(typeof(TCommandArguments));
+                parseResult.CommandOptions = Activator.CreateInstance(typeof(TCommandOptions));
                 parseResult.CommandName = this.CommandName;
 
-                this.ArgumentParsers.ForEach(a => a.Parse(tokens, parseResult));
+                this.OptionParsers.ForEach(a => a.Parse(tokens, parseResult));
             }
         }
 
@@ -144,75 +174,99 @@ namespace ParseTheArgs.Parsers.Commands
         /// Validates the given tokens and puts the result of the validation into the given parse result object.
         /// </summary>
         /// <param name="tokens">The tokens to validate.</param>
-        /// <param name="parseResult">The parse result to put result of the validation into.</param>
-        public void Validate(List<CommandLineArgumentsToken> tokens, ParseResult parseResult)
+        /// <param name="parseResult">The object where to put the result of the validation into.</param>
+        public void Validate(List<Token> tokens, ParseResult parseResult)
         {
             var commandToken = tokens.OfType<CommandToken>().FirstOrDefault();
 
             if ((commandToken == null && this.IsCommandDefault) || (commandToken != null && commandToken.CommandName == this.CommandName))
             {
-                this.Validator?.Invoke(new CommandValidatorContext<TCommandArguments>(this, parseResult));
-                this.ArgumentParsers.ForEach(a => a.Validate(tokens, parseResult));
+                this.Validator?.Invoke(new CommandValidatorContext<TCommandOptions>(this, parseResult));
             }
         }
 
-        private static String GetArgumentLongHelpPart(IArgumentParser argumentParser)
+        internal List<OptionParser> OptionParsers { get; }
+
+        /// <summary>
+        /// Determines whether the specified option parser can use the specified option name.
+        /// If no other option parser than the specified one currently uses the specified option name this method returns true.
+        /// In another option parser than the specified one currently uses the specified option name this method returns false.
+        /// </summary>
+        /// <param name="optionParser">The option parser that wants to use the specified option name.</param>
+        /// <param name="optionName">The option name to check.</param>
+        /// <returns>True if no option parser other than the specified one currently uses the specified option name; otherwise, false.</returns>
+        internal virtual Boolean CanOptionParserUseOptionName(OptionParser optionParser, String optionName)
+        {
+            return !this.OptionParsers.Any(a => a.OptionName == optionName && a != optionParser);
+        }
+
+        /// <summary>
+        /// Gets the name of the option that is associated with the given target property.
+        /// </summary>
+        /// <param name="targetProperty">The target property to get the option name for.</param>
+        /// <param name="optionName">The name of the option that is associated with the given target property.</param>
+        /// <returns>True if an option exists that is associated with the given target property; otherwise, false.</returns>
+        internal virtual Boolean TryGetOptionName(PropertyInfo targetProperty, out String optionName)
+        {
+            var optionParser = this.OptionParsers.FirstOrDefault(a => a.TargetProperty == targetProperty);
+
+            if (optionParser == null)
+            {
+                optionName = String.Empty;
+                return false;
+            }
+
+            optionName = optionParser.OptionName;
+            return true;
+        }
+
+        private static String GetOptionLongHelpPart(OptionParser optionParser)
         {
             var result = "";
 
-            if (argumentParser.ArgumentName.ShortName != null)
-            {
-                result += $"-{argumentParser.ArgumentName.ShortName}|";
-            }
+            result += $"--{optionParser.OptionName}";
 
-            result += $"--{argumentParser.ArgumentName.Name}";
-
-            switch (argumentParser.ArgumentType)
+            switch (optionParser.OptionType)
             {
-                case ArgumentType.ValuelessArgument:
+                case OptionType.ValuelessOption:
                     break;
 
-                case ArgumentType.SingleValueArgument:
+                case OptionType.SingleValueOption:
                     result += " [value]";
                     break;
 
-                case ArgumentType.MultiValueArgument:
+                case OptionType.MultiValueOption:
                     result += " [value value ...]";
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The ArgumentType '{argumentParser.ArgumentType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supported.");
             }
 
             return result;
         }
 
-        private static String GetArgumentShortHelpPart(IArgumentParser argumentParser)
+        private static String GetOptionShortHelpPart(OptionParser optionParser)
         {
             var result = "[";
 
-            if (argumentParser.ArgumentName.ShortName != null)
-            {
-                result += $"-{argumentParser.ArgumentName.ShortName}|";
-            }
+            result += $"--{optionParser.OptionName}";
 
-            result += $"--{argumentParser.ArgumentName.Name}";
-
-            switch (argumentParser.ArgumentType)
+            switch (optionParser.OptionType)
             {
-                case ArgumentType.ValuelessArgument:
+                case OptionType.ValuelessOption:
                     break;
 
-                case ArgumentType.SingleValueArgument:
+                case OptionType.SingleValueOption:
                     result += " value";
                     break;
 
-                case ArgumentType.MultiValueArgument:
+                case OptionType.MultiValueOption:
                     result += " value value ...";
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"The ArgumentType '{argumentParser.ArgumentType}' is not supproted.");
+                    throw new ArgumentOutOfRangeException($"The OptionType '{optionParser.OptionType}' is not supported.");
             }
 
             result += "]";

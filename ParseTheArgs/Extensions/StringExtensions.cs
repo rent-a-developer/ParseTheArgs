@@ -13,7 +13,12 @@ namespace ParseTheArgs.Extensions
     {
         /// <summary>
         /// Splits the given text into individual words in the order they appear in the text.
-        /// The text is split each time a space or underscore character is found or when the casing of the text changes form lower case to upper case.
+        /// 
+        /// The text is split each time:
+        /// - A space character is found or
+        /// - A underscore character is found or
+        /// - When the casing in the text changes form lower to upper case.
+        /// 
         /// Each word is returned in lower case.
         /// </summary>
         /// <param name="text">The text to split into words.</param>
@@ -24,6 +29,7 @@ namespace ParseTheArgs.Extensions
         /// "CommandLineArgument".SplitWords();   // Returns ["command", "line", "argument"].
         /// "command_line_argument".SplitWords(); // Returns ["command", "line", "argument"].
         /// "command line argument".SplitWords(); // Returns ["command", "line", "argument"].
+        /// "command1options".SplitWords();       // Returns ["command1", "options"].
         /// </code>
         /// </example>
         public static IEnumerable<String> SplitWords(this String text)
@@ -38,23 +44,30 @@ namespace ParseTheArgs.Extensions
             for (var i = 0; i < text.Length; i++)
             {
                 var character = text[i];
-                if (character == ' ' || character == '_')
+
+                var isWordSeparatorCharacter = character == ' ' || character == '_';
+                var isCasingChangingFromLoweToUpper = i > 0 && Char.IsUpper(character) && !Char.IsUpper(text[i - 1]);
+
+                if (isWordSeparatorCharacter)
                 {
+                    // We hit a word boundary, so we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
                     {
                         yield return currentWordBuilder.ToString();
                         currentWordBuilder.Clear();
                     }
                 }
-                else if (i > 0 && Char.IsLower(text[i - 1]) && Char.IsUpper(character))
+                else if (isCasingChangingFromLoweToUpper)
                 {
-                    // Casing has changed from lower case to upper case, so a new word started.
+                    // Either the casing has changed from lower to upper case or the end of a number has been found.
+                    // Since we consider both cases as a word boundary we return all the characters we have collected so far and clear the builder to start a new word.
                     if (currentWordBuilder.Length > 0)
                     {
                         yield return currentWordBuilder.ToString();
                     }
 
                     currentWordBuilder.Clear();
+
                     currentWordBuilder.Append(Char.ToLower(character));
                 }
                 else
@@ -70,14 +83,14 @@ namespace ParseTheArgs.Extensions
         }
 
         /// <summary>
-        /// Converts the given string into lower camel case (see https://en.wikipedia.org/wiki/Camel_case).
+        /// Converts the given string into camel case (see https://en.wikipedia.org/wiki/Camel_case).
         /// </summary>
         /// <param name="value">The string to convert to lower camel case.</param>
         /// <returns>The given string converted to lower camel case.</returns>
-        /// "commandLineArgument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "CommandLineArgument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "command_line_argument".ToLowerCamelCase(); // Returns "commandLineArgument".
-        /// "command line argument".ToLowerCamelCase(); // Returns "commandLineArgument".
+        /// "commandLineArgument".ToCamelCase();   // Returns "commandLineArgument".
+        /// "CommandLineArgument".ToCamelCase();   // Returns "commandLineArgument".
+        /// "command_line_argument".ToCamelCase(); // Returns "commandLineArgument".
+        /// "command line argument".ToCamelCase(); // Returns "commandLineArgument".
         public static String ToCamelCase(this String value)
         {
             if (String.IsNullOrEmpty(value))
@@ -134,9 +147,14 @@ namespace ParseTheArgs.Extensions
         /// <returns>The wrapped lines of the given text.</returns>
         public static String[] WordWrap(this String text, Int32 lineLength)
         {
-            if (String.IsNullOrEmpty(text))
+            if (text == null)
             {
-                return new String[] {text};
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text == String.Empty)
+            {
+                return new String[] {String.Empty};
             }
 
             var pattern = @"(?<line>.{1," + lineLength + @"})(?<!\s)(\s+|$)|(?<line>.+?)(\s+|$)";

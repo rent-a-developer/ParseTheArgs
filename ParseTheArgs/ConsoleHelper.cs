@@ -3,9 +3,24 @@ using System.IO;
 
 namespace ParseTheArgs
 {
-    internal static class ConsoleHelper
+    internal class ConsoleHelper
     {
-        internal static Boolean IsConsolePresent()
+        public virtual TextWriter GetConsoleErrorWriter()
+        {
+            return Console.Error;
+        }
+
+        public virtual TextWriter GetConsoleOutWriter()
+        {
+            return Console.Out;
+        }
+
+        public virtual Int32 GetConsoleWindowWidth()
+        {
+            return Console.WindowWidth;
+        }
+
+        public virtual Boolean IsConsolePresent()
         {
             try
             {

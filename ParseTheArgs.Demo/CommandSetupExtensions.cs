@@ -7,9 +7,12 @@ namespace ParseTheArgs.Demo
 {
     public static class CommandSetupExtensions
     {
-        public static FileInfoArgumentSetup<TCommandArguments> Argument<TCommandArguments>(this CommandSetup<TCommandArguments> commandSetup, Expression<Func<TCommandArguments, FileInfo>> propertyExpression) where TCommandArguments : new()
+        public static FileInfoOptionSetup<TCommandOptions> Option<TCommandOptions>(this CommandSetup<TCommandOptions> commandSetup, Expression<Func<TCommandOptions, FileInfo>> propertyExpression) where TCommandOptions : class, new()
         {
-            return new FileInfoArgumentSetup<TCommandArguments>(commandSetup.CommandParser, propertyExpression);
+            var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
+            var optionParser = commandSetup.CommandParser.GetOrCreateOptionParser<FileInfoOptionParser>(targetProperty);
+
+            return new FileInfoOptionSetup<TCommandOptions>(commandSetup.CommandParser, optionParser);
         }
     }
 }

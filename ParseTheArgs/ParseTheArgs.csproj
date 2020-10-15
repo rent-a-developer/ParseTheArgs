@@ -15,44 +15,49 @@
 		<Description>Simple, yet powerful, strongly typed command line arguments parser library for .NET.</Description>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>Fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1.</PackageReleaseNotes>
-    <CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Version>1.1.0</Version>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	  <DocumentationFile>ParseTheArgs.xml</DocumentationFile>
-	  <DebugType>full</DebugType>
-	  <DebugSymbols>true</DebugSymbols>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<DocumentationFile>ParseTheArgs.xml</DocumentationFile>
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-	  <DocumentationFile>ParseTheArgs.xml</DocumentationFile>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<DocumentationFile>ParseTheArgs.xml</DocumentationFile>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
 		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AdditionalFiles Include="..\.sonarlint\rent-a-developer_parsetheargs\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+		<AdditionalFiles Include="..\.sonarlint\rent-a-developer_parsetheargs\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="..\LICENSE.md">
-	    <Pack>True</Pack>
-	    <PackagePath></PackagePath>
-	  </None>
-	  <None Include="icon.png">
-	    <Pack>True</Pack>
-	    <PackagePath></PackagePath>
-	  </None>
+		<None Include="..\LICENSE.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

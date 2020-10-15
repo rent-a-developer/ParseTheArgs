@@ -1,702 +1,590 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using FakeItEasy;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using ParseTheArgs.Errors;
+using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Tests.TestData;
+using ParseTheArgs.Tokens;
 
 namespace ParseTheArgs.Tests
 {
     [TestFixture]
-    public class ParserTests
+    public class ParserTests : BaseTestFixture
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
+            // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
-        [Test]
-        public void TestParse_Help()
+        #endregion
+
+        [Test(Description = "Banner should return an empty string initially.")]
+        public void Banner_Initially_ShouldReturnEmptyString()
         {
             var parser = new Parser();
 
-            var helpTextWriterMock = new Mock<TextWriter>();
+            parser.Banner.Should().BeEmpty();
+        }
 
-            var setup = parser.Setup;
+        [Test(Description = "CanCommandParserUseCommandName should return true when there is no other command parser that already uses the given command name.")]
+        public void CanCommandParserUseCommandName_CommandNameIsAvailable_ShouldReturnTrue()
+        {
+            var parser = new Parser();
+            var commandParser1 = A.Fake<ICommandParser>();
 
-            setup
-                .ProgramName("tool")
-                .Banner("Banner Text");
+            parser.CommandParsers.Add(commandParser1);
 
-            setup
-                .Command<Command1Arguments>()
-                .Name("command1");
+            parser.CanCommandParserUseCommandName(commandParser1, "command1").Should().BeTrue();
+        }
 
-            setup
-                .HelpTextWriter(helpTextWriterMock.Object);
+        [Test(Description = "CanCommandParserUseCommandName should return false when there is another command parser that already uses the given command name.")]
+        public void CanCommandParserUseCommandName_CommandNameIsNotAvailable_ShouldReturnFalse()
+        {
+            var parser = new Parser();
+            var commandParser1 = A.Fake<ICommandParser>();
+            var commandParser2 = A.Fake<ICommandParser>();
 
-            var parseResult1 = parser.Parse(new String[] {});
+            parser.CommandParsers.Add(commandParser1);
+            parser.CommandParsers.Add(commandParser2);
+
+            A.CallTo(() => commandParser1.CommandName).Returns("command1");
+
+            parser.CanCommandParserUseCommandName(commandParser2, "command1").Should().BeFalse();
+        }
+
+        [Test(Description = "ErrorTextWriter should initially return an null when no console is present.")]
+        public void ErrorTextWriter_Initially_ConsoleNotPresent_ShouldReturnNull()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.ErrorTextWriter.Should().BeNull();
+        }
+
+        [Test(Description = "ErrorTextWriter should initially return Console.Error when a console is present.")]
+        public void ErrorTextWriter_Initially_ConsolePresent_ShouldReturnConsoleError()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+            var consoleErrorWriter = A.Fake<TextWriter>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleErrorWriter()).Returns(consoleErrorWriter);
+
+            var parser = new Parser();
+
+            parser.ErrorTextWriter.Should().Be(consoleErrorWriter);
+        }
+
+        [Test(Description = "GetCommandHelpText should return the help text of the command parser that handles the given command.")]
+        public void GetCommandHelpText_CommandParserDoesExist_ShouldReturnHelpTextFromCommandParser()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var commandParser = A.Fake<ICommandParser>();
+            parser.CommandParsers.Add(commandParser);
+
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
+            A.CallTo(() => commandParser.GetHelpText()).Returns("Command1 help text");
+
+            parser.GetCommandHelpText("command1", false).Should().Be("Command1 help text");
+        }
+
+        [Test(Description = "GetCommandHelpText should return an error message when no command parser for the given command exist.")]
+        public void GetCommandHelpText_CommandParserDoesNotExist_ShouldReturnErrorMessage()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            parser.GetCommandHelpText("command1", false).Should().Be(@"The command 'command1' is unknown.
+Try the following command to get a list of valid commands:
+Test help
+");
+        }
+
+        [Test(Description = "GetCommandHelpText should include the banner text when includeBanner is true.")]
+        public void GetCommandHelpText_IncludeBannerText_ShouldReturnHelpTextFromCommandParser()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var commandParser = A.Fake<ICommandParser>();
+            parser.CommandParsers.Add(commandParser);
+
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
+            A.CallTo(() => commandParser.GetHelpText()).Returns("Command1 help text");
+
+            parser.GetCommandHelpText("command1", true).Should().Be(@"Banner text
+
+Command1 help text");
+        }
+
+        [Test(Description = "GetErrorsText should return the error messages of the errors when errors are present.")]
+        public void GetErrorsText_ErrorsPresent_ShouldReturnMessagesOfErrors()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var parseResult = A.Fake<ParseResult>();
+            var error1 = A.Fake<IParseError>();
+            var error2 = A.Fake<IParseError>();
+
+            A.CallTo(() => error1.GetErrorMessage()).Returns("Error1 message");
+            A.CallTo(() => error2.GetErrorMessage()).Returns("Error2 message");
+
+            var errors = new List<IParseError> {error1, error2};
+            A.CallTo(() => parseResult.CommandName).Returns("command1");
+            A.CallTo(() => parseResult.HasErrors).Returns(true);
+            A.CallTo(() => parseResult.Errors).Returns(errors.AsReadOnly());
+
+            parser.GetErrorsText(parseResult, false).Should().Be(@"Invalid or missing option(s):
+- Error1 message
+- Error2 message
+
+Try the following command to get help:
+Test help command1
+");
+        }
+
+        [Test(Description = "GetErrorsText should include the banner text when includeBanner is true.")]
+        public void GetErrorsText_IncludeBanner_ShouldIncludeBannerText()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var parseResult = A.Fake<ParseResult>();
+            var error1 = A.Fake<IParseError>();
+            var error2 = A.Fake<IParseError>();
+
+            A.CallTo(() => error1.GetErrorMessage()).Returns("Error1 message");
+            A.CallTo(() => error2.GetErrorMessage()).Returns("Error2 message");
+
+            var errors = new List<IParseError> {error1, error2};
+            A.CallTo(() => parseResult.HasErrors).Returns(true);
+            A.CallTo(() => parseResult.Errors).Returns(errors.AsReadOnly());
+
+            parser.GetErrorsText(parseResult, true).Should().Be(@"Banner text
+
+Invalid or missing option(s):
+- Error1 message
+- Error2 message
+
+Try the following command to get help:
+Test help
+");
+        }
+
+        [Test(Description = "GetErrorsText should return an empty string when no errors are present.")]
+        public void GetErrorsText_NoErrorsPresent_ShouldReturnEmptyString()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var parseResult = A.Fake<ParseResult>();
+
+            A.CallTo(() => parseResult.HasErrors).Returns(false);
+
+            parser.GetErrorsText(parseResult).Should().BeEmpty();
+        }
+
+        [Test(Description = "GetHelpText should include the banner text when includeBanner is true.")]
+        public void GetHelpText_IncludeBanner_ShouldIncludeBannerText()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+            parser.Banner = "Banner text";
+
+            var defaultCommandParser = A.Fake<ICommandParser>();
+            A.CallTo(() => defaultCommandParser.IsCommandDefault).Returns(true);
+            A.CallTo(() => defaultCommandParser.CommandName).Returns(String.Empty);
+            A.CallTo(() => defaultCommandParser.GetHelpText()).Returns("Default command help text");
+            parser.CommandParsers.Add(defaultCommandParser);
+
+            parser.GetHelpText(true).Should().Be(@"Banner text
+
+Default command help text
+Test help
+Prints this help screen.
+");
+        }
+
+        [Test(Description = "GetHelpText should return the help texts from the command parsers.")]
+        public void GetHelpText_ShouldReturnHelpTextsFromCommandParsers()
+        {
+            var parser = new Parser();
+            parser.ProgramName = "Test";
+
+            var defaultCommandParser = A.Fake<ICommandParser>();
+            A.CallTo(() => defaultCommandParser.IsCommandDefault).Returns(true);
+            A.CallTo(() => defaultCommandParser.CommandName).Returns(String.Empty);
+            A.CallTo(() => defaultCommandParser.GetHelpText()).Returns("Default command help text");
+            parser.CommandParsers.Add(defaultCommandParser);
+
+            var namedCommandParser1 = A.Fake<ICommandParser>();
+            A.CallTo(() => namedCommandParser1.IsCommandDefault).Returns(false);
+            A.CallTo(() => namedCommandParser1.CommandName).Returns("command1");
+            A.CallTo(() => namedCommandParser1.CommandHelp).Returns("Command1 help text");
+            parser.CommandParsers.Add(namedCommandParser1);
+
+            var namedCommandParser2 = A.Fake<ICommandParser>();
+            A.CallTo(() => namedCommandParser2.IsCommandDefault).Returns(false);
+            A.CallTo(() => namedCommandParser2.CommandName).Returns("command2");
+            A.CallTo(() => namedCommandParser2.CommandHelp).Returns("Command2 help text");
+            parser.CommandParsers.Add(namedCommandParser2);
+
+            parser.GetHelpText(false).Should().Be(@"Default command help text
+Test <command> [options]
+
+Commands:
+command1	Command1 help text
+command2	Command2 help text
+
+Test help
+Prints this help screen.
+
+Test help <command>
+Prints the help screen for the specified command.
+");
+        }
+
+        [Test(Description = "GetOrCreateCommandParser should return the existing command parser when a matching command parser already exists.")]
+        public void GetOrCreateCommandParser_CommandParserDoesExist_ShouldReturnExistingCommandParser()
+        {
+            var parser = new Parser();
+            var defaultCommandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var namedCommandParser = A.Fake<CommandParser<Command2Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command2Options>(parser)));
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).Returns(defaultCommandParser);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).Returns(namedCommandParser);
+
+            parser.GetOrCreateCommandParser<Command1Options>(null);
+            parser.GetOrCreateCommandParser<Command2Options>("command2");
+
+            parser.GetOrCreateCommandParser<Command1Options>(null).Should().Be(defaultCommandParser);
+            parser.GetOrCreateCommandParser<Command2Options>("command2").Should().Be(namedCommandParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test(Description = "GetOrCreateCommandParser should create a new command parser when no matching command parser already exists.")]
+        public void GetOrCreateCommandParser_CommandParserDoesNotExist_ShouldCreateNewCommandParser()
+        {
+            var parser = new Parser();
+            var defaultCommandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
+            var namedCommandParser = A.Fake<CommandParser<Command2Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command2Options>(parser)));
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).Returns(defaultCommandParser);
+
+            parser.GetOrCreateCommandParser<Command1Options>(null).Should().Be(defaultCommandParser);
+
+            defaultCommandParser.IsCommandDefault.Should().BeTrue();
+            defaultCommandParser.CommandName.Should().BeEmpty();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command1Options>>(parser)).MustHaveHappened();
+
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).Returns(namedCommandParser);
+
+            parser.GetOrCreateCommandParser<Command2Options>("command2").Should().Be(namedCommandParser);
+
+            namedCommandParser.IsCommandDefault.Should().BeFalse();
+            namedCommandParser.CommandName.Should().Be("command2");
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandParser<Command2Options>>(parser)).MustHaveHappened();
+        }
+
+        [Test(Description = "HelpTextMaxLineLength should initially return Int32.MaxValue when no console is present.")]
+        public void HelpTextMaxLineLength_Initially_ConsoleNotPresent_ShouldReturnInt32MaxValue()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.HelpTextMaxLineLength.Should().Be(Int32.MaxValue);
+        }
+
+        [Test(Description = "HelpTextMaxLineLength should initially return Console.WindowWidth when a console is present.")]
+        public void HelpTextMaxLineLength_Initially_ConsolePresent_ShouldReturnConsoleWindowWidth()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleWindowWidth()).Returns(123);
+
+            var parser = new Parser();
+
+            parser.HelpTextMaxLineLength.Should().Be(123);
+        }
+
+        [Test(Description = "HelpTextWriter should initially return an null when no console is present.")]
+        public void HelpTextWriter_Initially_ConsoleNotPresent_ShouldReturnNull()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(false);
+
+            var parser = new Parser();
+
+            parser.HelpTextWriter.Should().BeNull();
+        }
+
+        [Test(Description = "HelpTextWriter should initially return Console.Out when a console is present.")]
+        public void HelpTextWriter_Initially_ConsolePresent_ShouldReturnConsoleOut()
+        {
+            var consoleHelper = A.Fake<ConsoleHelper>();
+            var consoleOutWriter = A.Fake<TextWriter>();
+
+            A.CallTo(() => this.DependencyResolver.Resolve<ConsoleHelper>()).Returns(consoleHelper);
+            A.CallTo(() => consoleHelper.IsConsolePresent()).Returns(true);
+            A.CallTo(() => consoleHelper.GetConsoleOutWriter()).Returns(consoleOutWriter);
+
+            var parser = new Parser();
+
+            parser.HelpTextWriter.Should().Be(consoleOutWriter);
+        }
+
+        [Test(Description = "IgnoreUnknownOptions should initially return false.")]
+        public void IgnoreUnknownOptions_Initially_ShouldReturnFalse()
+        {
+            var parser = new Parser();
+
+            parser.IgnoreUnknownOptions.Should().BeFalse();
+        }
+
+        [Test(Description = "Parse should write the command help screen to the help text writer when command help was called.")]
+        public void Parse_CommandHelpCalled_ShouldWriteCommandHelpScreenToHelpTextWriter()
+        {
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var helpTextWriter = A.Fake<TextWriter>();
+
+            parser.HelpTextWriter = helpTextWriter;
+
+            A.CallTo(() => parser.GetCommandHelpText("command1", true)).Returns("Command1 help screen");
+
+            parser.Parse(new String[] {"help", "command1"});
+
+            A.CallTo(() => parser.GetCommandHelpText("command1", true)).MustHaveHappened();
+            A.CallTo(() => helpTextWriter.Write("Command1 help screen")).MustHaveHappened();
+        }
+
+        [Test(Description = "Parse should print the error screen when a command parser has added an error to the parse result.")]
+        public void Parse_CommandParserAddedError_ShouldPrintErrors()
+        {
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+            var commandParser = A.Fake<ICommandParser>();
+            var error = A.Fake<IParseError>();
+            var errorTextWriter = A.Fake<TextWriter>();
+
+            parser.ErrorTextWriter = errorTextWriter;
+            parser.CommandParsers.Add(commandParser);
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+
+            var tokens = new List<Token> {new CommandToken("command1")};
+            A.CallTo(() => tokenizer.Tokenize("command1")).Returns(tokens);
+
+            A.CallTo(() => commandParser.Parse(tokens, A<ParseResult>.Ignored)).Invokes((List<Token> tokens2, ParseResult parseResult2) => { parseResult2.AddError(error); });
+
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
+
+            parser.Parse(new String[] {"command1"});
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
+        }
+
+        [Test(Description = "Parse should return a DuplicateOptionError when an option was specified more than once.")]
+        public void Parse_DuplicateOption_ShouldReturnError()
+        {
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+
+            parser.ErrorTextWriter = errorTextWriter;
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+            A.CallTo(() => tokenizer.Tokenize("command1", "--optionA", "optionAValue", "--optionA")).Returns(new List<Token> {new CommandToken("command1"), new OptionToken("optionA") {OptionValues = {"optionAValue"}}, new OptionToken("optionA")});
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
+
+            var parseResult = parser.Parse(new String[] {"command1", "--optionA", "optionAValue", "--optionA"});
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Count.Should().Be(1);
+            parseResult.Errors[0].Should().BeOfType<DuplicateOptionError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The option --optionA is used more than once. Please only use each option once.");
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
+        }
+
+        [Test(Description = "Parse should set ParseResult.IsHelpCalled to true when the help was called.")]
+        public void Parse_HelpCalled_ShouldSetIsHelpCalledToTrue()
+        {
+            var parser = new Parser();
+
+            var parseResult1 = parser.Parse(new String[] { });
             parseResult1.IsHelpCalled.Should().BeTrue();
 
             var parseResult2 = parser.Parse(new String[] {"help"});
             parseResult2.IsHelpCalled.Should().BeTrue();
 
-            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
-
-tool <command> [arguments]
-
-Commands:
-command1	
-
-tool help
-Prints this help screen.
-
-tool help <command>
-Prints the help screen for the specified command.
-"), Times.Exactly(2));
-
-            parser.Parse(new String[] { "help", "command1" });
-
-            helpTextWriterMock.Verify(a => a.Write(@"Banner Text
-
-tool command1 
-
-Arguments:
-"), Times.Exactly(1));
+            var parseResult3 = parser.Parse(new String[] {"help", "command1"});
+            parseResult3.IsHelpCalled.Should().BeTrue();
         }
 
-        [Test(Description = "Tests fix for https://github.com/rent-a-developer/ParseTheArgs/issues/1")]
-        public void TestParse_Help_ArgumentWithoutHelp()
+        [Test(Description = "Parse should write the help screen to the help text writer when help was called.")]
+        public void Parse_HelpCalled_ShouldWriteHelpScreenToHelpTextWriter()
         {
-            var parser = new Parser();
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var helpTextWriter = A.Fake<TextWriter>();
 
-            parser.Setup.HelpTextWriter(new StringWriter());
+            parser.HelpTextWriter = helpTextWriter;
 
-            var defaultCommand = parser.Setup
-                .DefaultCommand<Command1Arguments>();
+            A.CallTo(() => parser.GetHelpText(true)).Returns("Help screen");
 
-            defaultCommand
-                .Argument(a => a.ArgumentA)
-                .Name("argumentA");
+            parser.Parse(new String[] { });
 
-            parser.Invoking(a => a.Parse(new String[] { })).Should().NotThrow();
+            A.CallTo(() => parser.GetHelpText(true)).MustHaveHappened();
+            A.CallTo(() => helpTextWriter.Write("Help screen")).MustHaveHappened();
         }
 
-        [Test]
-        public void TestParse_Error()
+        [Test(Description = "Parse should ignore unknown options when the IgnoreUnknownOptions is enabled.")]
+        public void Parse_IgnoreUnknownOptionsEnabled_ShouldIgnoreUnknownOptions()
         {
-            var parser = new Parser();
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+            var commandParser = A.Fake<ICommandParser>();
 
-            var mock = new Mock<TextWriter>();
+            parser.IgnoreUnknownOptions = true;
+            parser.ErrorTextWriter = errorTextWriter;
+            parser.CommandParsers.Add(commandParser);
 
-            var setup = parser.Setup;
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
 
-            setup
-                .ProgramName("tool")
-                .Banner("Banner Text");
+            var tokens = new List<Token> {new CommandToken("command1"), new OptionToken("unknownOption")};
+            tokens[0].IsParsed = true;
 
-            setup
-                .Command<Command1Arguments>()
-                .Name("command1");
+            A.CallTo(() => tokenizer.Tokenize("command1", "--unknownOption")).Returns(tokens);
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
 
-            setup
-                .ErrorTextWriter(mock.Object);
+            var parseResult = parser.Parse(new String[] {"command1", "--unknownOption"});
 
-            parser.Parse(new String[] {"command1", "--unknownArgument"});
-
-            mock.Verify(a => a.Write(@"Banner Text
-
-Invalid or missing argument(s):
-- The argument --unknownArgument is unknown.
-
-Try the following command to get help:
-tool help command1
-"));
-        }
-
-        [Test]
-        public void TestGetCommandHelpText()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup
-                .ProgramName("tool")
-                .Banner("Banner Text");
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Help("Command1 help.");
-            command1.ExampleUsage("Command1 Example Usage.");
-            command1.Argument(a => a.ArgumentA).Help("ArgumentA help.").ShortName('a').IsRequired();
-            command1.Argument(a => a.ArgumentB).Help("ArgumentB help.").ShortName('b');
-            command1.Argument(a => a.ArgumentC).Help("ArgumentC help.").IsRequired();
-
-            parser
-                .GetCommandHelpText("command1")
-                .Should()
-                .Be(@"Banner Text
-
-tool command1 [-a|--argumentA value] [-b|--argumentB value] [--argumentC value value ...]
-
-Command1 help.
-
-Arguments:
--a|--argumentA [value]        (Required) ArgumentA help.
--b|--argumentB [value]        (Optional) ArgumentB help.
---argumentC [value value ...] (Required) ArgumentC help.
-
-Example usage:
-Command1 Example Usage.
-");
-
-            parser
-                .GetCommandHelpText("command1", false)
-                .Should()
-                .Be(@"tool command1 [-a|--argumentA value] [-b|--argumentB value] [--argumentC value value ...]
-
-Command1 help.
-
-Arguments:
--a|--argumentA [value]        (Required) ArgumentA help.
--b|--argumentB [value]        (Optional) ArgumentB help.
---argumentC [value value ...] (Required) ArgumentC help.
-
-Example usage:
-Command1 Example Usage.
-");
-
-            parser
-                .GetCommandHelpText("unknownCommand", false)
-                .Should()
-                .Be(@"The command 'unknownCommand' is unknown.
-Try the following command to get a list of valid commands:
-tool help
-");
-        }
-
-        [Test]
-        public void TestGetErrorsText()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup
-                .ProgramName("tool")
-                .Banner("Banner Text");
-
-            parser
-                .GetErrorsText(new ParseResult())
-                .Should()
-                .BeEmpty();
-
-            var parseResult = new ParseResult();
-            parseResult.AddError(new ArgumentMissingError(new ArgumentName("argumentA", 'a')));
-            parseResult.AddError(new ArgumentMultipleValuesError(new ArgumentName("argumentA", 'a')));
-
-            parser
-                .GetErrorsText(parseResult)
-                .Should()
-                .Be(@"Banner Text
-
-Invalid or missing argument(s):
-- The argument -a (--argumentA) is missing.
-- Multiple values are given for the argument -a (--argumentA), but the argument does not support multiple values.
-
-Try the following command to get help:
-tool help
-");
-        }
-
-        [Test]
-        public void TestGetHelpText()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.ProgramName("tool").Banner("Banner Text");
-
-            parser
-                .GetHelpText()
-                .Should()
-                .Be(@"Banner Text
-
-tool help
-Prints this help screen.
-");
-
-            var defaultCommand = setup.DefaultCommand<DefaultArguments>();
-            defaultCommand.Help("DefaultCommand Help.");
-            defaultCommand.ExampleUsage("DefaultCommand Example Usage");
-            defaultCommand.Argument(a => a.ArgumentA).Help("ArgumentA help.");
-            defaultCommand.Argument(a => a.ArgumentB).Help("ArgumentB help.");
-            defaultCommand.Argument(a => a.ArgumentC).Help("ArgumentC help.");
-
-            defaultCommand
-                .Argument(a => a.ArgumentD)
-                .Help("ArgumentD help.");
-
-            defaultCommand
-                .Argument(a => a.ArgumentE)
-                .Help("ArgumentE help.")
-                .OptionHelp(Encoding.ASCII, "ASCII help.")
-                .OptionHelp(Encoding.UTF8, "UTF8 help.")
-                .OptionHelp(Encoding.UTF16, "UTF16 help.");
-
-            defaultCommand
-                .Argument(a => a.ArgumentF)
-                .Help("ArgumentF help.");
-
-            defaultCommand
-                .Argument(a => a.ArgumentG)
-                .Help("ArgumentG help.")
-                .OptionHelp(Encoding.ASCII, "ASCII help.")
-                .OptionHelp(Encoding.UTF8, "UTF8 help.")
-                .OptionHelp(Encoding.UTF16, "UTF16 help.");
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Help("Command1 help.");
-
-            var command2 = setup.Command<Command2Arguments>();
-            command2.Name("command2");
-            command2.Help("Command2 help.");
-
-            parser
-                .GetHelpText()
-                .Should()
-                .Be(@"Banner Text
-
-tool [--argumentA value] [--argumentB value] [--argumentC] [--argumentD value] [--argumentE value] [--argumentF value value ...] [--argumentG value value ...]
-
-DefaultCommand Help.
-
-Arguments:
---argumentA [value]           (Optional) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC                   (Optional) ArgumentC help.
---argumentD [value]           (Optional) ArgumentD help. Possible values: Trace, Info, Debug, Error.
---argumentE [value]           (Optional) ArgumentE help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
---argumentF [value value ...] (Optional) ArgumentF help. Possible values: Trace, Info, Debug, Error.
---argumentG [value value ...] (Optional) ArgumentG help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
-
-Example usage:
-DefaultCommand Example Usage
-
-tool <command> [arguments]
-
-Commands:
-command1	Command1 help.
-command2	Command2 help.
-
-tool help
-Prints this help screen.
-
-tool help <command>
-Prints the help screen for the specified command.
-");
-
-            parser
-                .GetHelpText(false)
-                .Should()
-                .Be(@"tool [--argumentA value] [--argumentB value] [--argumentC] [--argumentD value] [--argumentE value] [--argumentF value value ...] [--argumentG value value ...]
-
-DefaultCommand Help.
-
-Arguments:
---argumentA [value]           (Optional) ArgumentA help.
---argumentB [value]           (Optional) ArgumentB help.
---argumentC                   (Optional) ArgumentC help.
---argumentD [value]           (Optional) ArgumentD help. Possible values: Trace, Info, Debug, Error.
---argumentE [value]           (Optional) ArgumentE help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
---argumentF [value value ...] (Optional) ArgumentF help. Possible values: Trace, Info, Debug, Error.
---argumentG [value value ...] (Optional) ArgumentG help. Possible values: ASCII, UTF8, UTF16.
-                                         ASCII: ASCII help.
-                                         UTF8: UTF8 help.
-                                         UTF16: UTF16 help.
-
-Example usage:
-DefaultCommand Example Usage
-
-tool <command> [arguments]
-
-Commands:
-command1	Command1 help.
-command2	Command2 help.
-
-tool help
-Prints this help screen.
-
-tool help <command>
-Prints the help screen for the specified command.
-");
-        }
-
-        [Test]
-        public void TestGetHelpText_MaxLineLength()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.ProgramName("tool");
-
-            setup.HelpTextMaxLineLength(80);
-
-            var defaultCommand = setup.DefaultCommand<DefaultArguments>();
-            defaultCommand.Argument(a => a.ArgumentA).Help("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et");
-
-            parser
-                .GetHelpText()
-                .Should()
-                .Be(@"tool [--argumentA value]
-
-Arguments:
---argumentA [value] (Optional) Lorem ipsum dolor sit amet, consetetur sadipscing
-                               elitr, sed diam nonumy eirmod tempor invidunt ut
-                               labore et dolore magna aliquyam erat, sed diam
-                               voluptua. At vero eos et accusam et
-
-tool help
-Prints this help screen.
-");
-        }
-
-        [Test]
-        public void TestParse_DataTypes()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-
-            var command = setup.Command<DataTypesCommandArguments>().Name("dataTypes");
-
-            command.Argument(a => a.Boolean);
-            command.Argument(a => a.DateTime);
-            command.Argument(a => a.Decimal);
-            command.Argument(a => a.Enum);
-            command.Argument(a => a.Guid);
-            command.Argument(a => a.Int64);
-            command.Argument(a => a.String);
-            command.Argument(a => a.TimeSpan);
-
-            command.Argument(a => a.NullableDateTime);
-            command.Argument(a => a.NullableDecimal);
-            command.Argument(a => a.NullableEnum);
-            command.Argument(a => a.NullableGuid);
-            command.Argument(a => a.NullableInt64);
-            command.Argument(a => a.NullableTimeSpan);
-
-            command.Argument(a => a.DateTimes);
-            command.Argument(a => a.Decimals);
-            command.Argument(a => a.Enums);
-            command.Argument(a => a.Guids);
-            command.Argument(a => a.Int64s);
-            command.Argument(a => a.Strings);
-            command.Argument(a => a.TimeSpans);
-
-            var result = parser.Parse(new String[]
-            {
-                "dataTypes",
-                "--boolean",
-                "--dateTime", "12/31/2016 23:59:59",
-                "--decimal", "123.45",
-                "--enum", "Info",
-                "--guid", "8B5CA729-F0F1-4650-A05A-529DC4694569",
-                "--int64", "64",
-                "--string", "string value",
-                "--timeSpan", "1.02:03:04.0050000",
-                
-                "--nullableDateTime", "12/31/2016 23:59:59",
-                "--nullableDecimal", "123.45",
-                "--nullableEnum", "Info",
-                "--nullableGuid", "8B5CA729-F0F1-4650-A05A-529DC4694569",
-                "--nullableInt64", "64",
-                "--nullableTimeSpan", "1.02:03:04.0050000",
-
-                "--dateTimes", "01/01/2017 23:59:59", "01/02/2017 23:59:59", "01/03/2017 23:59:59",
-                "--decimals", "100.45", "101.45", "102.45",
-                "--enums", "Info", "Trace", "Debug",
-                "--guids", "4186EE83-E1F4-456E-9FA6-4893E2F34AAD", "EA6F08B3-FE77-4CED-BF67-44948B7483F8", "D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D",
-                "--int64s", "64", "65", "66",
-                "--strings", "string1", "string2", "string3",
-                "--timeSpans", "1.02:03:04.0050000", "2.02:03:04.0050000", "3.02:03:04.0050000"
-            });
-
-            result.CommandArguments.Should().BeOfType<DataTypesCommandArguments>();
-
-            var commandArguments = (DataTypesCommandArguments) result.CommandArguments;
-            commandArguments.Boolean.Should().BeTrue();
-            commandArguments.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.Decimal.Should().Be(123.45M);
-            commandArguments.Enum.Should().Be(LogLevel.Info);
-            commandArguments.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.Int64.Should().Be(64);
-            commandArguments.String.Should().Be("string value");
-            commandArguments.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
-
-            commandArguments.NullableDateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.NullableDecimal.Should().Be(123.45M);
-            commandArguments.NullableEnum.Should().Be(LogLevel.Info);
-            commandArguments.NullableGuid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.NullableInt64.Should().Be(64);
-            commandArguments.NullableTimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
-
-            commandArguments.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            commandArguments.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            commandArguments.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            commandArguments.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            commandArguments.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
-            commandArguments.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
-            commandArguments.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
-        }
-
-        [Test]
-        public void TestParse_Defaults()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-
-            var command = setup.Command<DataTypesCommandArguments>().Name("dataTypes");
-
-            command.Argument(a => a.DateTime).DefaultValue(new DateTime(2016, 12, 31, 23, 59, 59));
-            command.Argument(a => a.Decimal).DefaultValue(123.45M);
-            command.Argument(a => a.Enum).DefaultValue(LogLevel.Info);
-            command.Argument(a => a.Guid).DefaultValue(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            command.Argument(a => a.Int64).DefaultValue(64);
-            command.Argument(a => a.String).DefaultValue("string value");
-            command.Argument(a => a.TimeSpan).DefaultValue(new TimeSpan(1, 2, 3, 4, 5));
-
-            command.Argument(a => a.DateTimes).DefaultValue(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            command.Argument(a => a.Decimals).DefaultValue(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            command.Argument(a => a.Enums).DefaultValue(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            command.Argument(a => a.Guids).DefaultValue(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            command.Argument(a => a.Int64s).DefaultValue(new List<Int64>() {64, 65, 66});
-            command.Argument(a => a.Strings).DefaultValue(new List<String>() {"string1", "string2", "string3"});
-            command.Argument(a => a.TimeSpans).DefaultValue(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
-
-            var parseResult = parser.Parse(new String[] {"dataTypes"});
-
-            parseResult.CommandArguments.Should().BeOfType<DataTypesCommandArguments>();
-
-            var commandArguments = (DataTypesCommandArguments) parseResult.CommandArguments;
-
-            commandArguments.DateTime.Should().Be(new DateTime(2016, 12, 31, 23, 59, 59));
-            commandArguments.Decimal.Should().Be(123.45M);
-            commandArguments.Enum.Should().Be(LogLevel.Info);
-            commandArguments.Guid.Should().Be(new Guid("8B5CA729-F0F1-4650-A05A-529DC4694569"));
-            commandArguments.Int64.Should().Be(64);
-            commandArguments.String.Should().Be("string value");
-            commandArguments.TimeSpan.Should().Be(new TimeSpan(1, 2, 3, 4, 5));
-
-            commandArguments.DateTimes.Should().BeEquivalentTo(new List<DateTime>() {new DateTime(2017, 01, 01, 23, 59, 59), new DateTime(2017, 01, 02, 23, 59, 59), new DateTime(2017, 01, 03, 23, 59, 59)});
-            commandArguments.Decimals.Should().BeEquivalentTo(new List<Decimal>() {100.45M, 101.45M, 102.45M});
-            commandArguments.Enums.Should().BeEquivalentTo(new List<LogLevel>() {LogLevel.Info, LogLevel.Trace, LogLevel.Debug});
-            commandArguments.Guids.Should().BeEquivalentTo(new List<Guid>() {new Guid("4186EE83-E1F4-456E-9FA6-4893E2F34AAD"), new Guid("EA6F08B3-FE77-4CED-BF67-44948B7483F8"), new Guid("D6E97844-EB33-4EC7-AC1F-AFEB697D1C6D")});
-            commandArguments.Int64s.Should().BeEquivalentTo(new List<Int64>() {64, 65, 66});
-            commandArguments.Strings.Should().BeEquivalentTo(new List<String>() {"string1", "string2", "string3"});
-            commandArguments.TimeSpans.Should().BeEquivalentTo(new List<TimeSpan>() {new TimeSpan(1, 2, 3, 4, 5), new TimeSpan(2, 2, 3, 4, 5), new TimeSpan(3, 2, 3, 4, 5)});
-        }
-
-        [Test]
-        public void TestParse_ValidateCommand()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
-
-            setup.ProgramName("fileTool");
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
-
-            command1.Validate((context) =>
-            {
-                if (!String.IsNullOrEmpty(context.CommandArguments.ArgumentA) && context.CommandArguments.ArgumentB == null)
-                {
-                    context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.ArgumentB), "The argument '--argumentB' must be specified when argument '--argumentA' is specified."));
-                }
-            });
-
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue"});
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
-
-            var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().Be(new ArgumentName("argumentB"));
-            error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
-        }
-
-        [Test]
-        public void TestParse_ValidateDefaultCommand()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
-
-            setup.ProgramName("fileTool");
-
-            var command1 = setup.DefaultCommand<Command1Arguments>();
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
-
-            command1.Validate((context) =>
-            {
-                if (!String.IsNullOrEmpty(context.CommandArguments.ArgumentA) && context.CommandArguments.ArgumentB == null)
-                {
-                    context.AddError(new InvalidArgumentError(context.GetArgumentName(a => a.ArgumentB), "The argument '--argumentB' must be specified when argument '--argumentA' is specified."));
-                }
-            });
-
-            var parseResult = parser.Parse(new String[] {"--argumentA", "argumentAValue"});
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Should().HaveCount(1);
-            parseResult.Errors[0].Should().BeOfType<InvalidArgumentError>();
-
-            var error = (InvalidArgumentError) parseResult.Errors[0];
-            error.ArgumentName.Should().Be(new ArgumentName("argumentB"));
-            error.GetErrorMessage().Should().Be("The argument --argumentB is invalid: The argument '--argumentB' must be specified when argument '--argumentA' is specified.");
-        }
-
-        [Test]
-        public void TestParse_IgnoreUnknownArguments()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
-
-            setup.IgnoreUnknownArguments();
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-            command1.Argument(a => a.ArgumentB);
-
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue", "--unknownArgument"});
             parseResult.HasErrors.Should().BeFalse();
+            parseResult.Errors.Count.Should().Be(0);
+
+            A.CallTo(() => errorTextWriter.Write(A<String>.Ignored)).MustNotHaveHappened();
         }
 
-        [Test]
-        public void TestParse_MoreThanOneCommandError()
+        [Test(Description = "Parse should return a MissingCommandError when there is no command specified and the default command has not set up.")]
+        public void Parse_MissingCommand_ShouldReturnError()
         {
-            var parser = new Parser();
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+            var commandParser = A.Fake<ICommandParser>();
+            
+            parser.ErrorTextWriter = errorTextWriter;
+            parser.CommandParsers.Add(commandParser);
 
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+            A.CallTo(() => tokenizer.Tokenize("--optionA")).Returns(new List<Token> {new OptionToken("optionA")});
+            A.CallTo(() => commandParser.IsCommandDefault).Returns(false);
+            A.CallTo(() => commandParser.CommandName).Returns("command1");
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
 
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            var parseResult = parser.Parse(new String[] {"--optionA"});
+
+            parseResult.HasErrors.Should().BeTrue();
+            parseResult.Errors.Count.Should().Be(1);
+            parseResult.Errors[0].Should().BeOfType<MissingCommandError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("No command was specified.");
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
+        }
+
+        [Test(Description = "Parse should return a MoreThanOneCommandError when there is more than one command specified.")]
+        public void Parse_MoreThanOneCommand_ShouldReturnError()
+        {
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+
+            parser.ErrorTextWriter = errorTextWriter;
+
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+            A.CallTo(() => tokenizer.Tokenize("command1", "command2")).Returns(new List<Token> {new CommandToken("command1"), new CommandToken("command2")});
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
 
             var parseResult = parser.Parse(new String[] {"command1", "command2"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
             parseResult.Errors[0].Should().BeOfType<MoreThanOneCommandError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("More than one command specified. Please only specify one command.");
+            parseResult.Errors[0].GetErrorMessage().Should().Be("More than one command was specified. Please only specify one command.");
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
         }
 
-        [Test]
-        public void TestParse_MissingCommandError()
+        [Test(Description = "Parse should let all command parsers parse and validate the command line.")]
+        public void Parse_ShouldLetAllCommandParsersParseAndValidateTheCommandLine()
         {
             var parser = new Parser();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
 
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
+            var commandParser1 = A.Fake<ICommandParser>();
+            var commandParser2 = A.Fake<ICommandParser>();
 
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            parser.CommandParsers.Add(commandParser1);
+            parser.CommandParsers.Add(commandParser2);
 
-            var parseResult = parser.Parse(new String[] {"--argumentA"});
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+            var tokens = new List<Token> {new CommandToken("command1")};
+            A.CallTo(() => tokenizer.Tokenize("command1")).Returns(tokens);
 
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<MissingCommandError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("No command was specified.");
+            var parseResult = parser.Parse(new String[] {"command1"});
+
+            A.CallTo(() => commandParser1.Parse(tokens, parseResult)).MustHaveHappened();
+            A.CallTo(() => commandParser1.Validate(tokens, parseResult)).MustHaveHappened();
+
+            A.CallTo(() => commandParser2.Parse(tokens, parseResult)).MustHaveHappened();
+            A.CallTo(() => commandParser2.Validate(tokens, parseResult)).MustHaveHappened();
         }
 
-        [Test]
-        public void TestParse_ArgumentValueMissingError()
+        [Test(Description = "Parse should return a UnknownCommandError when an unknown command was specified.")]
+        public void Parse_UnknownCommand_ShouldReturnError()
         {
-            var parser = new Parser();
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
 
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
+            parser.ErrorTextWriter = errorTextWriter;
 
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA"});
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<ArgumentValueMissingError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The value for the argument --argumentA is missing.");
-        }
-
-        [Test]
-        public void TestParse_DuplicateArgumentError()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
-
-            var parseResult = parser.Parse(new String[] {"command1", "--argumentA", "argumentAValue", "--argumentA"});
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<DuplicateArgumentError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The argument --argumentA is used more than once. Please only use each argument once.");
-        }
-
-        [Test]
-        public void TestParse_UnknownCommandError()
-        {
-            var parser = new Parser();
-
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
-
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
+            A.CallTo(() => tokenizer.Tokenize("unknownCommand")).Returns(new List<Token> {new CommandToken("unknownCommand")});
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
 
             var parseResult = parser.Parse(new String[] {"unknownCommand"});
 
@@ -704,48 +592,53 @@ Prints this help screen.
             parseResult.Errors.Count.Should().Be(1);
             parseResult.Errors[0].Should().BeOfType<UnknownCommandError>();
             parseResult.Errors[0].GetErrorMessage().Should().Be("The command 'unknownCommand' is unknown.");
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
         }
 
-        [Test]
-        public void TestParse_ArgumentValueFormatError()
+        [Test(Description = "Parse should return a UnknownOptionError when an unknown option was specified.")]
+        public void Parse_UnknownOption_ShouldReturnError()
         {
-            var parser = new Parser();
+            var parser = A.Fake<Parser>(ob => ob.CallsBaseMethods());
+            var errorTextWriter = A.Fake<TextWriter>();
+            var tokenizer = A.Fake<CommandLineArgumentsTokenizer>();
+            var commandParser = A.Fake<ICommandParser>();
 
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
+            parser.ErrorTextWriter = errorTextWriter;
+            parser.CommandParsers.Add(commandParser);
 
-            var command1 = setup.Command<DataTypesCommandArguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.Int64);
+            A.CallTo(() => this.DependencyResolver.Resolve<CommandLineArgumentsTokenizer>()).Returns(tokenizer);
 
-            var parseResult = parser.Parse(new String[] {"command1", "--int64", "NotANumber"});
+            var tokens = new List<Token> {new CommandToken("command1"), new OptionToken("unknownOption")};
+            tokens[0].IsParsed = true;
+
+            A.CallTo(() => tokenizer.Tokenize("command1", "--unknownOption")).Returns(tokens);
+            A.CallTo(() => parser.GetErrorsText(A<ParseResult>.Ignored, true)).Returns("Error text");
+
+            var parseResult = parser.Parse(new String[] {"command1", "--unknownOption"});
 
             parseResult.HasErrors.Should().BeTrue();
             parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<ArgumentValueFormatError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The value 'NotANumber' of the argument --int64 has an invalid format. The expected format is: An integer in the range from -9223372036854775808 to 9223372036854775807.");
+            parseResult.Errors[0].Should().BeOfType<UnknownOptionError>();
+            parseResult.Errors[0].GetErrorMessage().Should().Be("The option --unknownOption is unknown.");
+
+            A.CallTo(() => errorTextWriter.Write("Error text")).MustHaveHappened();
         }
 
-        [Test]
-        public void TestParse_UnknownArgumentError()
+        [Test(Description = "ProgramName should initially return the name of the current process.")]
+        public void ProgramName_Initially_ShouldReturnNameOfProcess()
         {
             var parser = new Parser();
 
-            var setup = parser.Setup;
-            setup.HelpTextWriter(null);
-            setup.ErrorTextWriter(null);
+            parser.ProgramName.Should().Be(Process.GetCurrentProcess().ProcessName);
+        }
 
-            var command1 = setup.Command<Command1Arguments>();
-            command1.Name("command1");
-            command1.Argument(a => a.ArgumentA);
+        [Test(Description = "Setup should return the parser setup.")]
+        public void Setup_ShouldReturnParserSetup()
+        {
+            var parser = new Parser();
 
-            var parseResult = parser.Parse(new String[] {"command1", "--unknownArgument"});
-
-            parseResult.HasErrors.Should().BeTrue();
-            parseResult.Errors.Count.Should().Be(1);
-            parseResult.Errors[0].Should().BeOfType<UnknownArgumentError>();
-            parseResult.Errors[0].GetErrorMessage().Should().Be("The argument --unknownArgument is unknown.");
+            parser.Setup.Should().NotBeNull();
         }
     }
 }

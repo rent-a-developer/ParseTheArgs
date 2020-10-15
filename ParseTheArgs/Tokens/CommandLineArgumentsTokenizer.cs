@@ -7,7 +7,7 @@ namespace ParseTheArgs.Tokens
     /// <summary>
     /// A tokenizer for command line arguments.
     /// </summary>
-    public static class CommandLineArgumentsTokenizer
+    public class CommandLineArgumentsTokenizer
     {
         /// <summary>
         /// Converts the given command line arguments to a sequence of tokens.
@@ -15,48 +15,48 @@ namespace ParseTheArgs.Tokens
         /// <param name="args">The command line arguments to tokenize.</param>
         /// <returns>The tokens that represent the given command line arguments.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="args" /> is null.</exception>
-        public static IEnumerable<CommandLineArgumentsToken> Tokenize(String[] args)
+        public virtual List<Token> Tokenize(params String[] args)
         {
             if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
 
-            return TokenizeIterator(args);
-        }
+            var argumentsToTokenize = new List<String>(args);
 
-        private static IEnumerable<CommandLineArgumentsToken> TokenizeIterator(String[] args)
-        {
-            var leftArgs = new List<String>(args);
+            var result = new List<Token>();
 
-            while (leftArgs.Any())
+            while (argumentsToTokenize.Any())
             {
-                var arg = leftArgs[0];
-                if (arg.StartsWith("--") || arg.StartsWith("-"))
-                {
-                    var argumentName = arg.StartsWith("--") ? arg.Substring(2) : arg.Substring(1);
-                    var argumentValues = leftArgs.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
+                var argument = argumentsToTokenize[0];
 
-                    if (argumentValues.Count == 0)
+                if (argument.StartsWith("--") || argument.StartsWith("-"))
+                {
+                    var optionName = argument.StartsWith("--") ? argument.Substring(2) : argument.Substring(1);
+                    var optionValues = argumentsToTokenize.Skip(1).TakeWhile(a => !a.StartsWith("--") && !a.StartsWith("-")).ToList();
+
+                    if (optionValues.Count == 0)
                     {
-                        yield return new ArgumentToken(argumentName);
+                        result.Add(new OptionToken(optionName));
                     }
                     else
                     {
-                        yield return new ArgumentToken(argumentName, argumentValues);
+                        result.Add(new OptionToken(optionName, optionValues));
                     }
 
-                    leftArgs.RemoveAt(0);
-                    leftArgs.RemoveRange(0, argumentValues.Count);
+                    argumentsToTokenize.RemoveAt(0);
+                    argumentsToTokenize.RemoveRange(0, optionValues.Count);
                 }
                 else
                 {
-                    var commandName = arg;
-                    yield return new CommandToken(commandName);
+                    var commandName = argument;
+                    result.Add(new CommandToken(commandName));
 
-                    leftArgs.RemoveAt(0);
+                    argumentsToTokenize.RemoveAt(0);
                 }
             }
+
+            return result;
         }
     }
 }

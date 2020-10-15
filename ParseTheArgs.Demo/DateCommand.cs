@@ -1,29 +1,29 @@
 ﻿using System;
 using ParseTheArgs.Errors;
-using ParseTheArgs.Parsers.Commands;
 using ParseTheArgs.Setup;
+using ParseTheArgs.Validation;
 using Console = System.Console;
 
 namespace ParseTheArgs.Demo
 {
     public static class DateCommand
     {
-        public static Int32 GetDate(DateCommandArguments arguments)
+        public static Int32 GetDate(DateCommandOptions options)
         {
             try
             {
-                var date = arguments.Date;
-                date = date.Add(arguments.Offset);
+                var date = options.Date;
+                date = date.Add(options.Offset);
 
-                if (arguments.DifferenceToDate != null)
+                if (options.DifferenceToDate != null)
                 {
-                    var difference = arguments.DifferenceToDate.Value.Subtract(date);
-                    Console.WriteLine($"The difference between {date} and {arguments.DifferenceToDate} is:");
+                    var difference = options.DifferenceToDate.Value.Subtract(date);
+                    Console.WriteLine($"The difference between {date} and {options.DifferenceToDate} is:");
                     Console.WriteLine(difference);
                 }
                 else
                 {
-                    if (arguments.DisplayInUtc)
+                    if (options.DisplayInUtc)
                     {
                         date = date.ToUniversalTime();
                     }
@@ -45,59 +45,55 @@ namespace ParseTheArgs.Demo
         public static void SetupCommand(ParserSetup parserSetup)
         {
             var command = parserSetup
-                .Command<DateCommandArguments>()
+                .Command<DateCommandOptions>()
                 .Name("date")
                 .Help("Displays a date and time and optionally calculates the difference to another date and time.")
                 .ExampleUsage("Toolbox date --utc");
 
             command
-                .Argument(a => a.Date)
+                .Option(a => a.Date)
                 .Name("date")
-                .ShortName('d')
                 .DefaultValue(DateTime.Now)
                 .Help("The date and time to display. If not specified the current system date and time are used.");
 
             command
-                .Argument(a => a.Offset)
+                .Option(a => a.Offset)
                 .Name("offset")
-                .ShortName('o')
                 .DefaultValue(TimeSpan.Zero)
                 .Help("Offsets the date and time by the specified duration before displaying it. Format is HH:MM:SS.");
 
             command
-                .Argument(a => a.DisplayInUtc)
+                .Option(a => a.DisplayInUtc)
                 .Name("utc")
-                .ShortName('u')
                 .Help("Converts the date and time to UTC before displaying it.");
 
             command
-                .Argument(a => a.DifferenceToDate)
+                .Option(a => a.DifferenceToDate)
                 .Name("differenceTo")
-                .ShortName('t')
-                .Help("If specified the difference between the first date (argument --date) and this date is displayed.");
+                .Help("If specified the difference between the first date (option --date) and this date is displayed.");
 
-            command.Validate(ValidateArguments);
+            command.Validate(Validate);
         }
 
-        private static void ValidateArguments(CommandValidatorContext<DateCommandArguments> context)
+        private static void Validate(CommandValidatorContext<DateCommandOptions> context)
         {
-            if (context.CommandArguments.DifferenceToDate != null)
+            if (context.CommandOptions.DifferenceToDate != null)
             {
-                if (context.CommandArguments.DifferenceToDate.Value < context.CommandArguments.Date)
+                if (context.CommandOptions.DifferenceToDate.Value < context.CommandOptions.Date)
                 {
                     context.AddError(
-                        new InvalidArgumentError(
-                            context.GetArgumentName(a => a.DifferenceToDate),
-                            $"The given date must be later than {context.CommandArguments.Date}."
+                        new InvalidOptionError(
+                            context.GetOptionName(a => a.DifferenceToDate),
+                            $"The given date must be later than {context.CommandOptions.Date}."
                         )
                     );
                 }
 
-                if (context.CommandArguments.DisplayInUtc)
+                if (context.CommandOptions.DisplayInUtc)
                 {
                     context.AddError(
-                        new InvalidArgumentError(
-                            context.GetArgumentName(a => a.DisplayInUtc),
+                        new InvalidOptionError(
+                            context.GetOptionName(a => a.DisplayInUtc),
                             "The option --utc can not be used when the option --differenceTo is used."
                         )
                     );

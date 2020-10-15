@@ -28,7 +28,7 @@ public class PrintFileOptions
 
 public class Program
 {
-    public static void Main(String[] args)
+    public static Int32 Main(String[] args)
     {
         var parser = new Parser();
 
@@ -44,12 +44,14 @@ public class Program
 
         var parseResult = parser.Parse(args);
 
-        parseResult.Handle(
-            (PrintFileOptions options) =>
+        parseResult.CommandHandler((PrintFileOptions options) =>
             {
                 Console.WriteLine(File.ReadAllText(options.File));
+                return 0;
             }
         );
+
+        return parseResult.Handle();
     }
 }
 ```

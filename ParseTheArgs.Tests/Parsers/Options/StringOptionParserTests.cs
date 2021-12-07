@@ -26,7 +26,7 @@ Parameter name: targetProperty");
         [Test(Description = "Constructor should throw an exception when the given option name is null or an empty string.")]
         public void Constructor_OptionNameIsNullOrEmpty_ShouldThrowException()
         {
-            Invoking(() => new StringOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), null))
+            Invoking(() => new StringOptionParser(typeof(DataTypesCommandOptions).GetProperty("String"), null!))
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(@"Value cannot be null or an empty string.
@@ -42,7 +42,7 @@ Parameter name: optionName");
         [Test(Description = "Constructor should throw an exception when the given target property is null.")]
         public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new StringOptionParser(null, "string"))
+            Invoking(() => new StringOptionParser(null!, "string"))
                 .Should()
                 .Throw<ArgumentNullException>()
                 .WithMessage(@"Value cannot be null.

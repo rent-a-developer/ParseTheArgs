@@ -123,7 +123,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseDateTime(null, null, new CultureInfo("en-US"), DateTimeStyles.None, out var result))
+                .Invoking(a => a.TryParseDateTime(null!, null, new CultureInfo("en-US"), DateTimeStyles.None, out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -215,7 +215,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseDecimal(null, NumberStyles.Any, new CultureInfo("en-US"), out var result))
+                .Invoking(a => a.TryParseDecimal(null!, NumberStyles.Any, new CultureInfo("en-US"), out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -281,7 +281,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseEnum<LogLevel>(null, out var result))
+                .Invoking(a => a.TryParseEnum<LogLevel>(null!, out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -360,7 +360,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseGuid(null, null, out var result))
+                .Invoking(a => a.TryParseGuid(null!, null, out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -452,7 +452,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseInt64(null, NumberStyles.Any, new CultureInfo("en-US"), out var result))
+                .Invoking(a => a.TryParseInt64(null!, NumberStyles.Any, new CultureInfo("en-US"), out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -570,7 +570,7 @@ namespace ParseTheArgs.Tests.Parsers.Options
             var parser = new ValueParser();
 
             parser
-                .Invoking(a => a.TryParseTimeSpan(null, null, new CultureInfo("en-US"), TimeSpanStyles.None, out var result))
+                .Invoking(a => a.TryParseTimeSpan(null!, null, new CultureInfo("en-US"), TimeSpanStyles.None, out var result))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

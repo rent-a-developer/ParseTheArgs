@@ -12,7 +12,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "HasPublicSetter should throw an exception when the given property info is null.")]
         public void HasPublicSetter_PropertyInfoIsNull_ShouldThrowException()
         {
-            ((PropertyInfo) null).Invoking(a => a.HasPublicSetter()).Should().Throw<ArgumentNullException>();
+            ((PropertyInfo) null!).Invoking(a => a.HasPublicSetter()).Should().Throw<ArgumentNullException>();
         }
 
         [Test(Description = "HasPublicSetter should return false when a public setter is not present.")]
@@ -32,11 +32,11 @@ namespace ParseTheArgs.Tests.Extensions
 
         class Item
         {
-            public String PropertyWithInternalSetter { get; internal set; }
-            public String PropertyWithoutSetter { get; }
-            public String PropertyWithPrivateSetter { get; private set; }
-            public String PropertyWithProtectedSetter { get; protected set; }
-            public String PropertyWithPublicSetter { get; set; }
+            public String? PropertyWithInternalSetter { get; internal set; }
+            public String? PropertyWithoutSetter { get; }
+            public String? PropertyWithPrivateSetter { get; private set; }
+            public String? PropertyWithProtectedSetter { get; protected set; }
+            public String? PropertyWithPublicSetter { get; set; }
         }
     }
 }

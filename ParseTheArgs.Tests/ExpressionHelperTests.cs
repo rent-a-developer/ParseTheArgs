@@ -14,7 +14,7 @@ namespace ParseTheArgs.Tests
         {
             Invoking(() =>
                     ExpressionHelper
-                        .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) ((item) => item.Method()))
+                        .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) (item => item.Method()))
                 )
                 .Should()
                 .Throw<ArgumentException>()
@@ -27,7 +27,7 @@ Parameter name: propertyExpression");
         {
             Invoking(() =>
                     ExpressionHelper
-                        .GetPropertyFromPropertyExpression(null)
+                        .GetPropertyFromPropertyExpression(null!)
                 )
                 .Should()
                 .Throw<ArgumentNullException>();
@@ -38,7 +38,7 @@ Parameter name: propertyExpression");
         {
             Invoking(() =>
                     ExpressionHelper
-                        .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) ((item) => item.PropertyWithoutSetter))
+                        .GetPropertyFromPropertyExpression((Expression<Func<Item, Object?>>) (item => item.PropertyWithoutSetter))
                 )
                 .Should()
                 .Throw<ArgumentException>()
@@ -50,32 +50,32 @@ Parameter name: propertyExpression");
         public void GetPropertyFromPropertyExpression_ValidExpression_ShouldReturnCorrectProperty()
         {
             ExpressionHelper
-                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) ((item) => item.PropertyA))
+                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object?>>) (item => item.PropertyA))
                 .Should()
                 .BeSameAs(typeof(Item).GetProperty("PropertyA"));
 
             ExpressionHelper
-                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) ((item) => item.PropertyB))
+                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object?>>) (item => item.PropertyB))
                 .Should()
                 .BeSameAs(typeof(Item).GetProperty("PropertyB"));
 
             ExpressionHelper
-                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object>>) ((item) => item.PropertyC))
+                .GetPropertyFromPropertyExpression((Expression<Func<Item, Object?>>) (item => item.PropertyC))
                 .Should()
                 .BeSameAs(typeof(Item).GetProperty("PropertyC"));
         }
 
         class Item
         {
-            public String PropertyA { get; set; }
+            public String? PropertyA { get; set; }
             public DateTime PropertyB { get; set; }
             public Guid PropertyC { get; set; }
 
-            public String PropertyWithoutSetter { get; }
+            public String? PropertyWithoutSetter { get; }
 
             public String Method()
             {
-                return null;
+                return "";
             }
         }
     }

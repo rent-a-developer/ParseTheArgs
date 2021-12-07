@@ -59,7 +59,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option value should be stored.</param>
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public StringOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, String>> propertyExpression)
+        public StringOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, String?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty);
@@ -72,7 +72,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="StringOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public StringListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<String>>> propertyExpression)
+        public StringListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<String>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<StringListOptionParser>(targetProperty);
@@ -98,7 +98,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="DateTimeOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public DateTimeListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<DateTime>>> propertyExpression)
+        public DateTimeListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<DateTime>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<DateTimeListOptionParser>(targetProperty);
@@ -137,7 +137,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="TimeSpanListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public TimeSpanListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<TimeSpan>>> propertyExpression)
+        public TimeSpanListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<TimeSpan>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(targetProperty);
@@ -176,7 +176,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="Int64ListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public Int64ListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Int64>>> propertyExpression)
+        public Int64ListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Int64>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<Int64ListOptionParser>(targetProperty);
@@ -215,7 +215,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="GuidListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public GuidListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Guid>>> propertyExpression)
+        public GuidListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Guid>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<GuidListOptionParser>(targetProperty);
@@ -254,7 +254,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="DecimalListOptionSetup{TCommandOptions}" /> that can be used to configure the option.</returns>
-        public DecimalListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Decimal>>> propertyExpression)
+        public DecimalListOptionSetup<TCommandOptions> Option(Expression<Func<TCommandOptions, List<Decimal>?>> propertyExpression)
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);
             var optionParser = this.CommandParser.GetOrCreateOptionParser<DecimalListOptionParser>(targetProperty);
@@ -311,7 +311,7 @@ namespace ParseTheArgs.Setup.Commands
         /// </summary>
         /// <param name="propertyExpression">An expression that points to a property (the target property) of the <typeparamref name="TCommandOptions" /> type in which the option values should be stored.</param>
         /// <returns>An instance of <see cref="EnumListOptionSetup{TCommandOptions,TEnum}" /> that can be used to configure the option.</returns>
-        public EnumListOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, List<TEnum>>> propertyExpression)
+        public EnumListOptionSetup<TCommandOptions, TEnum> Option<TEnum>(Expression<Func<TCommandOptions, List<TEnum>?>> propertyExpression)
             where TEnum : struct, Enum
         {
             var targetProperty = ExpressionHelper.GetPropertyFromPropertyExpression(propertyExpression);

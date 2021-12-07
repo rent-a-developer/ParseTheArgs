@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using ParseTheArgs.Extensions;
+using static FluentAssertions.FluentActions;
 
 namespace ParseTheArgs.Tests.Extensions
 {
@@ -31,7 +32,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "SplitWords should return an empty sequence when null is given.")]
         public void SplitWords_Null_ShouldReturnEmptyString()
         {
-            ((String) null).SplitWords().Should().BeEmpty();
+            ((String) null!).SplitWords().Should().BeEmpty();
         }
 
         [Test(Description = "SplitWords should return the individual words of a pascal case string.")]
@@ -61,7 +62,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "ToCamelCase should return null when null is given.")]
         public void ToCamelCase_Null_ShouldReturnNull()
         {
-            ((String) null).ToCamelCase().Should().BeNull();
+            ((String) null!).ToCamelCase().Should().BeNull();
         }
 
         [Test(Description = "ToCamelCase should return an empty string when only spaces are given.")]
@@ -89,7 +90,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "ToFirstLetterUpperCase should return null when null is given.")]
         public void ToFirstLetterUpperCase_Null_ShouldReturnNull()
         {
-            ((String) null).ToFirstLetterUpperCase().Should().Be(null);
+            ((String) null!).ToFirstLetterUpperCase().Should().Be(null);
         }
 
         [Test(Description = "ToFirstLetterUpperCase should return spaces when spaces are given.")]
@@ -117,7 +118,7 @@ namespace ParseTheArgs.Tests.Extensions
         [Test(Description = "WordWrap should throw an exception when null is given.")]
         public void WordWrap_Null_ShouldThrowException()
         {
-            ((String) null).Invoking(a => a.WordWrap(20))
+            Invoking(() => StringExtensions.WordWrap(null!, 20))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

@@ -67,7 +67,7 @@ namespace ParseTheArgs.Demo
 
         private static void Validate(CommandValidatorContext<QueryWebCommandOptions> context)
         {
-            if (String.IsNullOrEmpty(context.CommandOptions.SearchEngineQuery) && String.IsNullOrWhiteSpace(context.CommandOptions.WebsiteAddress))
+            if (String.IsNullOrEmpty(context.CommandOptions!.SearchEngineQuery) && String.IsNullOrWhiteSpace(context.CommandOptions.WebsiteAddress))
             {
                 context.AddError(new OptionMissingError(context.GetOptionName(a => a.WebsiteAddress)));
             }

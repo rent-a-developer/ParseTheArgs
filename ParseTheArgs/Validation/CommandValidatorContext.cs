@@ -86,7 +86,7 @@ namespace ParseTheArgs.Validation
         /// }
         /// </code>
         /// </example>
-        public String GetOptionName(Expression<Func<TCommandOptions, Object>> optionSelector)
+        public String GetOptionName(Expression<Func<TCommandOptions, Object?>> optionSelector)
         {
             if (optionSelector == null)
             {

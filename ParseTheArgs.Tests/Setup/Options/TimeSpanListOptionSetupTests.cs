@@ -21,7 +21,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("TimeSpans");
             var optionParser = A.Fake<TimeSpanListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new TimeSpanListOptionParser(targetProperty, "timeSpans")));
 
-            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -31,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new TimeSpanListOptionSetup<DataTypesCommandOptions>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

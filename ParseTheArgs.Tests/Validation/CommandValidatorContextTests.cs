@@ -50,7 +50,7 @@ namespace ParseTheArgs.Tests.Validation
         {
             var parseResult = A.Fake<ParseResult>();
 
-            Invoking(() => new CommandValidatorContext<Command1Options>(null, parseResult))
+            Invoking(() => new CommandValidatorContext<Command1Options>(null!, parseResult))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -61,7 +61,7 @@ namespace ParseTheArgs.Tests.Validation
             var parser = A.Fake<Parser>();
             var commandParser = A.Fake<CommandParser<Command1Options>>(ob => ob.WithArgumentsForConstructor(() => new CommandParser<Command1Options>(parser)));
 
-            Invoking(() => new CommandValidatorContext<Command1Options>(commandParser, null))
+            Invoking(() => new CommandValidatorContext<Command1Options>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -75,7 +75,7 @@ namespace ParseTheArgs.Tests.Validation
 
             var context = new CommandValidatorContext<Command1Options>(commandParser, parseResult);
 
-            context.Invoking(a => a.GetOptionName(null))
+            context.Invoking(a => a.GetOptionName(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

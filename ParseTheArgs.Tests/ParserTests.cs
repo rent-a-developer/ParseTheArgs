@@ -20,8 +20,10 @@ namespace ParseTheArgs.Tests
         #region Setup/Teardown
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             // We fix the current culture to en-US so that parsing of values (e.g. DateTime values) is done in a deterministic fashion.
             Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }

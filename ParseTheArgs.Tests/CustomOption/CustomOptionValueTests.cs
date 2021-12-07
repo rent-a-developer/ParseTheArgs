@@ -24,7 +24,7 @@ namespace ParseTheArgs.Tests.CustomOption
 
             result.CommandOptions.Should().BeOfType<CustomOptions>();
 
-            var commandOptions = (CustomOptions) result.CommandOptions;
+            var commandOptions = (CustomOptions) result.CommandOptions!;
 
             commandOptions.CustomValue.Should().BeEquivalentTo(new CustomValue("test value"));
         }

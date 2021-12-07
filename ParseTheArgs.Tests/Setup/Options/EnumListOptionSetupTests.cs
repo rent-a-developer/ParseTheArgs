@@ -20,7 +20,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Enums");
             var optionParser = A.Fake<EnumListOptionParser<LogLevel>>(ob => ob.WithArgumentsForConstructor(() => new EnumListOptionParser<LogLevel>(targetProperty, "enums")));
 
-            Invoking(() => new EnumListOptionSetup<DataTypesCommandOptions, LogLevel>(null, optionParser))
+            Invoking(() => new EnumListOptionSetup<DataTypesCommandOptions, LogLevel>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -30,7 +30,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new EnumListOptionSetup<DataTypesCommandOptions, LogLevel>(commandParser, null))
+            Invoking(() => new EnumListOptionSetup<DataTypesCommandOptions, LogLevel>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

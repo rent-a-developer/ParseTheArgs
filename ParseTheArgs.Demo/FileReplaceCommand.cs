@@ -13,7 +13,7 @@ namespace ParseTheArgs.Demo
         {
             try
             {
-                var text = File.ReadAllText(options.InFile.FullName);
+                var text = File.ReadAllText(options.InFile!.FullName);
                 String replacedText;
 
                 if (options.UseRegularExpressions)
@@ -30,11 +30,11 @@ namespace ParseTheArgs.Demo
                     }
                     else
                     {
-                        replacedText = text.Replace(options.Pattern, options.Replacement);
+                        replacedText = text.Replace(options.Pattern!, options.Replacement);
                     }
                 }
 
-                File.WriteAllText(options.OutFile.FullName, replacedText);
+                File.WriteAllText(options.OutFile!.FullName, replacedText);
 
                 if (options.DisplayResult)
                 {
@@ -108,7 +108,7 @@ namespace ParseTheArgs.Demo
 
         private static void Validate(CommandValidatorContext<FileReplaceCommandOptions> context)
         {
-            if (!context.CommandOptions.InFile.Exists)
+            if (!context.CommandOptions!.InFile!.Exists)
             {
                 context.AddError(
                     new InvalidOptionError(
@@ -118,7 +118,7 @@ namespace ParseTheArgs.Demo
                 );
             }
 
-            if (context.CommandOptions.OutFile.Exists && !context.CommandOptions.OverrideOutFile)
+            if (context.CommandOptions!.OutFile!.Exists && !context.CommandOptions.OverrideOutFile)
             {
                 context.AddError(
                     new InvalidOptionError(

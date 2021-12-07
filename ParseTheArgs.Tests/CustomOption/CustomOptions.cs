@@ -2,6 +2,6 @@
 {
     public class CustomOptions
     {
-        public CustomValue CustomValue { get; set; }
+        public CustomValue? CustomValue { get; set; }
     }
 }

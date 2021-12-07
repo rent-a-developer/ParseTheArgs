@@ -21,7 +21,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("DateTimes");
             var optionParser = A.Fake<DateTimeListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new DateTimeListOptionParser(targetProperty, "dateTimes")));
 
-            Invoking(() => new DateTimeListOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new DateTimeListOptionSetup<DataTypesCommandOptions>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -31,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new DateTimeListOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new DateTimeListOptionSetup<DataTypesCommandOptions>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

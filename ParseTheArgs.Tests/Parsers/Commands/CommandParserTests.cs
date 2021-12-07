@@ -76,7 +76,7 @@ namespace ParseTheArgs.Tests.Parsers.Commands
         [Test(Description = "Constructor should throw an exception when the given parser is null.")]
         public void Constructor_ParserIsNull_ShouldThrowException()
         {
-            Invoking(() => new CommandParser<Command1Options>(null))
+            Invoking(() => new CommandParser<Command1Options>(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

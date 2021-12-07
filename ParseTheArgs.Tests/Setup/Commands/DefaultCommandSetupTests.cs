@@ -22,7 +22,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         {
             var parser = A.Fake<Parser>();
 
-            Invoking(() => new DefaultCommandSetup<Command1Options>(parser, null))
+            Invoking(() => new DefaultCommandSetup<Command1Options>(parser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -32,7 +32,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
         {
             var commandParser = A.Fake<CommandParser<Command1Options>>();
 
-            Invoking(() => new DefaultCommandSetup<Command1Options>(null, commandParser))
+            Invoking(() => new DefaultCommandSetup<Command1Options>(null!, commandParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -122,7 +122,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<DateTimeListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<DateTime>>> propertyExpression = a => a.DateTimes;
+            Expression<Func<DataTypesCommandOptions, List<DateTime>?>> propertyExpression = a => a.DateTimes;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeListOptionParser>(targetProperty)).MustHaveHappened();
@@ -166,7 +166,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DecimalListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<DecimalListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<Decimal>>> propertyExpression = a => a.Decimals;
+            Expression<Func<DataTypesCommandOptions, List<Decimal>?>> propertyExpression = a => a.Decimals;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DecimalListOptionParser>(targetProperty)).MustHaveHappened();
@@ -210,7 +210,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<EnumListOptionParser<LogLevel>>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<EnumListOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<LogLevel>>> propertyExpression = a => a.Enums;
+            Expression<Func<DataTypesCommandOptions, List<LogLevel>?>> propertyExpression = a => a.Enums;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<EnumListOptionParser<LogLevel>>(targetProperty)).MustHaveHappened();
@@ -254,7 +254,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<GuidListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<GuidListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<Guid>>> propertyExpression = a => a.Guids;
+            Expression<Func<DataTypesCommandOptions, List<Guid>?>> propertyExpression = a => a.Guids;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<GuidListOptionParser>(targetProperty)).MustHaveHappened();
@@ -298,7 +298,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64ListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<Int64ListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<Int64>>> propertyExpression = a => a.Int64s;
+            Expression<Func<DataTypesCommandOptions, List<Int64>?>> propertyExpression = a => a.Int64s;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64ListOptionParser>(targetProperty)).MustHaveHappened();
@@ -342,7 +342,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<DateTimeOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<DateTime>>> propertyExpression = a => a.NullableDateTime;
+            Expression<Func<DataTypesCommandOptions, DateTime?>> propertyExpression = a => a.NullableDateTime;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DateTimeOptionParser>(targetProperty)).MustHaveHappened();
@@ -364,7 +364,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DecimalOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<DecimalOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<Decimal>>> propertyExpression = a => a.NullableDecimal;
+            Expression<Func<DataTypesCommandOptions, Decimal?>> propertyExpression = a => a.NullableDecimal;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<DecimalOptionParser>(targetProperty)).MustHaveHappened();
@@ -386,7 +386,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<EnumOptionParser<LogLevel>>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<EnumOptionSetup<DataTypesCommandOptions, LogLevel>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<LogLevel>>> propertyExpression = a => a.NullableEnum;
+            Expression<Func<DataTypesCommandOptions, LogLevel?>> propertyExpression = a => a.NullableEnum;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<EnumOptionParser<LogLevel>>(targetProperty)).MustHaveHappened();
@@ -408,7 +408,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<GuidOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<GuidOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<Guid>>> propertyExpression = a => a.NullableGuid;
+            Expression<Func<DataTypesCommandOptions, Guid?>> propertyExpression = a => a.NullableGuid;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<GuidOptionParser>(targetProperty)).MustHaveHappened();
@@ -430,7 +430,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64OptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<Int64OptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<Int64>>> propertyExpression = a => a.NullableInt64;
+            Expression<Func<DataTypesCommandOptions, Int64?>> propertyExpression = a => a.NullableInt64;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<Int64OptionParser>(targetProperty)).MustHaveHappened();
@@ -452,7 +452,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, Nullable<TimeSpan>>> propertyExpression = a => a.NullableTimeSpan;
+            Expression<Func<DataTypesCommandOptions, TimeSpan?>> propertyExpression = a => a.NullableTimeSpan;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanOptionParser>(targetProperty)).MustHaveHappened();
@@ -474,7 +474,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<StringListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<StringListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<String>>> propertyExpression = a => a.Strings;
+            Expression<Func<DataTypesCommandOptions, List<String>?>> propertyExpression = a => a.Strings;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<StringListOptionParser>(targetProperty)).MustHaveHappened();
@@ -496,7 +496,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<StringOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, String>> propertyExpression = a => a.String;
+            Expression<Func<DataTypesCommandOptions, String?>> propertyExpression = a => a.String;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<StringOptionParser>(targetProperty)).MustHaveHappened();
@@ -518,7 +518,7 @@ namespace ParseTheArgs.Tests.Setup.Commands
             A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(targetProperty)).Returns(optionParser);
             A.CallTo(() => this.DependencyResolver.Resolve<TimeSpanListOptionSetup<DataTypesCommandOptions>>(commandParser, optionParser)).Returns(optionSetup);
 
-            Expression<Func<DataTypesCommandOptions, List<TimeSpan>>> propertyExpression = a => a.TimeSpans;
+            Expression<Func<DataTypesCommandOptions, List<TimeSpan>?>> propertyExpression = a => a.TimeSpans;
             setup.Option(propertyExpression).Should().Be(optionSetup);
 
             A.CallTo(() => commandParser.GetOrCreateOptionParser<TimeSpanListOptionParser>(targetProperty)).MustHaveHappened();

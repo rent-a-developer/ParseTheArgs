@@ -77,7 +77,7 @@ namespace ParseTheArgs.Demo
 
         private static void Validate(CommandValidatorContext<DateCommandOptions> context)
         {
-            if (context.CommandOptions.DifferenceToDate != null)
+            if (context.CommandOptions!.DifferenceToDate != null)
             {
                 if (context.CommandOptions.DifferenceToDate.Value < context.CommandOptions.Date)
                 {

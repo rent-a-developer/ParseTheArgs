@@ -43,7 +43,7 @@ namespace ParseTheArgs.Tests.Tokens
         public void Tokenize_Null_ShouldThrowException()
         {
             var tokenizer = new CommandLineArgumentsTokenizer();
-            tokenizer.Invoking(a => a.Tokenize(null).ToList()).Should().Throw<ArgumentNullException>();
+            tokenizer.Invoking(a => a.Tokenize(null!).ToList()).Should().Throw<ArgumentNullException>();
         }
     }
 }

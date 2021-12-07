@@ -9,7 +9,7 @@ namespace ParseTheArgs.Tests
         #region Setup/Teardown
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             this.DependencyResolver = A.Fake<DefaultDependencyResolver>(ob => ob.CallsBaseMethods());
             Dependencies.Resolver = this.DependencyResolver;
@@ -23,6 +23,6 @@ namespace ParseTheArgs.Tests
 
         #endregion
 
-        protected IDependencyResolver DependencyResolver { get; private set; }
+        protected IDependencyResolver DependencyResolver { get; private set; } = null!;
     }
 }

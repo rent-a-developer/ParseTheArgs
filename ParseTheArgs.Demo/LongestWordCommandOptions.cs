@@ -5,6 +5,6 @@ namespace ParseTheArgs.Demo
 {
     public class LongestWordCommandOptions
     {
-        public List<String> Words { get; set; }
+        public List<String>? Words { get; set; }
     }
 }

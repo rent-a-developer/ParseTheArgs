@@ -19,7 +19,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Guid");
             var optionParser = A.Fake<GuidOptionParser>(ob => ob.WithArgumentsForConstructor(() => new GuidOptionParser(targetProperty, "guid")));
 
-            Invoking(() => new GuidOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new GuidOptionSetup<DataTypesCommandOptions>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -29,7 +29,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new GuidOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new GuidOptionSetup<DataTypesCommandOptions>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

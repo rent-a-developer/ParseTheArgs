@@ -40,7 +40,7 @@ Parameter name: targetProperty");
         [Test(Description = "Constructor should throw an exception when the given option name is null or an empty string.")]
         public void Constructor_OptionNameIsNullOrEmpty_ShouldThrowException()
         {
-            Invoking(() => new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), null))
+            Invoking(() => new Int64OptionParser(typeof(DataTypesCommandOptions).GetProperty("Int64"), null!))
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(@"Value cannot be null or an empty string.
@@ -56,7 +56,7 @@ Parameter name: optionName");
         [Test(Description = "Constructor should throw an exception when the given target property is null.")]
         public void Constructor_TargetPropertyIsNull_ShouldThrowException()
         {
-            Invoking(() => new Int64OptionParser(null, "int64"))
+            Invoking(() => new Int64OptionParser(null!, "int64"))
                 .Should()
                 .Throw<ArgumentNullException>()
                 .WithMessage(@"Value cannot be null.

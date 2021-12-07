@@ -15,7 +15,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            result.Invoking(a => a.AddError(null))
+            result.Invoking(a => a.AddError(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -36,7 +36,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            result.Invoking(a => a.CommandHandler<Command1Options>(null))
+            result.Invoking(a => a.CommandHandler<Command1Options>(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -81,7 +81,7 @@ namespace ParseTheArgs.Tests
         {
             var result = new ParseResult();
 
-            result.Invoking(a => a.ErrorHandler(null))
+            result.Invoking(a => a.ErrorHandler(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

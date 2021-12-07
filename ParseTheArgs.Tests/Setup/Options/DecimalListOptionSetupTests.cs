@@ -21,7 +21,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Decimals");
             var optionParser = A.Fake<DecimalListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new DecimalListOptionParser(targetProperty, "decimals")));
 
-            Invoking(() => new DecimalListOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new DecimalListOptionSetup<DataTypesCommandOptions>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -31,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new DecimalListOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new DecimalListOptionSetup<DataTypesCommandOptions>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

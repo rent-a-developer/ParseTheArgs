@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
 		<Authors>David Liebeherr</Authors>
 		<Company>rent-a-developer</Company>
 		<Copyright>Copyright © rent-a-developer / David Liebeherr</Copyright>
@@ -20,8 +21,8 @@
 		<Version>1.1.0</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<CodeAnalysisRuleSet>..\.sonarlint\rent-a-developer_parsetheargscsharp.ruleset</CodeAnalysisRuleSet>
-		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">

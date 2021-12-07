@@ -54,7 +54,7 @@ namespace ParseTheArgs.Tests.Setup
         [Test(Description = "Constructor should throw an exception when the given parser is null.")]
         public void Constructor_ParserIsNull_ShouldThrowException()
         {
-            Invoking(() => new ParserSetup(null))
+            Invoking(() => new ParserSetup(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -155,7 +155,7 @@ namespace ParseTheArgs.Tests.Setup
         }
 
         [Test(Description = "IgnoreUnknownOptions should set the ignore unknown options flag on the parser.")]
-        public void IgnoreUnknownOptions_ShouldSetIgnoreUnkownOptionsFlagOnParser()
+        public void IgnoreUnknownOptions_ShouldSetIgnoreUnknownOptionsFlagOnParser()
         {
             var parser = A.Fake<Parser>();
 

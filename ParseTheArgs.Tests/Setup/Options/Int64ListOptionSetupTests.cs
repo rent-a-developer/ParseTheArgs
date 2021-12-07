@@ -21,7 +21,7 @@ namespace ParseTheArgs.Tests.Setup.Options
             var targetProperty = typeof(DataTypesCommandOptions).GetProperty("Int64s");
             var optionParser = A.Fake<Int64ListOptionParser>(ob => ob.WithArgumentsForConstructor(() => new Int64ListOptionParser(targetProperty, "int64s")));
 
-            Invoking(() => new Int64ListOptionSetup<DataTypesCommandOptions>(null, optionParser))
+            Invoking(() => new Int64ListOptionSetup<DataTypesCommandOptions>(null!, optionParser))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -31,7 +31,7 @@ namespace ParseTheArgs.Tests.Setup.Options
         {
             var commandParser = A.Fake<CommandParser<DataTypesCommandOptions>>();
 
-            Invoking(() => new Int64ListOptionSetup<DataTypesCommandOptions>(commandParser, null))
+            Invoking(() => new Int64ListOptionSetup<DataTypesCommandOptions>(commandParser, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
